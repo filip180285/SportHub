@@ -1,0 +1,19 @@
+<div class="row sredina">
+    <div class="col-sm-6 offset-3 text-center boja">
+        <span id="ponistavanje">Ukoliko želite da poništite lozinku i da vam sistem novu pošalje na mejl, kliknite <a routerLink="../ponistavanjeLozinke">OVDE</a></span>
+        <hr><br>
+        <div class="forma1">
+            <h2>Prijavi se</h2>
+            <img src="../../assets/login.png">
+            <div class="forma-field">
+                <input type="text" id="korisnickoIme" placeholder="Korisničko ime..." name='korisnickoIme' [(ngModel)]='korisnickoIme'>
+            </div>
+            <div class="forma-field">
+                <input type="password" id="lozinka" placeholder="Lozinka..." name='lozinka' [(ngModel)]='lozinka'>
+            </div>
+            <div class="forma-field">
+                <button id="loginBtn" class="btn btn-secondary" (click)='prijavaNaSistem()'>Prijava</button>
+            </div>
+        </div>
+    </div>
+</div>

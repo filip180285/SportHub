@@ -1,0 +1,6 @@
+.footer {
+    /* background-color: #D5EEBB; */
+    background: linear-gradient(to right,white,#D5EEBB);
+    font-style: italic;
+    font-size:12pt !important;
+}

@@ -1,0 +1,148 @@
+.boja {
+    padding-top: 50px;
+    margin-bottom: 200px;
+    margin-top: 20px;
+}
+
+h2 {
+    color: #7FC8A9;
+    letter-spacing: 3px;
+    font-family: 'DM Serif Display', serif;
+}
+
+#korisnickoIme,
+#lozinka {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-color: #D5EEBB;
+    width: 80%;
+}
+
+.sredina {
+    background-color: #444941;
+    color: white;
+}
+
+
+#loginBtn{
+    width: 50%;
+}
+
+.naslov {
+    color: #5F7161 !important;
+}
+
+/*forma za login*/
+.forma1 {
+    border-radius: 5px;
+    padding-top: 20px;
+    margin: auto;
+    width: 80%;
+    height: 100%;
+}
+
+.forma1 {
+    position: relative;
+    background-color: white;
+}
+
+.forma1 .forma-field::before {
+    font-size: 20px;
+    position: absolute;
+    left: 15px;
+    top: 17px;
+    color: #888888;
+    content: " ";
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.forma1 .forma-field:nth-child(3)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/user-icon.png");
+    width: 20px;
+    height: 20px;
+    top: 15px;
+}
+
+.forma1 .forma-field:nth-child(4)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/lock-icon.png");
+    width: 16px;
+    height: 16px;
+}
+
+.forma1 .forma-field {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.forma1 input {
+    font-family: inherit;
+    width: 100%;
+    outline: none;
+    background-color: #fff;
+    border-radius: 4px;
+    border: none;
+    display: block;
+    padding: 0.9rem 0.7rem;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    font-size: 17px;
+    color: #4A4A4A;
+    text-indent: 40px;
+}
+
+.forma1 .btn {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0.8rem 2.5rem;
+    text-align: center;
+    background-color: #7FC8A9;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    font-size: 17px;
+    margin-top: 20px;
+}
+
+.forma1 .btn:hover{
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0.8rem 2.5rem;
+    text-align: center;
+    background-color: #48a77f;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+   
+    margin-top: 20px;
+}
+
+#ponistavanje a {
+    color: #5F7A61;
+    text-decoration: none;
+}
+
+#ponistavanje a:hover {
+    color: orangered;
+    font-weight: 500;
+}

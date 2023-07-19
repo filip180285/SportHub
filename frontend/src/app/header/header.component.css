@@ -1,0 +1,22 @@
+#heder {
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(to right,white,#D5EEBB);
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 0 50% 50%;
+    overflow: hidden;
+    height: 200px;
+}
+
+#naslov {
+    color: #5F7161;
+    font-family: 'Satisfy', cursive;
+    padding-top: 30px;
+}
+
+#logo {
+    width: 150px;
+    height: 80px;
+    margin-top: 20px;
+}
