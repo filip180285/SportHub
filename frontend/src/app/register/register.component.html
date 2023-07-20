@@ -1,0 +1,41 @@
+<div class="row sredina">
+    <div class="col-sm-6 offset-3 text-center boja">
+        <span id="ponistavanje">Imate nalog? Prijavite se <a routerLink="../">OVDE</a></span>
+        <hr><br>
+        <form class="forma2">
+            <h2>Registruj se</h2>
+            <img src="../../assets/register.png">
+            <br><br>
+            <div class="form-field">
+                <input type="text" id="ime" placeholder="Ime..." name='ime' [(ngModel)]='name'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="prezime" placeholder="Prezime..." name='prezime' [(ngModel)]='lastname'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="korisnickoImeReg" placeholder="Korisničko ime..." name='korisnickoIme' [(ngModel)]='username'>
+            </div>
+            <div class="form-field">
+                <input type="password" id="lozinkaReg" placeholder="Lozinka..." name='lozinka' [(ngModel)]='password'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="telefon" placeholder="Kontakt telefon(+381 xx xxxxxxx)..." name='telefon' [(ngModel)]='phone'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="mejl" placeholder="Mejl adresa..." name='mejl' [(ngModel)]='email'>
+            </div>
+            <div class="form-field">
+                <select name="type" id="type" [(ngModel)]='type'>
+                    <option value="" disabled selected>Izaberite tip korisnika</option>
+                    <option value="ucesnik">Učesnik</option>
+                    <option value="organizator">Organizator</option>
+                  </select>
+            </div>
+            <div class="form-field">
+                <input type="file" id="slika" placeholder="Slika(opciono)..." name="image" (change)="selectImage($event)">
+            </div>
+            <button id="regBtn" (click)="test()" class="btn btn-secondary dugmeReg">Registruj se</button>
+            <br><br>
+        </form>
+    </div>
+</div>

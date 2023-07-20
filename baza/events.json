@@ -1,0 +1,22 @@
+[ {
+  "id": 1,
+  "idOrg": 1,
+  "idSport": 1,
+  "pollDeadline": 1675987200000,
+  "dateTime": 1675987200000,
+  "location": "Dunavski kej 19, Beograd",
+  "description": "Ovo je opis nekog skupa",
+  "status": "active",
+  "participationFee": "300",
+  "comments": [
+    {
+	  "username" : "jovica",
+      "name": "Jovica",
+	  "lastname": "Jovica",
+      "time": 1675956707413,
+      "text": "Fantasticna radionica."
+    }
+  ],
+  "participants": [1, 2, 3]
+}
+ ]

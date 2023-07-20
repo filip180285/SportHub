@@ -1,2 +1,2 @@
 # GameTime
-Realizacija WEB aplikacije SportHub korišćenjem MEAN radnog okvira u sklopu izrade diplomskog rada
+Realizacija WEB aplikacije GameTime korišćenjem MEAN radnog okvira u sklopu izrade diplomskog rada

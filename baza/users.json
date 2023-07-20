@@ -1,0 +1,15 @@
+[ {
+  "id": 1,
+  "name": "Jovica",
+  "lastname": "Dobric",
+  "username": "jovica",
+  "password": "Jovica123#",
+  "email": "jovicaperic84@gmail.com",
+  "type": "administrator",
+  "status": "active",
+  "phone": "+381 66 5080121",
+  "picture": "jovica.jpg",
+  "description": "Ovo je neki moj licni opis",
+  "subscriptions": [1, 2, 3]
+}
+ ]

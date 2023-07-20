@@ -9,6 +9,12 @@
     height: 200px;
 }
 
+#moto {
+    font-size: 20px;
+    color: #5F7161;
+    font-family: 'Satisfy', cursive;
+}
+
 #naslov {
     color: #5F7161;
     font-family: 'Satisfy', cursive;
