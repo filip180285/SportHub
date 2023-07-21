@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
+    // poruka pri ucitavanju stranice za registraciju
     setTimeout(() => {
       alert("Sva polja osim izbora profilne slike(Choose file polje) su obavezna!" + "\n"
         + "Polja ime, prezime, korisnicko ime i lozinka moraju biti duzine do 20 karaktera!");
@@ -98,7 +99,7 @@ export class RegisterComponent implements OnInit {
   async sendRegistrationRequest(): Promise<void> {
     // provera da li su sve unete vrednosti validne
     if (this.checkInputValues() == false) { return; }
-
+    // podaci za slanje na backend
     const data = {
       name: this.name,
       lastname: this.lastname,
@@ -110,47 +111,33 @@ export class RegisterComponent implements OnInit {
     };
 
     try {
-      const response = await this.userService.register(data);
-      if (response["status"] == 400) {
-        alert(response["message"]);
-        return;
-      }
-
+      const response = await lastValueFrom(this.userService.register(data));
       if (this.picture != null) {
         const formData = new FormData();
         formData.append('file', this.picture);
         formData.append('username', this.username);
-        const responsePicture = await this.userService.addPicture(formData);
-        if (response["status"] == 400) {
-          alert(response["message"]);
-          return;
-        }
+        const responsePicture = await lastValueFrom(this.userService.addPicture(formData));
       }
 
       alert(response["message"]);
-      this.router.navigate(['']);
-    } catch (error) {
-      alert("lalalla");
-      console.log(error);
+      // preusmeravanje na stranicu za prijavu
+      this.router.navigate([""]);
+    } catch (error: any) {
+      alert(error.error.message);
+      console.log(error.error.message);
     }
   }
 
-  async test()  {
+  async test() {
     try {
       const response = await lastValueFrom(this.userService.test());
-      alert(response['status'])
-      if (response['status'] == 400) {
-        //alert(response["message"]);
-        alert("greskaaaa");
-        console.log("greskaaaa");
-        return;
-      }
-      
-      //alert(response["message"]);
-      //this.router.navigate(['']);
-    } catch (error) {
-      alert("lalalla");console.log("asdasd");
-      console.log(error);
+      alert(response["message"]);
+      alert(response["message2"]);
+      this.router.navigate(['']);
+    } catch (error: any) {
+      alert(error.error.message);
+      alert(error.error.message2);
+      console.log(error.error.message);
     }
   }
 

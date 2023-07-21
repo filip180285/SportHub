@@ -13,13 +13,15 @@
                 <input type="text" id="prezime" placeholder="Prezime..." name='prezime' [(ngModel)]='lastname'>
             </div>
             <div class="form-field">
-                <input type="text" id="korisnickoImeReg" placeholder="Korisničko ime..." name='korisnickoIme' [(ngModel)]='username'>
+                <input type="text" id="korisnickoImeReg" placeholder="Korisničko ime..." name='korisnickoIme'
+                    [(ngModel)]='username'>
             </div>
             <div class="form-field">
                 <input type="password" id="lozinkaReg" placeholder="Lozinka..." name='lozinka' [(ngModel)]='password'>
             </div>
             <div class="form-field">
-                <input type="text" id="telefon" placeholder="Kontakt telefon(+381 xx xxxxxxx)..." name='telefon' [(ngModel)]='phone'>
+                <input type="text" id="telefon" placeholder="Kontakt telefon(+381 xx xxxxxxx)..." name='telefon'
+                    [(ngModel)]='phone'>
             </div>
             <div class="form-field">
                 <input type="text" id="mejl" placeholder="Mejl adresa..." name='mejl' [(ngModel)]='email'>
@@ -29,12 +31,13 @@
                     <option value="" disabled selected>Izaberite tip korisnika</option>
                     <option value="ucesnik">Učesnik</option>
                     <option value="organizator">Organizator</option>
-                  </select>
+                </select>
             </div>
             <div class="form-field">
-                <input type="file" id="slika" placeholder="Slika(opciono)..." name="image" (change)="selectImage($event)">
+                <input type="file" id="slika" placeholder="Slika(opciono)..." name="image"
+                    (change)="selectImage($event)">
             </div>
-            <button id="regBtn" (click)="test()" class="btn btn-secondary dugmeReg">Registruj se</button>
+            <button id="regBtn" (click)="sendRegistrationRequest()" class="btn btn-secondary dugmeReg">Registruj se</button>
             <br><br>
         </form>
     </div>

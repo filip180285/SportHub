@@ -28,10 +28,12 @@ class UserController {
             const password = req.body.password;
             // trazenje korisnika sa prosledjenim kredencijalima
             user_1.default.findOne({ "username": username, "password": password, "status": "aktivan" }, (err, user) => {
-                if (err)
+                if (err) {
+                    return res.status(400).json({ "message": "Greska pri prijavi korisnika!" });
                     console.log(err);
+                }
                 else
-                    res.json(user);
+                    return res.json(user);
             });
         };
         /**
@@ -43,47 +45,44 @@ class UserController {
             const username = req.body.username;
             const user = yield user_1.default.findOne({ "username": username });
             if (user) {
-                return res.status(400).json({ message: "Korisnicko ime je zauzeto!" });
+                return res.status(400).json({ "message": "Korisnicko ime je zauzeto!" });
             }
-            else {
-                // id novog korisnika
-                let id = 1;
-                const users = yield user_1.default.find().sort({ "id": -1 }).limit(1);
-                if (users.length > 0) {
-                    id = users[0].id + 1;
-                }
-                const name = req.body.name;
-                const lastname = req.body.lastname;
-                const password = req.body.password;
-                const email = req.body.telefon;
-                const type = req.body.type;
-                const phone = req.body.phone;
-                const subscriptions = [];
-                let user = new user_1.default({
-                    id: id,
-                    name: name,
-                    lastname: lastname,
-                    username: username,
-                    password: password,
-                    email: email,
-                    type: type,
-                    status: "aktivan",
-                    phone: phone,
-                    picture: "",
-                    subscriptions: subscriptions
-                });
-                user.save().then(user => {
-                    res.status(200).json({
-                        "message": "Uspešno ste se registrovali kao " + type + "!",
-                        "status": 200
-                    });
-                }).catch(err => {
-                    res.status(400).json({
-                        "message": "Došlo je do greške prilikom slanja zahteva za registraciju!",
-                        "status": 400
-                    });
-                });
+            // id novog korisnika
+            let id = 1;
+            const users = yield user_1.default.find().sort({ "id": -1 }).limit(1);
+            if (users.length > 0) {
+                id = users[0].id + 1;
             }
+            const name = req.body.name;
+            const lastname = req.body.lastname;
+            const password = req.body.password;
+            const email = req.body.email;
+            const type = req.body.type;
+            const phone = req.body.phone;
+            const subscriptions = [];
+            const newUser = new user_1.default({
+                id: id,
+                name: name,
+                lastname: lastname,
+                username: username,
+                password: password,
+                email: email,
+                type: type,
+                status: "aktivan",
+                phone: phone,
+                picture: "",
+                subscriptions: subscriptions
+            });
+            newUser.save().then(user => {
+                console.log(user);
+                return res.status(200).json({
+                    "message": "Uspešno ste se registrovali kao " + type + "!"
+                });
+            }).catch(err => {
+                return res.status(400).json({
+                    "message": "Došlo je do greške prilikom slanja zahteva za registraciju!"
+                });
+            });
         });
         /**
         * Dodavanje i preimenovanje profilne slike za novog korisnika pri registraciji.
@@ -96,32 +95,41 @@ class UserController {
             if (file) {
                 const myArray = file.originalname.split(".");
                 const pictureName = username + Date.now() + "." + myArray[myArray.length - 1];
-                fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), (err) => {
+                // preimenovanje dodate slike
+                fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), (err) => __awaiter(this, void 0, void 0, function* () {
                     if (err) {
                         return res.status(400).json({
-                            "message": "Greska pri dodavanju slike u bazu!",
-                            "status": 400
+                            "message": "Greska pri dodavanju slike u bazu!"
                         });
                     }
+                    // promena naziva polja picture u kolekciji User
+                    yield user_1.default.collection.updateOne({ "username": username }, { $set: { "picture": pictureName } });
                     return res.status(200).json({
-                        "message": "Dodata profilna slika u bazu!",
-                        "status": 200
+                        "message": "Dodata profilna slika u bazu!"
                     });
-                });
+                }));
             }
             else {
                 return res.status(400).json({
-                    "message": "Greska pri dodavanju slike u bazu!",
-                    "status": 400
+                    "message": "Greska pri dodavanju slike u bazu!"
                 });
             }
         };
         this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield user_1.default.find().sort({ id: -1 }).limit(1);
+            /*const user = await User.find().sort({ id: -1 }).limit(1);
             console.log(user[0].id);
-            res.status(400).json({
+            return res.status(400).json({
+                "message": "loseeeee!",
+            });*/
+            /*return res.status(200).json({
                 "message": "oke!",
-                "status": 400
+            });
+            res.status(200).json({
+                "message": "loseeeee!",
+            })*/
+            return res.status(200).json({
+                "message": "prva!",
+                "message2": "druga"
             });
         });
     }
