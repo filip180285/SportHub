@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit {
     // poruka pri ucitavanju stranice za registraciju
     setTimeout(() => {
       alert("Sva polja osim izbora profilne slike(Choose file polje) su obavezna!" + "\n"
-        + "Polja ime, prezime, korisnicko ime i lozinka moraju biti duzine do 20 karaktera!");
+        + "Polja ime, prezime, korisničko ime i lozinka moraju biti duzine do 20 karaktera!");
     }, 100);
   }
 
@@ -87,7 +87,7 @@ export class RegisterComponent implements OnInit {
     const MAX_LEN: number = 20;
     if (this.name.length > MAX_LEN || this.lastname.length > MAX_LEN ||
       this.username.length > MAX_LEN || this.password.length > MAX_LEN) {
-      alert("Polja ime, prezime, korisnicko ime i lozinka moraju biti duzine do 20 karaktera!");
+      alert("Polja ime, prezime, korisničko ime i lozinka moraju biti duzine do 20 karaktera!");
       return false;
     }
     return true;

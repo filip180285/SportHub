@@ -16,6 +16,7 @@ exports.UserController = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const path = require("path");
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 class UserController {
     constructor() {
         /**
@@ -26,15 +27,23 @@ class UserController {
         this.login = (req, res) => {
             const username = req.body.username;
             const password = req.body.password;
-            // trazenje korisnika sa prosledjenim kredencijalima
-            user_1.default.findOne({ "username": username, "password": password, "status": "aktivan" }, (err, user) => {
+            user_1.default.findOne({ "username": username, "status": "aktivan" }, (err, user) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
+                    console.log("1");
                     return res.status(400).json({ "message": "Greska pri prijavi korisnika!" });
-                    console.log(err);
                 }
-                else
-                    return res.json(user);
-            });
+                if (!user) {
+                    console.log("2");
+                    return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+                }
+                // provera da li je lozinka ispravna
+                const isPasswordMatch = yield bcrypt.compare(password, user.password);
+                if (isPasswordMatch == false) {
+                    console.log("3");
+                    return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+                }
+                return res.json(user);
+            }));
         };
         /**
         * Obrada zahteva za registraciju korisnika.
@@ -60,12 +69,14 @@ class UserController {
             const type = req.body.type;
             const phone = req.body.phone;
             const subscriptions = [];
+            const saltRounds = 10;
+            const hashedPassword = yield bcrypt.hash(password, saltRounds);
             const newUser = new user_1.default({
                 id: id,
                 name: name,
                 lastname: lastname,
                 username: username,
-                password: password,
+                password: hashedPassword,
                 email: email,
                 type: type,
                 status: "aktivan",
@@ -127,9 +138,10 @@ class UserController {
             res.status(200).json({
                 "message": "loseeeee!",
             })*/
+            const hashedPassword = yield bcrypt.hash("filip", 10);
             return res.status(200).json({
                 "message": "prva!",
-                "message2": "druga"
+                "message2": hashedPassword
             });
         });
     }

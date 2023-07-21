@@ -2,6 +2,7 @@ import * as express from 'express';
 import User from '../models/user';
 const path = require("path");
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 
 export class UserController {
 
@@ -14,14 +15,24 @@ export class UserController {
         const username: string = req.body.username;
         const password: string = req.body.password;
 
-        // trazenje korisnika sa prosledjenim kredencijalima
-        User.findOne({ "username": username, "password": password, "status": "aktivan" }, (err, user) => {
+        User.findOne({ "username": username, "status": "aktivan" }, async (err, user) => {
             if (err) {
-                return res.status(400).json({ "message": "Greska pri prijavi korisnika!" });
-                console.log(err);
+                return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
             }
-            else return res.json(user);
-        })
+            
+            if (!user) {
+                return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+            }
+    
+            // provera da li je lozinka ispravna
+            const isPasswordMatch = await bcrypt.compare(password, user.password);
+            if (!isPasswordMatch) {
+                console.log("3")
+                return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+            }
+    
+            return res.json(user);
+        });
     }
 
     /**
@@ -34,7 +45,7 @@ export class UserController {
 
         const user = await User.findOne({ "username": username });
         if (user) {
-            return res.status(400).json({ "message": "Korisnicko ime je zauzeto!" });
+            return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
         }
         // id novog korisnika
         let id: number = 1;
@@ -52,12 +63,15 @@ export class UserController {
 
         const subscriptions: Array<number> = [];
 
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
         const newUser = new User({
             id: id,
             name: name,
             lastname: lastname,
             username: username,
-            password: password,
+            password: hashedPassword,
             email: email,
             type: type,
             status: "aktivan",
@@ -96,7 +110,7 @@ export class UserController {
             fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), async (err) => {
                 if (err) {
                     return res.status(400).json({
-                        "message": "Greska pri dodavanju slike u bazu!"
+                        "message": "Greška pri dodavanju slike u bazu!"
                     });
                 }
                 // promena naziva polja picture u kolekciji User
@@ -108,7 +122,7 @@ export class UserController {
         }
         else {
             return res.status(400).json({
-                "message": "Greska pri dodavanju slike u bazu!"
+                "message": "Greška pri dodavanju slike u bazu!"
             });
         }
     }
@@ -126,9 +140,11 @@ export class UserController {
         res.status(200).json({
             "message": "loseeeee!",
         })*/
+
+        const hashedPassword = await bcrypt.hash("filip", 10);
         return res.status(200).json({
             "message": "prva!",
-            "message2" : "druga"
+            "message2" : hashedPassword
         });
 
     }
