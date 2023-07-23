@@ -7,10 +7,6 @@ hr {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), #444941, rgba(0, 0, 0, 0));
 }
 
-body{
-    background-color: #444941;
-}
-
 .baner {
     display: flex;
     flex-direction: row;

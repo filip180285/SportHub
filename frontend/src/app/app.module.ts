@@ -14,6 +14,10 @@ import { TestRouteComponent } from './test-route/test-route.component';
 import { UcesnikComponent } from './ucesnik/ucesnik.component';
 import { OrganizatorComponent } from './organizator/organizator.component';
 import { AdministratorComponent } from './administrator/administrator.component';
+import { HeaderLoggedComponent } from './header-logged/header-logged.component';
+import { MeniUcesnikComponent } from './meni-ucesnik/meni-ucesnik.component';
+import { MeniOrganizatorComponent } from './meni-organizator/meni-organizator.component';
+import { MeniAdministratorComponent } from './meni-administrator/meni-administrator.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +29,11 @@ import { AdministratorComponent } from './administrator/administrator.component'
     TestRouteComponent,
     UcesnikComponent,
     OrganizatorComponent,
-    AdministratorComponent
+    AdministratorComponent,
+    HeaderLoggedComponent,
+    MeniUcesnikComponent,
+    MeniOrganizatorComponent,
+    MeniAdministratorComponent
   ],
   imports: [
     BrowserModule,
