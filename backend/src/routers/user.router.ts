@@ -18,6 +18,10 @@ userRouter.route("/test").post( // testiranje
   (req, res) => new UserController().test(req, res)
 );
 
+userRouter.route("/testJWT").post( // testiranje
+  (req, res) => new UserController().testJWT(req, res)
+);
+
 userRouter.route('/login').post(
   (req, res) => new UserController().login(req, res)
 );

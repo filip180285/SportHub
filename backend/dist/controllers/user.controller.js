@@ -14,47 +14,57 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const utility_1 = require("./utility");
+const utility_2 = require("./utility");
 const path = require("path");
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 class UserController {
     constructor() {
         /**
          * Obrada zahteva za prijavu korisnika.
          * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
          * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+         * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
          */
         this.login = (req, res) => {
             const username = req.body.username;
             const password = req.body.password;
             user_1.default.findOne({ "username": username, "status": "aktivan" }, (err, user) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
-                    console.log("1");
-                    return res.status(400).json({ "message": "Greska pri prijavi korisnika!" });
+                    return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
                 }
                 if (!user) {
-                    console.log("2");
-                    return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+                    return res.status(400).json({ "message": "Neispravni kredencijali!" });
                 }
                 // provera da li je lozinka ispravna
                 const isPasswordMatch = yield bcrypt.compare(password, user.password);
-                if (isPasswordMatch == false) {
-                    console.log("3");
-                    return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+                if (!isPasswordMatch) {
+                    return res.status(400).json({ "message": "Neispravni kredencijali!" });
                 }
-                return res.json(user);
+                const jwtData = {
+                    username: user.username,
+                    name: user.name,
+                    lastname: user.lastname,
+                    role: user.type
+                };
+                // kreiranje i potpis tokena
+                const token = jwt.sign(jwtData, utility_1.secretKey, { expiresIn: '1h' });
+                return res.json({ token });
             }));
         };
         /**
         * Obrada zahteva za registraciju korisnika.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat sa odgovarajucom porukom
         */
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const username = req.body.username;
             const user = yield user_1.default.findOne({ "username": username });
             if (user) {
-                return res.status(400).json({ "message": "Korisnicko ime je zauzeto!" });
+                return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
             }
             // id novog korisnika
             let id = 1;
@@ -99,6 +109,7 @@ class UserController {
         * Dodavanje i preimenovanje profilne slike za novog korisnika pri registraciji.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat odgovarajucom porukom
         */
         this.addPicture = (req, res) => {
             const file = req.file;
@@ -110,7 +121,7 @@ class UserController {
                 fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), (err) => __awaiter(this, void 0, void 0, function* () {
                     if (err) {
                         return res.status(400).json({
-                            "message": "Greska pri dodavanju slike u bazu!"
+                            "message": "Greška pri dodavanju slike u bazu!"
                         });
                     }
                     // promena naziva polja picture u kolekciji User
@@ -122,27 +133,27 @@ class UserController {
             }
             else {
                 return res.status(400).json({
-                    "message": "Greska pri dodavanju slike u bazu!"
+                    "message": "Greška pri dodavanju slike u bazu!"
                 });
             }
         };
         this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            /*const user = await User.find().sort({ id: -1 }).limit(1);
-            console.log(user[0].id);
-            return res.status(400).json({
-                "message": "loseeeee!",
-            });*/
-            /*return res.status(200).json({
-                "message": "oke!",
-            });
-            res.status(200).json({
-                "message": "loseeeee!",
-            })*/
-            const hashedPassword = yield bcrypt.hash("filip", 10);
-            return res.status(200).json({
-                "message": "prva!",
-                "message2": hashedPassword
-            });
+        });
+        this.testJWT = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            const token = ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1]) || '';
+            const allowedUserTypes = ['organizator', 'admin'];
+            const statusCode = utility_2.Utility.verifyToken(token, allowedUserTypes);
+            if (statusCode == 400) { // zahtev bez tokena
+                return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
+            }
+            else if (statusCode == 401) { // pogresna rola
+                return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
+            }
+            else if (statusCode == 403) { // token istekao
+                return res.status(statusCode).json({ message: "Istekao token!" });
+            }
+            return res.status(statusCode).json({ message: "SVE OK!" });
         });
     }
 }

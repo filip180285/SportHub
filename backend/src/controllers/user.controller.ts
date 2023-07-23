@@ -1,8 +1,11 @@
 import * as express from 'express';
 import User from '../models/user';
+import { secretKey } from './utility';
+import { Utility } from './utility';
 const path = require("path");
 const fs = require('fs');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 export class UserController {
 
@@ -10,6 +13,7 @@ export class UserController {
      * Obrada zahteva za prijavu korisnika.
      * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
      * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+     * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
      */
     login = (req: express.Request, res: express.Response) => {
         const username: string = req.body.username;
@@ -19,19 +23,26 @@ export class UserController {
             if (err) {
                 return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
             }
-            
+
             if (!user) {
-                return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+                return res.status(400).json({ "message": "Neispravni kredencijali!" });
             }
-    
+
             // provera da li je lozinka ispravna
             const isPasswordMatch = await bcrypt.compare(password, user.password);
             if (!isPasswordMatch) {
-                console.log("3")
-                return res.status(400).json({ "message": "Pogrešno korisničko ime ili lozinka!" });
+                return res.status(400).json({ "message": "Neispravni kredencijali!" });
             }
-    
-            return res.json(user);
+
+            const jwtData = {
+                username: user.username,
+                name: user.name,
+                lastname: user.lastname,
+                role: user.type
+            }
+            // kreiranje i potpis tokena
+            const token = jwt.sign(jwtData, secretKey, { expiresIn: '1h' });
+            return res.json({ token });
         });
     }
 
@@ -39,6 +50,7 @@ export class UserController {
     * Obrada zahteva za registraciju korisnika.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat sa odgovarajucom porukom
     */
     register = async (req: express.Request, res: express.Response) => { // ok
         const username: string = req.body.username;
@@ -98,6 +110,7 @@ export class UserController {
     * Dodavanje i preimenovanje profilne slike za novog korisnika pri registraciji.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat odgovarajucom porukom
     */
     addPicture = (req: express.Request, res: express.Response) => { // ok
         const file: Express.Multer.File = req.file;
@@ -128,24 +141,23 @@ export class UserController {
     }
 
     test = async (req: express.Request, res: express.Response) => { // ok
-        /*const user = await User.find().sort({ id: -1 }).limit(1);
-        console.log(user[0].id);
-        return res.status(400).json({
-            "message": "loseeeee!",
-        });*/
 
-        /*return res.status(200).json({
-            "message": "oke!",
-        });
-        res.status(200).json({
-            "message": "loseeeee!",
-        })*/
+    }
 
-        const hashedPassword = await bcrypt.hash("filip", 10);
-        return res.status(200).json({
-            "message": "prva!",
-            "message2" : hashedPassword
-        });
+    testJWT = async (req: express.Request, res: express.Response) => { // ok
+        const token: string = req.headers.authorization?.split(' ')[1] || '';
+        const allowedUserTypes: string[] = ['organizator', 'admin'];
+        const statusCode = Utility.verifyToken(token, allowedUserTypes);
+
+        if (statusCode == 400) { // zahtev bez tokena
+            return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
+        } else if (statusCode == 401) {  // pogresna rola
+            return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
+        } else if (statusCode == 403) { // token istekao
+            return res.status(statusCode).json({ message: "Istekao token!" });
+        }
+
+        return res.status(statusCode).json({ message: "SVE OK!" });
 
     }
 }

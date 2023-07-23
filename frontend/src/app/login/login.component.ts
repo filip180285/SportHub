@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { User } from 'src/models/user';
+import { lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
+
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-login',
@@ -22,36 +24,28 @@ export class LoginComponent implements OnInit {
 
   username: string = "";
   password: string = "";
-  message: string = "";
 
   /**
    * Obrada submit-a forme za prijavu.
    */
-  login(): void {
+  async login(): Promise<void> {
     if (this.username == "" || this.password == "") {
-      alert('Niste uneli podatke!');
+      alert('Unesite korisničko ime i lozinku!');
       return;
     }
-    this.userService.login(this.username, this.password).subscribe((user: User) => {
-      if (!user) {
-        alert('Neispravni kredencijali!');
-        return;
-      }
-      else {
-        //alert(korisnik.lozinkaTrajeDo)
-        if (user.type == "administrator") {
-          // alert('Pogrešan tip!');
-          // return;
-        }
-        localStorage.setItem('ulogovan', JSON.stringify(user));
-        if (user.type == "ucesnik") {
-          //this.ruter.navigate(['ucesnik']);
-        }
-        else if (user.type == "organizator") {
-          //this.ruter.navigate(['organizator']);
-        }
-      }
-    })
+    // poziv ka backend-u sa kredencijalima
+    try {
+      const data = {
+        username: this.username,
+        password: this.password
+      };
+      const response = await lastValueFrom(this.userService.login(data));
+      sessionStorage.setItem('token', response["token"]);
+      const decodedToken: any = jwt_decode(response["token"]);
+      this.router.navigate([`/${decodedToken.role}`]);
+    } catch (error) {
+      alert(error.error["message"])
+    }
   }
 
 

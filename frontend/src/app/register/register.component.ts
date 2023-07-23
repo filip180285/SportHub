@@ -124,19 +124,20 @@ export class RegisterComponent implements OnInit {
       this.router.navigate([""]);
     } catch (error: any) {
       alert(error.error.message);
-      console.log(error.error.message);
     }
   }
 
   async test() {
     try {
-      const response = await lastValueFrom(this.userService.test());
-      alert(response["message"]);
-      alert(response["message2"]);
-      this.router.navigate(['']);
+      //const response = await lastValueFrom(this.userService.login({"novi", "321"}));
+     // alert(response["message"]);
+      // alert(response["message2"]);
+      // this.router.navigate(['']);
     } catch (error: any) {
-      alert(error.error.message);
-      alert(error.error.message2);
+      //alert(error.error.message);
+      //alert(error.error.message2);
+      const statusCode = error?.status;
+      alert(statusCode)
       console.log(error.error.message);
     }
   }
