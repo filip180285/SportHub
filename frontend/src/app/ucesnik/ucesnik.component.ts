@@ -25,11 +25,6 @@ export class UcesnikComponent implements OnInit {
     else {
       try {
         const decodedToken: any = jwt_decode(token);
-        // provera da li ucesnik pristupa stranici i preusmeravanje
-        // na odgovarajacu pocetnu stranu ako to nije slucaj
-        if(decodedToken.role != "ucesnik") {
-          this.router.navigate([`/${decodedToken.role}`]);
-        }
         const data:Object = { username: decodedToken.username };
         const response:any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;

@@ -8,14 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const user_1 = __importDefault(require("../models/user"));
-const utility_1 = require("./utility");
-const utility_2 = require("./utility");
+const middleware_1 = require("../middleware/middleware");
 const path = require("path");
 const fs = require('fs');
 const bcrypt = require('bcrypt');
@@ -50,7 +60,7 @@ class UserController {
                     role: user.type
                 };
                 // kreiranje i potpis tokena
-                const token = jwt.sign(jwtData, utility_1.secretKey, { expiresIn: '1h' });
+                const token = jwt.sign(jwtData, middleware_1.secretKey, { expiresIn: '1h' });
                 return res.json({ token });
             }));
         };
@@ -137,49 +147,66 @@ class UserController {
                 });
             }
         };
+        /**
+        * Dohvatanje korisnika.
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat odgovarajucom porukom
+        */
         this.getUser = (req, res) => {
-            var _a;
-            const token = ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1]) || '';
-            const allowedUserTypes = ["ucesnik", "organizator", "administrator"];
-            const statusCode = utility_2.Utility.verifyToken(token, allowedUserTypes);
-            if (statusCode == 400) { // zahtev bez tokena
-                return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
-            }
-            else if (statusCode == 401) { // pogresna rola
-                return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
-            }
-            else if (statusCode == 403) { // token istekao
-                return res.status(statusCode).json({ message: "Vaša sesija je istekla! Prijavite se ponovo!" });
-            }
             const username = req.body.username;
-            console.log(username);
             user_1.default.findOne({ "username": username }, (err, user) => {
-                if (err)
-                    console.log(err);
-                else
-                    res.json(user);
+                if (err) {
+                    return res.status(400).json({ "message": "Greška!" });
+                }
+                else {
+                    const _a = user._doc, { _id, id, password } = _a, userData = __rest(_a, ["_id", "id", "password"]);
+                    res.json(userData);
+                }
             });
         };
+        /**
+        * Dohvatanje profilne slike korisnika
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} Profilna slika korisnika
+        */
         this.getUserPicture = (req, res) => {
             res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
         };
+        /**
+        * Dohvatanje svih korisnika.
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat sa nizom svih korisnika
+        */
+        this.getAllUsers = (req, res) => {
+            user_1.default.find({ type: { $ne: "administrator" } }, { "_id": 0, "id": 0, "password": 0 }, (err, users) => {
+                if (err) {
+                    return res.status(400).json({ "message": "Greška!" });
+                }
+                else
+                    res.json(users);
+            });
+        };
         this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const username = req.body.username;
+            //console.log(username)
+            user_1.default.findOne({ "username": "jovica" }, (err, user) => {
+                if (err) {
+                    return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
+                }
+                else {
+                    // Exclude the 'password' field from the 'user' object
+                    const _a = user._doc, { password, email } = _a, userData = __rest(_a, ["password", "email"]);
+                    //console.log(user);
+                    console.log(userData);
+                    // Send all the other fields in a new object
+                    res.json(userData);
+                }
+            });
         });
         this.testJWT = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
-            const token = ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1]) || '';
-            const allowedUserTypes = ['organizator', 'admin'];
-            const statusCode = utility_2.Utility.verifyToken(token, allowedUserTypes);
-            if (statusCode == 400) { // zahtev bez tokena
-                return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
-            }
-            else if (statusCode == 401) { // pogresna rola
-                return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
-            }
-            else if (statusCode == 403) { // token istekao
-                return res.status(statusCode).json({ message: "Istekao token!" });
-            }
-            return res.status(statusCode).json({ message: "SVE OK!" });
         });
     }
 }

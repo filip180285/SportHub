@@ -28,6 +28,7 @@ export class HeaderLoggedComponent implements OnInit {
         const data:Object = { username: decodedToken.username };
         const response:any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;
+        console.log(this.loggedIn)
       } catch (error) {
         alert(error.error["message"]);
         this.router.navigate([""]);

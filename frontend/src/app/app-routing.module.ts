@@ -9,6 +9,7 @@ import { AdministratorComponent } from './administrator/administrator.component'
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
+  { path: "test", component: TestRouteComponent },
   { path: "register", component: RegisterComponent },
   { path: "ucesnik", component: UcesnikComponent },
   { path: "organizator", component: OrganizatorComponent },

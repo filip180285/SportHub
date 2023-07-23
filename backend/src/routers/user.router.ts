@@ -1,5 +1,7 @@
 import express from 'express';
 import { UserController } from '../controllers/user.controller';
+import { verifyTokenMiddleware } from '../middleware/middleware';
+
 const userRouter = express.Router();
 const multer = require('multer');
 
@@ -35,11 +37,17 @@ userRouter.route("/addPicture").post(upload.single("file"), (req, res) =>
 );
 
 userRouter.route('/getUser').post(
+  verifyTokenMiddleware(["ucesnik","organizator","administrator"]),
   (req, res) => new UserController().getUser(req, res)
 )
 
 userRouter.route("/getUserPicture").get(
   (req, res) => new UserController().getUserPicture(req, res)
+);
+
+userRouter.route("/getAllUsers").get(
+  verifyTokenMiddleware(["administrator"]),
+  (req, res) => new UserController().getAllUsers(req, res)
 );
 
 export default userRouter;

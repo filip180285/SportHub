@@ -19,7 +19,7 @@ const verifyTokenMiddleware = (allowedUserTypes) => {
             if (!allowedUserTypes.includes(role)) {
                 return res.status(401).json({ message: "Nemate pristup ovoj usluzi!" });
             }
-            // If token is valid and user is authorized, proceed to the next middleware or route handler
+            // ako je sve u redu, obraditi zahtev
             next();
         }
         catch (error) {
@@ -28,4 +28,4 @@ const verifyTokenMiddleware = (allowedUserTypes) => {
     };
 };
 exports.verifyTokenMiddleware = verifyTokenMiddleware;
-//# sourceMappingURL=utility.js.map
+//# sourceMappingURL=middleware.js.map

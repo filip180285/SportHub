@@ -1,7 +1,6 @@
 import * as express from 'express';
 import User from '../models/user';
-import { secretKey } from './utility';
-import { Utility } from './utility';
+import { secretKey } from '../middleware/middleware';
 const path = require("path");
 const fs = require('fs');
 const bcrypt = require('bcrypt');
@@ -140,49 +139,69 @@ export class UserController {
         }
     }
 
+    /**
+    * Dohvatanje korisnika.
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat odgovarajucom porukom
+    */
     getUser = (req: express.Request, res: express.Response) => {
-        const token: string = req.headers.authorization?.split(' ')[1] || '';
-        const allowedUserTypes: string[] = ["ucesnik", "organizator", "administrator"];
-        const statusCode = Utility.verifyToken(token, allowedUserTypes);
-
-        if (statusCode == 400) { // zahtev bez tokena
-            return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
-        } else if (statusCode == 401) {  // pogresna rola
-            return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
-        } else if (statusCode == 403) { // token istekao
-            return res.status(statusCode).json({ message: "Vaša sesija je istekla! Prijavite se ponovo!" });
-        }
-
         const username = req.body.username;
-        console.log(username)
         User.findOne({ "username": username }, (err, user) => {
-            if (err) console.log(err);
-            else res.json(user)
-        })
+            if (err) {
+                return res.status(400).json({ "message": "Greška!" });
+            }
+            else {
+                const { _id, id, password, ...userData } = user._doc;
+                res.json(userData);
+            }
+        });
     }
 
-    getUserPicture = (req, res) => {
+    /**
+    * Dohvatanje profilne slike korisnika
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} Profilna slika korisnika
+    */
+    getUserPicture = (req, res) => { // ok
         res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
     };
 
-    test = async (req: express.Request, res: express.Response) => { // ok
+    /**
+    * Dohvatanje svih korisnika.
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat sa nizom svih korisnika
+    */
+    getAllUsers = (req: express.Request, res: express.Response) => { // ok
+        User.find({ type: { $ne: "administrator" } }, { "_id": 0, "id": 0, "password": 0 }, (err, users) => {
+            if (err) {
+                return res.status(400).json({ "message": "Greška!" });
+            }
+            else res.json(users);
+        });
+    };
 
+    test = async (req: express.Request, res: express.Response) => { // ok
+        const username = req.body.username;
+        //console.log(username)
+        User.findOne({ "username": "jovica" }, (err, user) => {
+            if (err) {
+                return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
+            }
+            else {
+                // Exclude the 'password' field from the 'user' object
+                const { password, email, ...userData } = user._doc;
+                //console.log(user);
+                console.log(userData);
+                // Send all the other fields in a new object
+                res.json(userData);
+            }
+        });
     }
 
-    testJWT = async (req: express.Request, res: express.Response) => { // ok
-        const token: string = req.headers.authorization?.split(' ')[1] || '';
-        const allowedUserTypes: string[] = ['organizator', 'admin'];
-        const statusCode = Utility.verifyToken(token, allowedUserTypes);
-
-        if (statusCode == 400) { // zahtev bez tokena
-            return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
-        } else if (statusCode == 401) {  // pogresna rola
-            return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
-        } else if (statusCode == 403) { // token istekao
-            return res.status(statusCode).json({ message: "Istekao token!" });
-        }
-
-        return res.status(statusCode).json({ message: "SVE OK!" });
+    testJWT = async (req: express.Request, res: express.Response) => {
 
     }
 }
