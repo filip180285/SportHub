@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit {
   constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
+    sessionStorage.clear();
     // poruka pri ucitavanju stranice za registraciju
     setTimeout(() => {
       alert("Sva polja osim izbora profilne slike(Choose file polje) su obavezna!" + "\n"

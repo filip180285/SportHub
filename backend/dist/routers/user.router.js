@@ -23,5 +23,7 @@ userRouter.route("/testJWT").post(// testiranje
 userRouter.route('/login').post((req, res) => new user_controller_1.UserController().login(req, res));
 userRouter.route("/register").post((req, res) => new user_controller_1.UserController().register(req, res));
 userRouter.route("/addPicture").post(upload.single("file"), (req, res) => new user_controller_1.UserController().addPicture(req, res));
+userRouter.route('/getUser').post((req, res) => new user_controller_1.UserController().getUser(req, res));
+userRouter.route("/getUserPicture").get((req, res) => new user_controller_1.UserController().getUserPicture(req, res));
 exports.default = userRouter;
 //# sourceMappingURL=user.router.js.map

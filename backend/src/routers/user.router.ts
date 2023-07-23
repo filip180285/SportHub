@@ -34,4 +34,12 @@ userRouter.route("/addPicture").post(upload.single("file"), (req, res) =>
   new UserController().addPicture(req, res)
 );
 
+userRouter.route('/getUser').post(
+  (req, res) => new UserController().getUser(req, res)
+)
+
+userRouter.route("/getUserPicture").get(
+  (req, res) => new UserController().getUserPicture(req, res)
+);
+
 export default userRouter;

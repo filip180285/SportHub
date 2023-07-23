@@ -12,10 +12,10 @@ export class Utility {
         try {
             // verifikacija tokena
             const decodedToken: any = jwt.verify(token, secretKey);
-            const userType = decodedToken.userType;
+            const role = decodedToken.role;
 
             // provera da li je odgovarajuca rola
-            if (!allowedUserTypes.includes(userType)) {
+            if (!allowedUserTypes.includes(role)) {
                 return 401; // data rola nema pristup
             }
 

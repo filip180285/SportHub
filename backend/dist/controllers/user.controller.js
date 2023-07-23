@@ -137,6 +137,32 @@ class UserController {
                 });
             }
         };
+        this.getUser = (req, res) => {
+            var _a;
+            const token = ((_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1]) || '';
+            const allowedUserTypes = ["ucesnik", "organizator", "administrator"];
+            const statusCode = utility_2.Utility.verifyToken(token, allowedUserTypes);
+            if (statusCode == 400) { // zahtev bez tokena
+                return res.status(statusCode).json({ message: "Nema tokena u zaglavlju!" });
+            }
+            else if (statusCode == 401) { // pogresna rola
+                return res.status(statusCode).json({ message: "Nemate pristup ovoj usluzi!" });
+            }
+            else if (statusCode == 403) { // token istekao
+                return res.status(statusCode).json({ message: "Vaša sesija je istekla! Prijavite se ponovo!" });
+            }
+            const username = req.body.username;
+            console.log(username);
+            user_1.default.findOne({ "username": username }, (err, user) => {
+                if (err)
+                    console.log(err);
+                else
+                    res.json(user);
+            });
+        };
+        this.getUserPicture = (req, res) => {
+            res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
+        };
         this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
         });
         this.testJWT = (req, res) => __awaiter(this, void 0, void 0, function* () {

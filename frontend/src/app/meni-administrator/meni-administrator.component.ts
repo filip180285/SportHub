@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-meni-administrator',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MeniAdministratorComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  /**
+  * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
+  */
+  logout(): void {
+    sessionStorage.clear();
+    this.router.navigate([""]);
   }
 
 }

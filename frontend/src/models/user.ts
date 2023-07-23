@@ -8,4 +8,5 @@ export class User {
     type: string;
     status: string;
     phone: string;
+    picture: string;
 }
