@@ -5,6 +5,7 @@ import { UserService } from 'src/services/user.service';
 
 import jwt_decode from "jwt-decode";
 import { lastValueFrom } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-header-logged',
@@ -13,7 +14,7 @@ import { lastValueFrom } from 'rxjs';
 })
 export class HeaderLoggedComponent implements OnInit {
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private toastr:ToastrService) { }
 
   loggedIn: User;
 
@@ -30,7 +31,7 @@ export class HeaderLoggedComponent implements OnInit {
         this.loggedIn = response;
         console.log(this.loggedIn)
       } catch (error) {
-        alert(error.error["message"]);
+        this.toastr.error("", error.error["message"], {positionClass: "toast-top-center"});
         this.router.navigate([""]);
       }
     }

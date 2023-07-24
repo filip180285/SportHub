@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
 import jwt_decode from "jwt-decode";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
    * @param api API service to inject
    * @param router Angular Router to inject
    */
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private toastr:ToastrService) { }
 
   ngOnInit(): void {
     sessionStorage.clear();
@@ -31,7 +32,7 @@ export class LoginComponent implements OnInit {
    */
   async login(): Promise<void> {
     if (this.username == "" || this.password == "") {
-      alert('Unesite korisničko ime i lozinku!');
+      this.toastr.error("","Unesite kredencijale!" );
       return;
     }
     // poziv ka backend-u sa kredencijalima
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit {
       const decodedToken: any = jwt_decode(response["token"]);
       this.router.navigate([`/${decodedToken.role}`]);
     } catch (error) {
-      alert(error.error["message"])
+      this.toastr.error("", error.error["message"]);
     }
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
@@ -15,7 +16,7 @@ export class RegisterComponent implements OnInit {
    * @param api API service to inject
    * @param router Angular Router to inject
    */
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private toastr:ToastrService) { }
 
   ngOnInit(): void {
     sessionStorage.clear();
@@ -58,7 +59,7 @@ export class RegisterComponent implements OnInit {
     const fileExtension = this.picture.name.slice(this.picture.name.lastIndexOf('.')).toLowerCase();
 
     if (!allowedExtensions.includes(fileExtension)) {
-      alert("Izaberite fajl sa validnom ekstenzijom (.png, .jpg, .jpeg).");
+      this.toastr.error("", "Izaberite fajl sa validnom ekstenzijom (.png, .jpg, .jpeg).");
       this.picture = null;
     }
   }
@@ -68,19 +69,19 @@ export class RegisterComponent implements OnInit {
     if (this.name == "" || this.username == "" || this.password == "" ||
       this.lastname == "" || this.phone == "" || this.email == "" ||
       this.type == "") {
-      alert("Obavezna polja su ime, prezime , korisničko ime, lozinka, telefon, tip i mejl!");
+      this.toastr.error("", "Obavezna polja su ime, prezime , korisničko ime, lozinka, telefon, tip i mejl!");
       return false;
     }
 
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
-      alert("Broj telefona nije u dobrom formatu!");
+      this.toastr.error("", "Broj telefona nije u dobrom formatu!");
       return false;
     }
 
     // provera da li je mejl u dobrom formatu
     if (/^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$/.test(this.email) == false) {
-      alert("Mejl nije u dobrom formatu!");
+      this.toastr.error("", "Mejl nije u dobrom formatu!");
       return false;
     }
 
@@ -88,7 +89,7 @@ export class RegisterComponent implements OnInit {
     const MAX_LEN: number = 20;
     if (this.name.length > MAX_LEN || this.lastname.length > MAX_LEN ||
       this.username.length > MAX_LEN || this.password.length > MAX_LEN) {
-      alert("Polja ime, prezime, korisničko ime i lozinka moraju biti duzine do 20 karaktera!");
+      this.toastr.error("", "Polja ime, prezime, korisničko ime i lozinka moraju biti dužine do 20 karaktera!");
       return false;
     }
     return true;
@@ -120,11 +121,11 @@ export class RegisterComponent implements OnInit {
         const responsePicture = await lastValueFrom(this.userService.addPicture(formData));
       }
 
-      alert(response["message"]);
+      this.toastr.success("", response["message"], { positionClass:"toast-top-center"});
       // preusmeravanje na stranicu za prijavu
       this.router.navigate([""]);
     } catch (error: any) {
-      alert(error.error.message);
+      this.toastr.error("", error.error.message);
     }
   }
 

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-test-route',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TestRouteComponent implements OnInit {
 
-  constructor() { }
+  constructor(private toastr:ToastrService,  private router: Router) { }
 
   ngOnInit(): void {
+    //alert("aas")
+    //sessionStorage.clear();
   }
 
+  prikazi(){
+    this.toastr.error("", "Uspeh")
+    //this.router.navigate([""]);
+  }
 }

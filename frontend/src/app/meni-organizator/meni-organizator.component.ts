@@ -5,6 +5,7 @@ import jwt_decode from "jwt-decode";
 import { User } from 'src/models/user';
 import { lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-meni-organizator',
@@ -15,7 +16,7 @@ export class MeniOrganizatorComponent implements OnInit {
 
   loggedIn: User;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -36,7 +37,7 @@ export class MeniOrganizatorComponent implements OnInit {
           this.loggedIn = response;
         }
       } catch (error) {
-        alert(error.error["message"]);
+        this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
         this.router.navigate([""]);
       }
     }
