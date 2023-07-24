@@ -119,7 +119,7 @@ class UserController {
         * Dodavanje i preimenovanje profilne slike za novog korisnika pri registraciji.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-        * @returns {Object} JSON objekat odgovarajucom porukom
+        * @returns {Object} JSON objekat sa odgovarajucom porukom
         */
         this.addPicture = (req, res) => {
             const file = req.file;
@@ -151,7 +151,7 @@ class UserController {
         * Dohvatanje korisnika.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-        * @returns {Object} JSON objekat odgovarajucom porukom
+        * @returns {Object} JSON objekat sa odgovarajucom porukom
         */
         this.getUser = (req, res) => {
             const username = req.body.username;
@@ -175,18 +175,79 @@ class UserController {
             res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
         };
         /**
-        * Dohvatanje svih korisnika.
+        * Dohvatanje svih ucesnika.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-        * @returns {Object} JSON objekat sa nizom svih korisnika
+        * @returns {Object} JSON objekat sa nizom svih ucesnika
         */
-        this.getAllUsers = (req, res) => {
-            user_1.default.find({ type: { $ne: "administrator" } }, { "_id": 0, "id": 0, "password": 0 }, (err, users) => {
+        this.getAllParticipants = (req, res) => {
+            user_1.default.find({ "type": "ucesnik" }, { "_id": 0, "id": 0, "password": 0 })
+                .sort({ "status": 1, "username": 1 })
+                .exec((err, organizers) => {
+                if (err) {
+                    return res.status(400).json({ "message": "Greška!" });
+                }
+                else {
+                    res.json(organizers);
+                }
+            });
+        };
+        /**
+        * Dohvatanje svih organizatora.
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat sa nizom svih organizatora
+        */
+        this.getAllOrganisers = (req, res) => {
+            user_1.default.find({ "type": "organizator" }, { "_id": 0, "id": 0, "password": 0 })
+                .sort({ "status": 1, "username": 1 })
+                .exec((err, organizers) => {
+                if (err) {
+                    return res.status(400).json({ "message": "Greška!" });
+                }
+                else {
+                    res.json(organizers);
+                }
+            });
+        };
+        /**
+        * Promena statusa korinika na neaktivan.
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat sa odgovarajucom porukom
+        */
+        this.deleteUser = (req, res) => {
+            const username = req.body.username;
+            user_1.default.collection.updateOne({ 'username': username }, { $set: { status: "neaktivan" } }, (err, success) => {
                 if (err) {
                     return res.status(400).json({ "message": "Greška!" });
                 }
                 else
-                    res.json(users);
+                    res.json({ "message": "Korisnik je obrisan!" });
+            });
+        };
+        /**
+       * Azuriranje podataka korisnika.
+       * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+       * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+       * @returns {Object} JSON objekat sa odgovarajucom porukom
+       */
+        this.updateUser = (req, res) => {
+            const username = req.body.username;
+            const phone = req.body.phone;
+            const email = req.body.email;
+            user_1.default.collection.updateOne({ 'username': username }, {
+                $set: {
+                    "phone": phone,
+                    "email": email
+                }
+            }, (err, success) => {
+                if (err) {
+                    return res.status(400).json({ "message": "Greška!" });
+                }
+                else {
+                    res.json({ message: "Korisnik je ažuriran!" });
+                }
             });
         };
         this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -205,8 +266,6 @@ class UserController {
                     res.json(userData);
                 }
             });
-        });
-        this.testJWT = (req, res) => __awaiter(this, void 0, void 0, function* () {
         });
     }
 }

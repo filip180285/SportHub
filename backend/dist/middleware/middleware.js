@@ -23,7 +23,7 @@ const verifyTokenMiddleware = (allowedUserTypes) => {
             next();
         }
         catch (error) {
-            return res.status(403).json({ message: "Vaša sesija je istekla! Prijavite se ponovo!" });
+            return res.status(403).json({ message: "Vaša sesija je istekla!" });
         }
     };
 };

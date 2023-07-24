@@ -20,6 +20,9 @@ import { HeaderLoggedComponent } from './header-logged/header-logged.component';
 import { MeniUcesnikComponent } from './meni-ucesnik/meni-ucesnik.component';
 import { MeniOrganizatorComponent } from './meni-organizator/meni-organizator.component';
 import { MeniAdministratorComponent } from './meni-administrator/meni-administrator.component';
+import { AdminOrganizatoriComponent } from './admin-organizatori/admin-organizatori.component';
+import { AdminProfilComponent } from './admin-profil/admin-profil.component';
+import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,10 @@ import { MeniAdministratorComponent } from './meni-administrator/meni-administra
     HeaderLoggedComponent,
     MeniUcesnikComponent,
     MeniOrganizatorComponent,
-    MeniAdministratorComponent
+    MeniAdministratorComponent,
+    AdminOrganizatoriComponent,
+    AdminProfilComponent,
+    AdminAzuriranjeComponent
   ],
   imports: [
     BrowserModule,

@@ -5,15 +5,15 @@ import { User } from 'src/models/user';
 import { UserService } from 'src/services/user.service';
 
 @Component({
-  selector: 'app-administrator',
-  templateUrl: './administrator.component.html',
-  styleUrls: ['./administrator.component.css']
+  selector: 'app-admin-organizatori',
+  templateUrl: './admin-organizatori.component.html',
+  styleUrls: ['./admin-organizatori.component.css']
 })
-export class AdministratorComponent implements OnInit {
+export class AdminOrganizatoriComponent implements OnInit {
 
-  participants: User[] = [];
+  organisers: User[] = [];
 
-  /**
+    /**
    * Injects the API service and Angular Router.
    * @param userService API service to inject
    * @param router Angular Router to inject
@@ -27,11 +27,10 @@ export class AdministratorComponent implements OnInit {
     const token: string = sessionStorage.getItem("token");
     if (token != null) {
       try {
-        const response: any = await lastValueFrom(this.userService.getAllParticipants(token));
-        this.participants = response;
+        const response: any = await lastValueFrom(this.userService.getAllOrganisers(token));
+        this.organisers = response;
       } catch (error) {
       }
     }
   }
-
 }

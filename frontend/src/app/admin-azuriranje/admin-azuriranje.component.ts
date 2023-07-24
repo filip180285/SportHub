@@ -1,45 +1,52 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
+import { User } from 'src/models/user';
 import { UserService } from 'src/services/user.service';
 
+import jwt_decode from "jwt-decode";
+
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  selector: 'app-admin-azuriranje',
+  templateUrl: './admin-azuriranje.component.html',
+  styleUrls: ['./admin-azuriranje.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class AdminAzuriranjeComponent implements OnInit {
 
   /**
- * Injects the API service and Angular Router.
- * @param userService API service to inject
- * @param router Angular Router to inject
- * @param toastr Toastr ToastrService to inject
- */
+     * Injects the API service and Angular Router.
+     * @param userService API service to inject
+     * @param router Angular Router to inject
+     * @param toastr Toastr ToastrService to inject
+     */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
+
+  loggedIn: User;
+  username: string = "";
+  email: string = "";
+  phone: string = "";
+
+  picture: File = null;
 
   /**
    * Poziva se pri ucitavanju komponente.
    */
-  ngOnInit(): void {
-    sessionStorage.clear();
-    // poruka pri ucitavanju stranice za registraciju
-    setTimeout(() => {
-      alert("Sva polja osim izbora profilne slike(Choose file polje) su obavezna!" + "\n"
-        + "Polja ime, prezime, korisničko ime i lozinka moraju biti duzine do 20 karaktera!");
-    }, 100);
+  async ngOnInit(): Promise<void> {
+    const token: string = sessionStorage.getItem("token");
+    if (token != null) {
+      try {
+        const decodedToken: any = jwt_decode(token);
+        const data: Object = { username: decodedToken.username };
+        const response: any = await lastValueFrom(this.userService.getUser(data, token));
+        this.loggedIn = response;
+        this.email = this.loggedIn.email;
+        this.phone = this.loggedIn.phone;
+        this.username = this.loggedIn.username;
+      } catch (error) {
+      }
+    }
   }
-
-  username: string = "";
-  password: string = "";
-  name: string = "";
-  lastname: string = "";
-  email: string = "";
-  phone: string = "";
-  type: string = "";
-
-  picture: File = null;
 
   /**
    * Obrada dogadjaja select-ovanja fajla.
@@ -69,14 +76,6 @@ export class RegisterComponent implements OnInit {
   }
 
   checkInputValues(): boolean {
-    // provera da li su unete sve vrednosti
-    if (this.name == "" || this.username == "" || this.password == "" ||
-      this.lastname == "" || this.phone == "" || this.email == "" ||
-      this.type == "") {
-      this.toastr.error("", "Obavezna polja su ime, prezime , korisničko ime, lozinka, telefon, tip i mejl!");
-      return false;
-    }
-
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
       this.toastr.error("", "Broj telefona nije u dobrom formatu!");
@@ -89,35 +88,28 @@ export class RegisterComponent implements OnInit {
       return false;
     }
 
-    // provera da li su ime, prezime, korisnicko ime i lozinka duzine do 20 karaktera
-    const MAX_LEN: number = 20;
-    if (this.name.length > MAX_LEN || this.lastname.length > MAX_LEN ||
-      this.username.length > MAX_LEN || this.password.length > MAX_LEN) {
-      this.toastr.error("", "Polja ime, prezime, korisničko ime i lozinka moraju biti dužine do 20 karaktera!");
-      return false;
-    }
     return true;
   }
 
   /**
-  * Obrada submit-a forme za registraciju.
+  * Obrada submit-a forme za azuriranje korisnickih podataka.
   */
-  async sendRegistrationRequest(): Promise<void> {
+  async updateUserInfo(): Promise<void> {
     // provera da li su sve unete vrednosti validne
     if (this.checkInputValues() == false) { return; }
     // podaci za slanje na backend
+    alert(this.username);
+    alert(this.email);
+    alert(this.phone);
     const data = {
-      name: this.name,
-      lastname: this.lastname,
       username: this.username,
-      password: this.password,
       email: this.email,
-      type: this.type,
       phone: this.phone
     };
 
     try {
-      const response = await lastValueFrom(this.userService.register(data));
+      const token: string = sessionStorage.getItem("token");
+      const response = await lastValueFrom(this.userService.updateUser(data, token));
       if (this.picture != null) {
         const formData = new FormData();
         formData.append('file', this.picture);
@@ -126,11 +118,11 @@ export class RegisterComponent implements OnInit {
       }
 
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
-      // preusmeravanje na stranicu za prijavu
-      this.router.navigate([""]);
+      // preusmeravanje na stranicu sa pregledom profila
+      this.router.navigate(["adminProfil"]);
     } catch (error: any) {
       this.toastr.error("", error.error.message);
+      this.router.navigate([""]);
     }
   }
-
 }

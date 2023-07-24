@@ -20,10 +20,6 @@ userRouter.route("/test").post( // testiranje
   (req, res) => new UserController().test(req, res)
 );
 
-userRouter.route("/testJWT").post( // testiranje
-  (req, res) => new UserController().testJWT(req, res)
-);
-
 userRouter.route('/login').post(
   (req, res) => new UserController().login(req, res)
 );
@@ -37,7 +33,7 @@ userRouter.route("/addPicture").post(upload.single("file"), (req, res) =>
 );
 
 userRouter.route('/getUser').post(
-  verifyTokenMiddleware(["ucesnik","organizator","administrator"]),
+  verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new UserController().getUser(req, res)
 )
 
@@ -45,9 +41,24 @@ userRouter.route("/getUserPicture").get(
   (req, res) => new UserController().getUserPicture(req, res)
 );
 
-userRouter.route("/getAllUsers").get(
+userRouter.route("/getAllParticipants").get(
   verifyTokenMiddleware(["administrator"]),
-  (req, res) => new UserController().getAllUsers(req, res)
+  (req, res) => new UserController().getAllParticipants(req, res)
 );
+
+userRouter.route("/getAllOrganisers").get(
+  verifyTokenMiddleware(["administrator"]),
+  (req, res) => new UserController().getAllOrganisers(req, res)
+);
+
+userRouter.route("/deleteUser").post(
+  verifyTokenMiddleware(["administrator"]),
+  (req, res) => new UserController().deleteUser(req, res)
+);
+
+userRouter.route('/updateUser').post(
+  verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
+  (req, res) => new UserController().updateUser(req, res)
+)
 
 export default userRouter;

@@ -14,6 +14,7 @@ export class TestRouteComponent implements OnInit {
   ngOnInit(): void {
     //alert("aas")
     //sessionStorage.clear();
+    alert("filip");
   }
 
   prikazi(){

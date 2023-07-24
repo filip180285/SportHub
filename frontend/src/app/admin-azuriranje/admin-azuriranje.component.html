@@ -1,0 +1,25 @@
+<app-header-logged></app-header-logged>
+<app-meni-administrator></app-meni-administrator>
+
+<div class="row sredina">
+    <div class="col-sm-6 offset-3 text-center boja">
+        <form class="forma2">
+            <h2>Ažuriraj profil</h2>
+            <img src="../../assets/login.png">
+            <br><br>
+            <div class="form-field">
+                <input type="text" id="mejl" placeholder="Mejl adresa..." name='mejl' [(ngModel)]='email'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="telefon" placeholder="Kontakt telefon(+381 xx xxxxxxx)..." name='telefon'
+                    [(ngModel)]='phone'>
+            </div>
+            <div class="form-field">
+                <input type="file" id="slika" placeholder="Slika(opciono)..." name="image"
+                    (change)="selectImage($event)">
+            </div>
+            <button id="regBtn" (click)="updateUserInfo()" class="btn btn-secondary dugmeReg">Ažuriraj</button>
+            <br><br>
+        </form>
+    </div>
+</div>

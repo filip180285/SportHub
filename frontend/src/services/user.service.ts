@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from 'src/models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -47,22 +46,55 @@ export class UserService {
   * Slanje POST zahteva za dohvatanje korisnika.
   * @param {Object} data - Objekat sa poljima sa korisnickim imenom
   * @param {string} token - Token korisnika za autorizaciju
-  * @returns {Observable<User>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a."
+  * @returns {Observable<User>} Observable korisnika, sa telom kao objektom parsiranim iz JSON-a."
  */
   getUser(data: Object, token: string) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(`${this.uri}/getUser`, data, { headers });
   }
 
-    /**
-  * Slanje GET zahteva za dohvatanje svih korisnika.
+  /**
+  * Slanje GET zahteva za dohvatanje svih ucesnika.
   * @param {string} token - Token korisnika za autorizaciju
-  * @returns {Observable<User>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a."
- */
-    getAllUsers(token: string) {
-      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-      return this.http.get(`${this.uri}/getAllUsers`, { headers });
-    }
+  * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+  */
+  getAllParticipants(token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.get(`${this.uri}/getAllParticipants`, { headers });
+  }
+
+  /**
+  * Slanje GET zahteva za dohvatanje svih organizatora.
+  * @param {string} token - Token korisnika za autorizaciju
+  * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+  */
+  getAllOrganisers(token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.get(`${this.uri}/getAllOrganisers`, { headers });
+  }
+
+  /**
+   * Slanje POST zahteva za brisanje korisnika.
+   * @param {Object} data - Objekat sa poljima sa korisnickim imenom
+   * @param {string} token - Token korisnika za autorizaciju
+   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a."
+  */
+  deleteUser(data: Object, token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(`${this.uri}/deleteUser`, data, { headers });
+  }
+
+  /**
+   * Slanje POST zahteva za azuriranje informacija korisnika.
+   * @param {Object} data - Objekat sa poljima sa novim informacijama korisnika
+   * @param {string} token - Token korisnika za autorizaciju
+   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a."
+  */
+  updateUser(data: Object, token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(`${this.uri}/updateUser`, data, { headers });
+  }
+
 
 
   //test

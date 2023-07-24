@@ -6,14 +6,20 @@ import { TestRouteComponent } from './test-route/test-route.component';
 import { UcesnikComponent } from './ucesnik/ucesnik.component';
 import { OrganizatorComponent } from './organizator/organizator.component';
 import { AdministratorComponent } from './administrator/administrator.component';
+import { AdminOrganizatoriComponent } from './admin-organizatori/admin-organizatori.component';
+import { AdminProfilComponent } from './admin-profil/admin-profil.component';
+import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.component';
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
   { path: "test", component: TestRouteComponent },
-  { path: "register", component: RegisterComponent },
+  { path: "registracija", component: RegisterComponent },
   { path: "ucesnik", component: UcesnikComponent },
   { path: "organizator", component: OrganizatorComponent },
-  { path: "administrator", component: AdministratorComponent }
+  { path: "administrator", component: AdministratorComponent },
+  { path: "adminOrganizatori", component: AdminOrganizatoriComponent },
+  { path: "adminProfil", component: AdminProfilComponent },
+  { path: "adminAzuriranje", component: AdminAzuriranjeComponent }
 ];
 
 @NgModule({

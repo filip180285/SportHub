@@ -15,11 +15,15 @@ export class LoginComponent implements OnInit {
 
   /**
    * Injects the API service and Angular Router.
-   * @param api API service to inject
+   * @param userService API service to inject
    * @param router Angular Router to inject
+   * @param toastr Toastr ToastrService to inject
    */
-  constructor(private userService: UserService, private router: Router, private toastr:ToastrService) { }
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  /**
+   * Poziva se pri ucitavanju komponente, cisti session storage.
+   */
   ngOnInit(): void {
     sessionStorage.clear();
   }
@@ -32,7 +36,7 @@ export class LoginComponent implements OnInit {
    */
   async login(): Promise<void> {
     if (this.username == "" || this.password == "") {
-      this.toastr.error("","Unesite kredencijale!" );
+      this.toastr.error("", "Unesite kredencijale!");
       return;
     }
     // poziv ka backend-u sa kredencijalima

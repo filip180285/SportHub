@@ -19,13 +19,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 userRouter.route("/test").post(// testiranje
 (req, res) => new user_controller_1.UserController().test(req, res));
-userRouter.route("/testJWT").post(// testiranje
-(req, res) => new user_controller_1.UserController().testJWT(req, res));
 userRouter.route('/login').post((req, res) => new user_controller_1.UserController().login(req, res));
 userRouter.route("/register").post((req, res) => new user_controller_1.UserController().register(req, res));
 userRouter.route("/addPicture").post(upload.single("file"), (req, res) => new user_controller_1.UserController().addPicture(req, res));
 userRouter.route('/getUser').post((0, middleware_1.verifyTokenMiddleware)(["ucesnik", "organizator", "administrator"]), (req, res) => new user_controller_1.UserController().getUser(req, res));
 userRouter.route("/getUserPicture").get((req, res) => new user_controller_1.UserController().getUserPicture(req, res));
-userRouter.route("/getAllUsers").get((0, middleware_1.verifyTokenMiddleware)(["administrator"]), (req, res) => new user_controller_1.UserController().getAllUsers(req, res));
+userRouter.route("/getAllParticipants").get((0, middleware_1.verifyTokenMiddleware)(["administrator"]), (req, res) => new user_controller_1.UserController().getAllParticipants(req, res));
+userRouter.route("/getAllOrganisers").get((0, middleware_1.verifyTokenMiddleware)(["administrator"]), (req, res) => new user_controller_1.UserController().getAllOrganisers(req, res));
+userRouter.route("/deleteUser").post((0, middleware_1.verifyTokenMiddleware)(["administrator"]), (req, res) => new user_controller_1.UserController().deleteUser(req, res));
+userRouter.route('/updateUser').post((0, middleware_1.verifyTokenMiddleware)(["ucesnik", "organizator", "administrator"]), (req, res) => new user_controller_1.UserController().updateUser(req, res));
 exports.default = userRouter;
 //# sourceMappingURL=user.router.js.map

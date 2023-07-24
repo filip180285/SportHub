@@ -3,7 +3,7 @@
     
     <div class="row sredina">
         <div class="col-sm-12 text-center">
-            <h3 id="naslov">Učesnici</h3>
+            <h3 id="naslov">Organizatori</h3>
         </div>
     </div>
     
@@ -15,12 +15,12 @@
                 <th>Prezime</th>
                 <th>Status</th>
                 <th>Detalji</th>
-                <tr *ngFor="let user of participants">
+                <tr *ngFor="let user of organisers">
                     <td>{{user.username}}</td>
                     <td>{{user.name}}</td>
                     <td>{{user.lastname}}</td>
                     <td>{{user.status}}</td>
-                    <td><a routerLink="../pregledProfila">LINK</a></td>
+                    <td><a routerLink="../administrator">LINK</a></td>
                 </tr>
             </table>
         </div>

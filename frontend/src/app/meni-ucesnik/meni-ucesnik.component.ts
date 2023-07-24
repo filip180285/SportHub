@@ -16,14 +16,20 @@ export class MeniUcesnikComponent implements OnInit {
 
   loggedIn: User;
 
+    /**
+   * Injects the API service and Angular Router.
+   * @param userService API service to inject
+   * @param router Angular Router to inject
+   * @param toastr Toastr ToastrService to inject
+   */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  /**
+   * Poziva se pri ucitavanju komponente.
+   */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token == null) { // ako korisnik nije ulogovan, vrati ga na pocetnu stranu
-      this.router.navigate([""]);
-    }
-    else {
+    if (token != null) {
       try {
         const decodedToken: any = jwt_decode(token);
         // provera da li ucesnik pristupa stranici i preusmeravanje
@@ -37,8 +43,6 @@ export class MeniUcesnikComponent implements OnInit {
           this.loggedIn = response;
         }
       } catch (error) {
-        this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
-        this.router.navigate([""]);
       }
     }
   }
