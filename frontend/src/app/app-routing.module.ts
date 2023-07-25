@@ -9,6 +9,7 @@ import { AdministratorComponent } from './administrator/administrator.component'
 import { AdminOrganizatoriComponent } from './admin-organizatori/admin-organizatori.component';
 import { AdminProfilComponent } from './admin-profil/admin-profil.component';
 import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.component';
+import { AdminPrikazProfilaComponent } from './admin-prikaz-profila/admin-prikaz-profila.component';
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: "administrator", component: AdministratorComponent },
   { path: "adminOrganizatori", component: AdminOrganizatoriComponent },
   { path: "adminProfil", component: AdminProfilComponent },
-  { path: "adminAzuriranje", component: AdminAzuriranjeComponent }
+  { path: "adminAzuriranje", component: AdminAzuriranjeComponent },
+  { path: "prikazProfila/:username", component: AdminPrikazProfilaComponent }
 ];
 
 @NgModule({

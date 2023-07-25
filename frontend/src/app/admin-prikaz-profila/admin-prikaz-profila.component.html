@@ -1,0 +1,46 @@
+<app-header-logged></app-header-logged>
+<app-meni-administrator></app-meni-administrator>
+
+<div class="row sredina">
+    <div class="col-sm-12 text-center">
+        <img class="rounded-circle velicina" src="http://localhost:4000/users/getUserPicture/?image={{user.picture}}"
+            *ngIf="user.picture != ''">
+        <img class="rounded-circle velicina" src="../../assets/unknownuser.png" *ngIf="user.picture == ''">
+    </div>
+</div>
+
+<div class="row sredina">
+    <div class="col-sm-8 offset-2 text-center">
+        <table class="table table-striped table-bordered" id="tabela">
+            <tr>
+                <td><b>Ime</b></td>
+                <td>{{user.name}}</td>
+            </tr>
+            <tr>
+                <td><b>Prezime</b></td>
+                <td>{{user.lastname}}</td>
+            </tr>
+            <tr>
+                <td><b>Korisničko ime</b></td>
+                <td>{{user.username}}</td>
+            </tr>
+            <tr>
+                <td><b>Tip</b></td>
+                <td>{{user.type}}</td>
+            </tr>
+            <tr>
+                <td><b>Telefon</b></td>
+                <td>{{user.phone}}</td>
+            </tr>
+            <tr>
+                <td><b>Mejl</b></td>
+                <td>{{user.email}}</td>
+            </tr>
+            <tr>
+                <td><b>Status</b></td>
+                <td>{{user.status}}</td>
+            </tr>
+        </table>
+        <button id="btnPretraga" *ngIf="user.status == 'aktivan'" (click)="deleteUser()" class="btn btn-primary">Ukloni korisnika</button>
+    </div>
+</div>

@@ -50,6 +50,27 @@ export class MeniAdministratorComponent implements OnInit {
   }
 
   /**
+* Odlazak na pocetnu stranicu za administratora.
+*/
+  administrator(): void {
+    this.router.navigate(["administrator"]);
+  }
+
+  /**
+* Odlazak na stranicu sa pregledom organizatora.
+*/
+  organizatori(): void {
+    this.router.navigate(["adminOrganizatori"]);
+  }
+
+  /**
+  * Odlazak na stranicu sa prikazom profila.
+  */
+  profil(): void {
+    this.router.navigate(["adminProfil"]);
+  }
+
+  /**
   * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
   */
   logout(): void {

@@ -20,7 +20,7 @@
                     <td>{{user.name}}</td>
                     <td>{{user.lastname}}</td>
                     <td>{{user.status}}</td>
-                    <td><a routerLink="../administrator">LINK</a></td>
+                    <td><a [routerLink]="['/prikazProfila', user.username]">LINK</a></td>
                 </tr>
             </table>
         </div>

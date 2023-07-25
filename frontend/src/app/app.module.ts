@@ -23,6 +23,7 @@ import { MeniAdministratorComponent } from './meni-administrator/meni-administra
 import { AdminOrganizatoriComponent } from './admin-organizatori/admin-organizatori.component';
 import { AdminProfilComponent } from './admin-profil/admin-profil.component';
 import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.component';
+import { AdminPrikazProfilaComponent } from './admin-prikaz-profila/admin-prikaz-profila.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.co
     MeniAdministratorComponent,
     AdminOrganizatoriComponent,
     AdminProfilComponent,
-    AdminAzuriranjeComponent
+    AdminAzuriranjeComponent,
+    AdminPrikazProfilaComponent
   ],
   imports: [
     BrowserModule,
