@@ -28,5 +28,7 @@ userRouter.route("/getAllParticipants").get((0, middleware_1.verifyTokenMiddlewa
 userRouter.route("/getAllOrganisers").get((0, middleware_1.verifyTokenMiddleware)(["administrator"]), (req, res) => new user_controller_1.UserController().getAllOrganisers(req, res));
 userRouter.route("/deleteUser").post((0, middleware_1.verifyTokenMiddleware)(["administrator"]), (req, res) => new user_controller_1.UserController().deleteUser(req, res));
 userRouter.route('/updateUser').post((0, middleware_1.verifyTokenMiddleware)(["ucesnik", "organizator", "administrator"]), (req, res) => new user_controller_1.UserController().updateUser(req, res));
+userRouter.route('/subscribe').post((0, middleware_1.verifyTokenMiddleware)(["ucesnik"]), (req, res) => new user_controller_1.UserController().subscribe(req, res));
+userRouter.route('/unsubscribe').post((0, middleware_1.verifyTokenMiddleware)(["ucesnik"]), (req, res) => new user_controller_1.UserController().unsubscribe(req, res));
 exports.default = userRouter;
 //# sourceMappingURL=user.router.js.map

@@ -48,6 +48,13 @@ export class MeniOrganizatorComponent implements OnInit {
   }
 
   /**
+* Odlazak na pocetnu stranicu za organizatora.
+*/
+  profil(): void {
+    this.router.navigate(["organizatorProfil"]);
+  }
+
+  /**
   * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
   */
   logout(): void {

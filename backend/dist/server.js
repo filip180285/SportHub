@@ -10,6 +10,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const user_router_1 = __importDefault(require("./routers/user.router"));
 const event_router_1 = __importDefault(require("./routers/event.router"));
 const sport_router_1 = __importDefault(require("./routers/sport.router"));
+require("dotenv").config();
 // podizanje express aplikacije
 const app = (0, express_1.default)();
 // za omogucavanje komunikacije izmedju razlicitih domena
@@ -17,7 +18,7 @@ app.use((0, cors_1.default)());
 // za obradjivanje JSON objekata iz tela zahteva
 app.use(body_parser_1.default.json());
 // povezivanje sa MongoDB bazom gametime2023
-mongoose_1.default.connect('mongodb://127.0.0.1:27017/gametime2023');
+mongoose_1.default.connect(process.env.DATABASE_URL);
 const connection = mongoose_1.default.connection;
 connection.once('open', () => {
     console.log('db connection ok');

@@ -6,13 +6,19 @@ let Event = new Schema({
     id: {
         type: Number
     },
-    idOrg: { // id organizatora
+    organiser: { // username
+        type: String
+    },
+    sport: {
+        type: String
+    },
+    pollDeadline: { // rok za prijavu, podrazumevano do pocetka dana u kome se odrzava termin
         type: Number
     },
-    idSport: {
+    minParticipants: {
         type: Number
     },
-    pollDeadline: { // rok za prijavu
+    maxParticipants: {
         type: Number
     },
     dateTime: { // datum i vreme termina
@@ -21,13 +27,13 @@ let Event = new Schema({
     location: {
         type: String
     },
-    description: {
+    status: { // aktivan, zavrsen, otkazan
         type: String
     },
-    status: {
-        type: String // status poll-a
+    eventPrice: {
+        type: Number
     },
-    participationFee: {
+    pricePerUser: {
         type: Number
     },
     comments: {
@@ -35,7 +41,7 @@ let Event = new Schema({
     },
     participants: { // prijavljeni ucesnici
         type: Array
-    },
+    }
 })
 
 export default mongoose.model('Event', Event, 'events');

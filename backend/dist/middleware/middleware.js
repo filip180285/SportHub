@@ -1,9 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyTokenMiddleware = exports.secretKey = void 0;
+exports.verifyTokenMiddleware = void 0;
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-exports.secretKey = crypto.randomBytes(32).toString('hex');
 const verifyTokenMiddleware = (allowedUserTypes) => {
     return (req, res, next) => {
         var _a;
@@ -13,7 +11,7 @@ const verifyTokenMiddleware = (allowedUserTypes) => {
         }
         try {
             // verifikacija tokena
-            const decodedToken = jwt.verify(token, exports.secretKey);
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
             const role = decodedToken.role;
             // provera da li je odgovarajuca uloga
             if (!allowedUserTypes.includes(role)) {

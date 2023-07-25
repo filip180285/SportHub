@@ -11,6 +11,7 @@
 #meni a {
     color: #5F7A61;
     text-decoration: none;
+    cursor: pointer;
 }
 
 #meni a:hover {

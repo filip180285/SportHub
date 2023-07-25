@@ -6,6 +6,8 @@ import userRouter from './routers/user.router';
 import eventRouter from './routers/event.router';
 import sportRouter from './routers/sport.router';
 
+require("dotenv").config();
+
 // podizanje express aplikacije
 const app = express();
 // za omogucavanje komunikacije izmedju razlicitih domena
@@ -14,7 +16,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // povezivanje sa MongoDB bazom gametime2023
-mongoose.connect('mongodb://127.0.0.1:27017/gametime2023');
+mongoose.connect(process.env.DATABASE_URL);
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('db connection ok')

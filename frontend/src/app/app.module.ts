@@ -24,6 +24,10 @@ import { AdminOrganizatoriComponent } from './admin-organizatori/admin-organizat
 import { AdminProfilComponent } from './admin-profil/admin-profil.component';
 import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.component';
 import { AdminPrikazProfilaComponent } from './admin-prikaz-profila/admin-prikaz-profila.component';
+import { UcesnikProfilComponent } from './ucesnik-profil/ucesnik-profil.component';
+import { OrganizatorProfilComponent } from './organizator-profil/organizator-profil.component';
+import { UcesnikAzuriranjeComponent } from './ucesnik-azuriranje/ucesnik-azuriranje.component';
+import { OrganizatorAzuriranjeComponent } from './organizator-azuriranje/organizator-azuriranje.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +47,11 @@ import { AdminPrikazProfilaComponent } from './admin-prikaz-profila/admin-prikaz
     AdminOrganizatoriComponent,
     AdminProfilComponent,
     AdminAzuriranjeComponent,
-    AdminPrikazProfilaComponent
+    AdminPrikazProfilaComponent,
+    UcesnikProfilComponent,
+    OrganizatorProfilComponent,
+    UcesnikAzuriranjeComponent,
+    OrganizatorAzuriranjeComponent
   ],
   imports: [
     BrowserModule,

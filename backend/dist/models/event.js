@@ -9,13 +9,19 @@ let Event = new Schema({
     id: {
         type: Number
     },
-    idOrg: {
-        type: Number
+    organiser: {
+        type: String
     },
-    idSport: {
-        type: Number
+    sport: {
+        type: String
     },
     pollDeadline: {
+        type: Number
+    },
+    minParticipants: {
+        type: Number
+    },
+    maxParticipants: {
         type: Number
     },
     dateTime: {
@@ -24,13 +30,13 @@ let Event = new Schema({
     location: {
         type: String
     },
-    description: {
+    status: {
         type: String
     },
-    status: {
-        type: String // status poll-a
+    eventPrice: {
+        type: Number
     },
-    participationFee: {
+    pricePerUser: {
         type: Number
     },
     comments: {
@@ -38,7 +44,7 @@ let Event = new Schema({
     },
     participants: {
         type: Array
-    },
+    }
 });
 exports.default = mongoose_1.default.model('Event', Event, 'events');
 //# sourceMappingURL=event.js.map

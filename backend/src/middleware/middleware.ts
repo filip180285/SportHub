@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
 const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-
-export const secretKey = crypto.randomBytes(32).toString('hex');
 
 export const verifyTokenMiddleware = (allowedUserTypes: string[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +12,7 @@ export const verifyTokenMiddleware = (allowedUserTypes: string[]) => {
 
         try {
             // verifikacija tokena
-            const decodedToken: any = jwt.verify(token, secretKey);
+            const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
             const role = decodedToken.role;
 
             // provera da li je odgovarajuca uloga

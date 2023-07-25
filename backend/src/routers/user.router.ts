@@ -35,7 +35,7 @@ userRouter.route("/addPicture").post(upload.single("file"), (req, res) =>
 userRouter.route('/getUser').post(
   verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new UserController().getUser(req, res)
-)
+);
 
 userRouter.route("/getUserPicture").get(
   (req, res) => new UserController().getUserPicture(req, res)
@@ -59,6 +59,16 @@ userRouter.route("/deleteUser").post(
 userRouter.route('/updateUser').post(
   verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new UserController().updateUser(req, res)
-)
+);
+
+userRouter.route('/subscribe').post(
+  verifyTokenMiddleware(["ucesnik"]),
+  (req, res) => new UserController().subscribe(req, res)
+);
+
+userRouter.route('/unsubscribe').post(
+  verifyTokenMiddleware(["ucesnik"]),
+  (req, res) => new UserController().unsubscribe(req, res)
+);
 
 export default userRouter;

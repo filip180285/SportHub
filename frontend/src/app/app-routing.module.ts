@@ -10,6 +10,10 @@ import { AdminOrganizatoriComponent } from './admin-organizatori/admin-organizat
 import { AdminProfilComponent } from './admin-profil/admin-profil.component';
 import { AdminAzuriranjeComponent } from './admin-azuriranje/admin-azuriranje.component';
 import { AdminPrikazProfilaComponent } from './admin-prikaz-profila/admin-prikaz-profila.component';
+import { UcesnikProfilComponent } from './ucesnik-profil/ucesnik-profil.component';
+import { UcesnikAzuriranjeComponent } from './ucesnik-azuriranje/ucesnik-azuriranje.component';
+import { OrganizatorProfilComponent } from './organizator-profil/organizator-profil.component';
+import { OrganizatorAzuriranjeComponent } from './organizator-azuriranje/organizator-azuriranje.component';
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -21,7 +25,11 @@ const routes: Routes = [
   { path: "adminOrganizatori", component: AdminOrganizatoriComponent },
   { path: "adminProfil", component: AdminProfilComponent },
   { path: "adminAzuriranje", component: AdminAzuriranjeComponent },
-  { path: "prikazProfila/:username", component: AdminPrikazProfilaComponent }
+  { path: "prikazProfila/:username", component: AdminPrikazProfilaComponent },
+  { path: "ucesnikProfil", component: UcesnikProfilComponent },
+  { path: "ucesnikAzuriranje", component: UcesnikAzuriranjeComponent },
+  { path: "organizatorProfil", component: OrganizatorProfilComponent },
+  { path: "organizatorAzuriranje", component: OrganizatorAzuriranjeComponent }
 ];
 
 @NgModule({

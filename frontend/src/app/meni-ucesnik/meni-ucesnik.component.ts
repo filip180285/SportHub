@@ -16,12 +16,12 @@ export class MeniUcesnikComponent implements OnInit {
 
   loggedIn: User;
 
-    /**
-   * Injects the API service and Angular Router.
-   * @param userService API service to inject
-   * @param router Angular Router to inject
-   * @param toastr Toastr ToastrService to inject
-   */
+  /**
+ * Injects the API service and Angular Router.
+ * @param userService API service to inject
+ * @param router Angular Router to inject
+ * @param toastr Toastr ToastrService to inject
+ */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
   /**
@@ -45,6 +45,13 @@ export class MeniUcesnikComponent implements OnInit {
       } catch (error) {
       }
     }
+  }
+
+  /**
+* Odlazak na pocetnu stranicu za ucesnika.
+*/
+  profil(): void {
+    this.router.navigate(["ucesnikProfil"]);
   }
 
   /**

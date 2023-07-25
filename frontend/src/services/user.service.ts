@@ -95,6 +95,28 @@ export class UserService {
     return this.http.post(`${this.uri}/updateUser`, data, { headers });
   }
 
+  /**
+   * Slanje POST zahteva za subscribe-ovanje na organizatora.
+   * @param {Object} data - Objekat sa korsnickim imenima korisnika i organizatora
+   * @param {string} token - Token korisnika za autorizaciju
+   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a."
+  */
+  subscribe(data: Object, token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(`${this.uri}/subscribe`, data, { headers });
+  }
+
+  /**
+   * Slanje POST zahteva za unsubscribe-ovanje na organizatora.
+   * @param {Object} data - Objekat sa korsnickim imenima korisnika i organizatora
+   * @param {string} token - Token korisnika za autorizaciju
+   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a."
+  */
+  unsubscribe(data: Object, token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(`${this.uri}/unsubscribe`, data, { headers });
+  }
+
 
 
   //test

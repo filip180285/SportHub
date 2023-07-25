@@ -98,9 +98,6 @@ export class AdminAzuriranjeComponent implements OnInit {
     // provera da li su sve unete vrednosti validne
     if (this.checkInputValues() == false) { return; }
     // podaci za slanje na backend
-    alert(this.username);
-    alert(this.email);
-    alert(this.phone);
     const data = {
       username: this.username,
       email: this.email,
