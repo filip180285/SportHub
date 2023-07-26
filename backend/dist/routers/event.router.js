@@ -13,8 +13,6 @@ eventRouter.route("/getAllActiveEvents").get((0, middleware_1.verifyTokenMiddlew
 eventRouter.route("/getAllActiveEventsForOrganiser").get((0, middleware_1.verifyTokenMiddleware)(["organizator"]), (req, res) => new event_controller_1.EventController().getAllActiveEventsForOrganiser(req, res));
 eventRouter.route("/getAllPreviousEventsForOrganiser").get((0, middleware_1.verifyTokenMiddleware)(["organizator"]), (req, res) => new event_controller_1.EventController().getAllPreviousEventsForOrganiser(req, res));
 eventRouter.route("/newEvent").post((0, middleware_1.verifyTokenMiddleware)(["organizator"]), (req, res) => new event_controller_1.EventController().newEvent(req, res));
-eventRouter.route("/cancelEvent").post(
-//verifyTokenMiddleware(["organizator"]),
-(req, res) => new event_controller_1.EventController().cancelEvent(req, res));
+eventRouter.route("/cancelEvent").post((0, middleware_1.verifyTokenMiddleware)(["organizator"]), (req, res) => new event_controller_1.EventController().cancelEvent(req, res));
 exports.default = eventRouter;
 //# sourceMappingURL=event.router.js.map

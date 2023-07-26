@@ -218,7 +218,7 @@ export class UserController {
     deleteUser = (req: express.Request, res: express.Response) => { // ok
         const username = req.body.username;
 
-        User.collection.updateOne({ 'username': username }, { $set: { status: "neaktivan" } }, (err, success) => {
+        User.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (err, success) => {
             if (err) {
                 return res.status(400).json({ "message": "Greška pri brisanju korisnika!" });
             }
@@ -238,7 +238,7 @@ export class UserController {
         const email = req.body.email;
 
         User.collection.updateOne(
-            { 'username': username },
+            { "username": username },
             {
                 $set: {
                     "phone": phone,
@@ -269,10 +269,6 @@ export class UserController {
             // trazenje korisnika
             const participant = await User.findOne({ "username": username });
             const organizer = await User.findOne({ "username": orgUsername });
-
-            if (!participant || !organizer) {
-                return res.status(400).json({ message: 'Korisnik ili organizator nije pronađen.' });
-            }
 
             // dodavanje organizatora u ucesnikove pretplate
             if (!participant.subscriptions.includes(orgUsername)) {
@@ -306,10 +302,6 @@ export class UserController {
             // trazenje korisnika
             const participant = await User.findOne({ "username": username });
             const organizer = await User.findOne({ "username": orgUsername });
-
-            if (!participant || !organizer) {
-                return res.status(400).json({ message: 'Korisnik ili organizator nije pronađen.' });
-            }
 
             // Removing organizer from participant's subscriptions
             const orgIndex = participant.subscriptions.indexOf(orgUsername);

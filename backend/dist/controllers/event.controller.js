@@ -17,7 +17,7 @@ const event_1 = __importDefault(require("../models/event"));
 const user_1 = __importDefault(require("../models/user"));
 const schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
-schedule.scheduleJob("1 0 * * *", () => {
+schedule.scheduleJob("1 6 * * *", () => {
     console.log("filip");
 });
 class EventController {

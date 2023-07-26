@@ -4,9 +4,27 @@ import User from '../models/user';
 const schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
 
-schedule.scheduleJob("1 0 * * *", () => {
+schedule.scheduleJob("1 6 * * *", () => {
   console.log("filip");
-})
+});
+
+schedule.scheduleJob("5 0 * * *", () => {
+  new EventController().cancelEventsWithoutMinimum();
+});
+
+schedule.scheduleJob("10 0 * * *", () => {
+  new EventController().updateEventsStatus();
+});
+
+const options = {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+};
+
+const formatDate = (date) => date.toLocaleString('en-GB', options);
 
 export class EventController {
 
@@ -16,11 +34,11 @@ export class EventController {
 
   /**
    * Pomocna metoda za slanje mejlova.
-   * @param {string} subscribersEmails - Mejlovi razdvojeni sa ", ".
+   * @param {string} emails - Mejlovi razdvojeni sa ", ".
    * @param {string} subject - Naslov mejla.
    * @param {string} html - Sadrzaj mejla.
   */
-  sendEmail = (subscribersEmails: string, subject: string, html: string) => { // ok
+  sendEmail = async (emails: string, subject: string, html: string) => { // ok
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
       port: parseInt(process.env.PORT, 10),
@@ -33,7 +51,7 @@ export class EventController {
 
     const mailOptions = {
       from: process.env.EMAIL,
-      to: subscribersEmails,
+      to: emails,
       subject: subject,
       html: html
     };
@@ -54,8 +72,8 @@ export class EventController {
    * @returns {Object} JSON objekat sa nizom aktuelnih dogadjaja ili odgovarajucom porukom
    */
   getAllActiveEvents = (req: express.Request, res: express.Response) => {
-    Event.find({ status: "aktivan" })
-      .sort({ dateTime: 1 }) // vrati prvo najskorije dogadjaje
+    Event.find({ "status": "aktivan" })
+      .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
       .exec((err, events) => {
         if (err) {
           return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja!" });
@@ -71,10 +89,10 @@ export class EventController {
    * @returns {Object} JSON objekat sa nizom aktuelnih dogadjaja ili odgovarajucom porukom
    */
   getAllActiveEventsForOrganiser = (req: express.Request, res: express.Response) => {
-    const username = req.body.username; // korisnicko ime organizatora
+    const username: string = req.body.username; // korisnicko ime organizatora
 
     Event.find({ "organiser": username, status: "aktivan" })
-      .sort({ dateTime: 1 }) // vrati prvo najskorije dogadjaje
+      .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
       .exec((err, events) => {
         if (err) {
           return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja organizatora!" });
@@ -90,10 +108,10 @@ export class EventController {
    * @returns {Object} JSON objekat sa nizom aktuelnih dogadjaja ili odgovarajucom porukom
    */
   getAllPreviousEventsForOrganiser = (req: express.Request, res: express.Response) => {
-    const organiser = req.body.organiser; // korisnicko ime organizatora
+    const organiser: string = req.body.organiser; // korisnicko ime organizatora
 
     Event.find({ "organiser": organiser, status: "zavrsen" })
-      .sort({ dateTime: -1 }) // vrati prvo najskorije dogadjaje
+      .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
       .exec((err, events) => {
         if (err) {
           return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!" });
@@ -145,7 +163,7 @@ export class EventController {
         participants: participants
       });
 
-      const savedEvent = await newEvent.save();
+      await newEvent.save();
 
       // dohvatanje objekta organizatora
       const organizer = await User.findOne({ "username": organiserUsername });
@@ -162,16 +180,6 @@ export class EventController {
 
       const date = new Date(dateTime);
       const deadline = new Date(pollDeadline);
-
-      const options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      };
-
-      const formatDate = (date) => date.toLocaleString('en-GB', options);
 
       const emails: string = subscribersEmails.join(', ');
       const title: string = "Novi događaj";
@@ -202,8 +210,8 @@ export class EventController {
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
   cancelEvent = async (req: express.Request, res: express.Response) => { // ok
-    const eventId = req.body.eventId; // id dogadjaja koji se otkazuje
-    const organiserUsername = req.body.organiser; // korisnicko ime organizatora
+    const eventId: number = req.body.eventId; // id dogadjaja koji se otkazuje
+    const organiserUsername: string = req.body.organiser; // korisnicko ime organizatora
 
     try {
       // pronalazenje dogadjaja i postavljanje statusa na otkazan
@@ -211,39 +219,180 @@ export class EventController {
       event.status = 'otkazan';
       await event.save();
 
-      const options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      };
-
-      const formatDate = (date) => date.toLocaleString('en-GB', options);
       const date = new Date(event.dateTime);
       // dohvatanje organizatora
       const organiser = await User.findOne({ "username": organiserUsername });
-      // dohvatanje korisnickih mejlova
-      const subscribersEmails = await User.find({
-        "username": { $in: organiser.subscriptions }
-      }).select('email');
+      // dohvatanje mejlova ucesnika
+      const participants = event.participants;
+      const participantsEmails = await User.find({ "username": { $in: participants } }).select('email');
 
-      const emails: string = subscribersEmails.join(', ');
+      if (participantsEmails.length == 0) {
+        return res.status(200).json({
+          "message": "Događaj je uspešno otkazan!"
+        });
+      }
+
+      const emails: string = participantsEmails.join(', ');
       const title: string = "Otkazan događaj";
       const content: string =
-      `<p>Otkazan događaj organizatora <strong> ${organiser.name} ${organiser.lastname} </strong></p>
+        `<p>Otkazan događaj organizatora <strong> ${organiser.name} ${organiser.lastname} </strong></p>
       <p><strong>Sport:</strong> ${event.sport} </p>
       <p><strong>Datum:</strong> ${formatDate(date)} </p>
       <p><strong>Lokacija:</strong> ${event.location} </p>`;
 
       this.sendEmail(emails, title, content);
 
-      return res.json({ message: 'Dogadjaj je uspešno otkazan.' });
+      return res.json({ "message": "Događaj je uspešno otkazan!" });
     } catch (error) {
-      return res.status(400).json({ message: 'Greška prilikom otkazivanja dogadjaja.', error });
+      return res.status(400).json({ "message": 'Greška prilikom otkazivanja dogadjaja!', error });
     }
   };
 
+  /**
+   * Prijava ucesnika za dogadjaj.
+   * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+   * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+   * @returns {Object} JSON objekat sa odgovarajucom porukom
+   */
+  applyForEvent = (req: express.Request, res: express.Response) => {
+    const username = req.body.username; // korisnicko ime ucesnika
+    const eventId = req.body.id; // korisnicko ime ucesnika
+
+
+  }
+
+  /**
+   * Komentarisanje dogadjaja.
+   * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+   * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+   * @returns {Object} JSON objekat sa odgovarajucom porukom
+   */
+  addComment = async (req: express.Request, res: express.Response) => {
+    const username: string = req.body.username;
+    const eventId: number = req.body.id;
+    const name: string = req.body.name;
+    const lastname: string = req.body.lastname;
+    const text: string = req.body.text;
+    const datetime: number = req.body.datetime;
+
+    try {
+      // nadji dogadjaj sa prosledjenim id
+      const event = await Event.findOne({ "id": eventId });
+
+      // id novog komentara
+      const lastComment = event.comments[event.comments.length - 1];
+      const newCommentId = lastComment ? lastComment.id + 1 : 1;
+
+      // Create a new comment object with the new ID
+      const newComment = {
+        id: newCommentId,
+        username: username,
+        name: name,
+        lastname: lastname,
+        datetime: datetime,
+        text: text,
+      };
+
+      // Update the comments array in the event document
+      event.comments.push(newComment);
+      await event.save();
+
+      return res.status(200).json({ "message": "Komentar uspešno dodat!", comment: newComment });
+    } catch (error) {
+      return res.status(400).json({ "message": "Greška pri dodavanju komentara!", error });
+    }
+  };
+
+  /**
+ * Azuriranje statusa dogadjaja i cene po korisniku, slanje mejla kao podsetnika
+ * na dogadjaj.
+ */
+  updateEventsStatus = async () => {
+    try {
+      const now = Date.now();
+
+      // nalazenje aktuelnih dogadjaja kojima je istekao rok za prijavu
+      const events = await Event.find({ "status": "aktivan", "pollDeadline": { $lt: now } });
+
+      // azurira status dogadjaja i racuna cenu po korisniku
+      for (const event of events) {
+        event.status = "zavrsen";
+        // cena za ucesnika = cena termina / broj ucesnika
+        const pricePerUser = Number((event.eventPrice / event.participants.length).toFixed(2));
+        event.pricePerUser = pricePerUser;
+        await event.save();
+      }
+
+      // slanje mejlova
+      for (const event of events) {
+        const participants = event.participants;
+        // dohvatanje mejlova ucesnika
+        const participantsEmails = await User.find({ "username": { $in: participants } }).select('email');
+        const emails: string = participantsEmails.join(', ');
+        const date = new Date(event.dateTime);
+        // mejl podsetnik
+        const title: string = "Podsetnik";
+        const content: string =
+          `<p><strong>Današnji događaj:</strong></p>
+        <p><strong>Sport:</strong> ${event.sport} </p>
+        <p><strong>Datum:</strong> ${formatDate(date)} </p>
+        <p><strong>Lokacija:</strong> ${event.location} </p>`;
+        // poziv metode za slanje mejlova
+        this.sendEmail(emails, title, content);
+      }
+
+      console.log("Uspešno ažurirani događaji!");
+    } catch (error) {
+      console.log("Došlo je do greške!", error);
+    }
+  };
+
+  /**
+ * Otkazivanje dogadjaja koji nisu ispunili minimalan broj ucesnika, slanje
+ * mejla za obavestenje o otkazanom dogadjaju
+ */
+  cancelEventsWithoutMinimum = async () => {
+    try {
+      const now = Date.now();
+
+      // Find aktivan dogadjaja kojima je istekao rok za prijavu i ima manje ucesnika od minParticipants
+      const events = await Event.find({
+        "status": "aktivan",
+        "pollDeadline": { $lt: now },
+        $expr: { $lt: [{ $size: "$participants" }, "$minParticipants"] }
+      });
+
+      // Azurira status dogadjaja
+      for (const event of events) {
+        event.status = "otkazan";
+        await event.save();
+      }
+
+      // Slanje mejlova
+      for (const event of events) {
+        const participants = event.participants;
+        // Dohvatanje mejlova ucesnika
+        const participantsEmails = await User.find({ "username": { $in: participants } }).select('email');
+        if (participantsEmails.length == 0) {
+          continue;
+        }
+        const emails: string = participantsEmails.join(', ');
+        const date = new Date(event.dateTime);
+        // Mejlovi podsetnici
+        const title: string = "Otkazan događaj";
+        const content: string =
+          `<p><strong>Današnji događaj je otkazan zbog nedovoljnog broja učesnika:</strong></p>
+        <p><strong>Sport:</strong> ${event.sport} </p>
+        <p><strong>Datum:</strong> ${formatDate(date)} </p>
+        <p><strong>Lokacija:</strong> ${event.location} </p>`;
+        // poziv metode za slanje mejlova
+        this.sendEmail(emails, title, content);
+      }
+      console.log("Uspešno otkazani događaji!");
+    } catch (error) {
+      console.log("Došlo je do greške!", error);
+    }
+  };
 
 
 
