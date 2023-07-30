@@ -7,7 +7,7 @@ sportRouter.route("/getAllSports").get(
     (req, res) => new SportController().getAllSports(req, res)
 );
 
-sportRouter.route("/getUserPicture").get(
+sportRouter.route("/getSportPicture").get(
     (req, res) => new SportController().getSportPicture(req, res)
 );
 

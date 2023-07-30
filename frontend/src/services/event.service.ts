@@ -32,7 +32,7 @@ export class EventService {
    * @param {string} token - Token korisnika za autorizaciju
    * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
    */
-  getAllActiveEvents(token: string) {
+  getAllActiveEvents(token: string): Observable<Object>  {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(`${this.uri}/getAllActiveEvents`, { headers });
   }
