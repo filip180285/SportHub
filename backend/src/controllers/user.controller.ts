@@ -39,9 +39,9 @@ export class UserController {
 
             // kreiranje i potpis tokena
             const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-            return res.json({ token });
+            return res.status(200).json({ token });
         } catch (error) {
-            return res.status(400).json({ "message": "Greška prilikom prijave!" });
+            return res.status(400).json({ "message": "Greška prilikom prijave!", error });
         }
     }
 
@@ -99,7 +99,7 @@ export class UserController {
             });
         } catch (error) {
             return res.status(400).json({
-                "message": "Došlo je do greške prilikom slanja zahteva za registraciju!"
+                "message": "Došlo je do greške prilikom slanja zahteva za registraciju!", error
             });
         }
     }
@@ -136,9 +136,8 @@ export class UserController {
                     "message": "Dodata profilna slika u bazu!"
                 });
             } catch (error) {
-                console.error(error);
                 return res.status(400).json({
-                    "message": "Greška pri ažuriranju korisnika u bazi!"
+                    "message": "Greška pri ažuriranju korisnika u bazi!", error
                 });
             }
         });
@@ -151,14 +150,14 @@ export class UserController {
     * @returns {Object} JSON objekat korisnika ili odgovarajuca poruka
     */
     getUser = (req: express.Request, res: express.Response) => { // ok
-        const username = req.body.username;
-        User.findOne({ "username": username }, (err, user) => {
-            if (err) {
-                return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!" });
+        const username:string = req.body.username;
+        User.findOne({ "username": username }, (error, user) => {
+            if (error) {
+                return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
             }
             else {
                 const { _id, id, password, ...userData } = user._doc;
-                res.json(userData);
+                res.status(200).json(userData);
             }
         });
     }
@@ -170,7 +169,7 @@ export class UserController {
     * @returns {Object} Profilna slika korisnika
     */
     getUserPicture = (req, res) => { // ok
-        res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
+        return res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
     };
 
     /**
@@ -182,11 +181,11 @@ export class UserController {
     getAllParticipants = (req: express.Request, res: express.Response) => { // ok
         User.find({ "type": "ucesnik" }, { "_id": 0, "id": 0, "password": 0 })
             .sort({ "status": 1, "username": 1 })
-            .exec((err, organizers) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri dohvatanju učesnika!" });
+            .exec((error, participants) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju učesnika!", error });
                 } else {
-                    res.json(organizers);
+                    return res.status(200).json(participants);
                 }
             });
     };
@@ -200,11 +199,11 @@ export class UserController {
     getAllOrganisers = (req: express.Request, res: express.Response) => { // ok
         User.find({ "type": "organizator" }, { "_id": 0, "id": 0, "password": 0 })
             .sort({ "status": 1, "username": 1 })
-            .exec((err, organizers) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri dohvatanju organizatora!" });
+            .exec((error, organizers) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju organizatora!", error });
                 } else {
-                    res.json(organizers);
+                    res.status(200).json(organizers);
                 }
             });
     };
@@ -218,11 +217,11 @@ export class UserController {
     deleteUser = (req: express.Request, res: express.Response) => { // ok
         const username = req.body.username;
 
-        User.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (err, success) => {
-            if (err) {
-                return res.status(400).json({ "message": "Greška pri brisanju korisnika!" });
+        User.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (error, success) => {
+            if (error) {
+                return res.status(400).json({ "message": "Greška pri brisanju korisnika!", error });
             }
-            else res.json({ "message": "Korisnik je obrisan!" })
+            else res.status(200).json({ "message": "Korisnik je obrisan!" })
         })
     }
 
@@ -245,12 +244,12 @@ export class UserController {
                     "email": email
                 }
             },
-            (err, success) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri ažuriranju podataka!" });
+            (error, success) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
                 }
                 else {
-                    res.json({ message: "Podaci su ažurirani!" });
+                    res.status(200).json({ message: "Podaci su ažurirani!" });
                 }
             })
     }
@@ -262,8 +261,8 @@ export class UserController {
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
     subscribe = async (req: express.Request, res: express.Response) => {
-        const username = req.body.username; // korisnicko ime ucesnika
-        const orgUsername = req.body.orgUsername; // korisnicko ime organizatora
+        const username:string = req.body.username; // korisnicko ime ucesnika
+        const orgUsername:string = req.body.orgUsername; // korisnicko ime organizatora
 
         try {
             // trazenje korisnika
@@ -282,9 +281,9 @@ export class UserController {
                 await organizer.save();
             }
 
-            return res.status(200).json({ message: 'Uspešno ste se pretplatili na organizatora!' });
+            return res.status(200).json({ "message": 'Uspešno ste se pretplatili na organizatora!' });
         } catch (error) {
-            return res.status(400).json({ message: 'Greška pri pretplati na organizatora!', error });
+            return res.status(400).json({ "message": 'Greška pri pretplati na organizatora!', error });
         }
     };
 
@@ -295,8 +294,8 @@ export class UserController {
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
     unsubscribe = async (req: express.Request, res: express.Response) => {
-        const username = req.body.username; // korisnicko ime ucesnika
-        const orgUsername = req.body.orgUsername; // korisnicko ime organizatora
+        const username:string = req.body.username; // korisnicko ime ucesnika
+        const orgUsername:string = req.body.orgUsername; // korisnicko ime organizatora
 
         try {
             // trazenje korisnika
@@ -317,15 +316,15 @@ export class UserController {
                 await organizer.save();
             }
 
-            return res.status(200).json({ message: 'Uspešno ste se odjavili od organizatora!' });
+            return res.status(200).json({ "message": 'Uspešno ste se odjavili od organizatora!' });
         } catch (error) {
-            return res.status(400).json({ message: 'Greška pri odjavi od organizatora!', error });
+            return res.status(400).json({ "message": 'Greška pri odjavi od organizatora!', error });
         }
     };
 
 
     test = async (req: express.Request, res: express.Response) => { // ok
-        const orgUsername = req.body.username;
+        const orgUsername:string = req.body.username;
         //console.log(username)
         User.findOne({ "username": "jovica" }, (err, user) => {
             if (err) {
@@ -337,7 +336,7 @@ export class UserController {
                 //console.log(user);
                 console.log(userData);
                 // Send all the other fields in a new object
-                res.json(userData);
+                res.status(200).json(userData);
             }
         });
     }

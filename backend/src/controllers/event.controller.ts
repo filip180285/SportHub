@@ -1,7 +1,6 @@
 import * as express from 'express';
 import Event from '../models/event';
 import User from '../models/user';
-import Payment from '../models/payment';
 const schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
 
@@ -67,6 +66,24 @@ export class EventController {
   }
 
   /**
+    * Dohvatanje pojedinacnog dogadjaja.
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat dogadjaja ili odgovarajuca poruka
+    */
+  getEvent = (req: express.Request, res: express.Response) => { // ok
+    const id: number = req.body.eventId;
+    Event.findOne({ "id": id }, (error, event) => {
+      if (error) {
+        return res.status(400).json({ "message": "Greška pri dohvatanju pojedinačnog događaja!", error });
+      }
+      else {
+        return res.status(200).json(event);
+      }
+    });
+  }
+
+  /**
    * Dohvatanje aktuelnih dogadjaja.
    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
@@ -75,13 +92,31 @@ export class EventController {
   getAllActiveEvents = (req: express.Request, res: express.Response) => {
     Event.find({ "status": "aktivan" })
       .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
-      .exec((err, events) => {
-        if (err) {
-          return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja!" });
+      .exec((error, events) => {
+        if (error) {
+          return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja!", error });
         }
-        else return res.json(events);
+        else return res.status(200).json(events);
       });
   }
+
+  /**
+   * Dohvatanje prethodnih dogadjaja ucesnika.
+   * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+   * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+   * @returns {Object} JSON objekat sa nizom dogadjaja ili odgovarajucom porukom
+   */
+  getAllPreviousEventsForParticipant = async (req: express.Request, res: express.Response) => {
+    const username: string = req.body.username; // korisnicko ime ucesnika
+
+    try {
+      const events = await Event.find({ "participants": username, status: "zavrsen" })
+        .sort({ dateTime: -1 }) // vrati prvo najskorije dogadjaje
+      return res.status(200).json(events);
+    } catch (error) {
+      return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!", error });
+    }
+  };
 
   /**
    * Dohvatanje aktuelnih dogadjaja organizatora.
@@ -94,11 +129,11 @@ export class EventController {
 
     Event.find({ "organiser": username, status: "aktivan" })
       .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
-      .exec((err, events) => {
-        if (err) {
-          return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja organizatora!" });
+      .exec((error, events) => {
+        if (error) {
+          return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja organizatora!", error });
         }
-        else return res.json(events);
+        else return res.status(200).json(events);
       });
   }
 
@@ -113,11 +148,11 @@ export class EventController {
 
     Event.find({ "organiser": organiser, status: "zavrsen" })
       .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
-      .exec((err, events) => {
-        if (err) {
-          return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!" });
+      .exec((error, events) => {
+        if (error) {
+          return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!", error });
         }
-        else return res.json(events);
+        else return res.status(200).json(events);
       });
   }
 
@@ -199,7 +234,8 @@ export class EventController {
 
     } catch (error) {
       return res.status(400).json({
-        "message": "Došlo je do greške prilikom dodavanja događaja!"
+        "message": "Došlo je do greške prilikom dodavanja događaja!",
+        error
       });
     }
   }
@@ -243,35 +279,34 @@ export class EventController {
 
       this.sendEmail(emails, title, content);
 
-      return res.json({ "message": "Događaj je uspešno otkazan!" });
+      return res.status(200).json({ "message": "Događaj je uspešno otkazan!" });
     } catch (error) {
-      return res.status(400).json({ "message": 'Greška prilikom otkazivanja dogadjaja!', error });
+      return res.status(400).json({ "message": "Greška prilikom otkazivanja dogadjaja!", error });
     }
   };
 
-    /**
-   * Prijava ucesnika za dogadjaj.
-   * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
-   * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-   * @returns {Object} JSON objekat sa odgovarajucom porukom
-   */
+  /**
+ * Prijava ucesnika za dogadjaj.
+ * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+ * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+ * @returns {Object} JSON objekat sa odgovarajucom porukom
+ */
   applyForEvent = async (req: express.Request, res: express.Response) => {
+    const username: string = req.body.username; // korisnicko ime ucesnika
+    const eventId: number = req.body.eventId; // id dogadjaja
     try {
-      const username = req.body.username; // korisnicko ime ucesnika
-      const eventId = req.body.eventId; // id dogadjaja
-  
       // trazenje dogadjaja
       const event = await Event.findOne({ "id": eventId });
-  
+
       // dodavanje ucesnika u niz
       if (!event.participants.includes(username)) {
         event.participants.push(username);
         await event.save();
       }
-  
-      return res.status(200).json({ message: "Uspešno ste se prijavili za događaj." });
+
+      return res.status(200).json({ "message": "Uspešno ste se prijavili za događaj." });
     } catch (error) {
-      return res.status(400).json({ message: "Došlo je do greške pri prijavi za događaj.", error });
+      return res.status(400).json({ "message": "Došlo je do greške pri prijavi za događaj.", error });
     }
   };
 
@@ -281,25 +316,24 @@ export class EventController {
  * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
-cancelApplication = async (req: express.Request, res: express.Response) => {
-  try {
-    const username = req.body.username; // korisnicko ime ucesnika
-    const eventId = req.body.eventId; // id dogadjaja
+  cancelApplication = async (req: express.Request, res: express.Response) => {
+    const username: string = req.body.username; // korisnicko ime ucesnika
+    const eventId: number = req.body.eventId; // id dogadjaja
+    try {
+      // trazenje dogadjaja
+      const event = await Event.findOne({ "id": eventId });
 
-    // trazenje dogadjaja
-    const event = await Event.findOne({ "id": eventId });
+      // uklanjanje ucesnika iz niza
+      if (event.participants.includes(username)) {
+        event.participants = event.participants.filter((participant) => participant != username);
+        await event.save();
+      }
 
-    // uklanjanje ucesnika iz niza
-    if (event.participants.includes(username)) {
-      event.participants = event.participants.filter((participant) => participant != username);
-      await event.save();
+      return res.status(200).json({ "message": "Uspešno ste odjavili učešće sa događaja." });
+    } catch (error) {
+      return res.status(400).json({ "message": "Došlo je do greške pri odjavi sa događaja.", error });
     }
-
-    return res.status(200).json({ message: "Uspešno ste odjavili učešće sa događaja." });
-  } catch (error) {
-    return res.status(400).json({ message: "Došlo je do greške pri odjavi sa događaja.", error });
-  }
-};
+  };
 
   /**
    * Komentarisanje dogadjaja.
@@ -337,20 +371,92 @@ cancelApplication = async (req: express.Request, res: express.Response) => {
       event.comments.push(newComment);
       await event.save();
 
-      return res.status(200).json({ "message": "Komentar uspešno dodat!", comment: newComment });
+      return res.status(200).json({ "message": "Komentar uspešno dodat!" });
     } catch (error) {
       return res.status(400).json({ "message": "Greška pri dodavanju komentara!", error });
     }
   };
 
   /**
+  * Svi dogadjaji koje ucesnik nije jos uvek platio i ukupan dug.
+  * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+  * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+  * @returns {Object} JSON objekat sa nizom dogadjaja i totalnim dugom
+  */
+  findOwingEventsForParticipant = async (req: express.Request, res: express.Response) => {
+    const username: string = req.body.username;
+    try {
+      // trazi sve dogadjaje za koje je ucesnik duzan
+      const events = await Event.find({
+        status: "zavrsen",
+        participants: username,
+        paid: { $nin: [username] }
+      });
+
+      // racuna ukupan dug korisnika
+      let totalOwing = 0;
+      for (const event of events) {
+        totalOwing += event.pricePerUser;
+      }
+
+      return res.status(200).json({ events, totalOwing });
+    } catch (error) {
+      return res.status(400).json({ "message": "Došlo je do greške prilikom dohvatanja događaja.", error });
+    }
+  };
+
+  /**
+ * Svi dogadjaji organizatora za koje postoje dugovanja
+ * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+ * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+ * @returns {Object} JSON objekat sa nizom dogadjaja ili odgovarajucom porukom
+ */
+  findOwingEventsForOrganiser = async (req: express.Request, res: express.Response) => {
+    const username: string = req.body.username;
+    try {
+      // pronalazenje svih dogadjaja organizatora
+      const events = await Event.find({ status: "zavrsen", organiser: username });
+
+      // filtriranje dogadjaja za koje postoje dugovanja
+      const eventsWithOwing = events.filter((event) => (event.paid).length < (event.participants).length);
+
+      return res.status(200).json({ eventsWithOwing });
+    } catch (error) {
+      return res.status(400).json({ "message": "Došlo je do greške prilikom dohvatanja događaja.", error });
+    }
+  };
+
+  /**
+* Azuriranje placanja
+* @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+* @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+* @returns {Object} JSON objekat sa odgovarajucom porukom
+*/
+  updatePayments = async (req: express.Request, res: express.Response) => {
+    const eventId: number = req.body.eventId; // id dogadjaja
+    const paidArray: Array<string> = req.body.paid; // niz ucesnika koji su platili
+    try {
+      // pronalazenje dogadjaja
+      const event = await Event.findOne({ id: eventId });
+
+      // azuriranje placanja
+      event.paid = paidArray;
+      await event.save();
+
+      return res.status(200).json({ "message": "Plaćanje je uspesno ažurirano." });
+    } catch (error) {
+      return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja placanja.", error });
+    }
+  };
+
+
+  /**
  * Azuriranje statusa dogadjaja i cene po korisniku, slanje mejla kao podsetnika
  * na dogadjaj.
  */
   updateEventsStatus = async () => {
+    const now: number = Date.now();
     try {
-      const now = Date.now();
-
       // nalazenje aktuelnih dogadjaja kojima je istekao rok za prijavu
       const events = await Event.find({ "status": "aktivan", "pollDeadline": { $lt: now } });
 
@@ -361,14 +467,6 @@ cancelApplication = async (req: express.Request, res: express.Response) => {
         const pricePerUser = Number((event.eventPrice / event.participants.length).toFixed(2));
         event.pricePerUser = pricePerUser;
         await event.save();
-
-        // za vodjenje evidencije placanja
-        const payment = new Payment({
-          eventId: event.id,
-          paid: []
-        });
-  
-        await payment.save();
       }
 
       // slanje mejlova
@@ -400,9 +498,8 @@ cancelApplication = async (req: express.Request, res: express.Response) => {
  * mejla za obavestenje o otkazanom dogadjaju
  */
   cancelEventsWithoutMinimum = async () => {
+    const now: number = Date.now();
     try {
-      const now = Date.now();
-
       // Find aktivan dogadjaja kojima je istekao rok za prijavu i ima manje ucesnika od minParticipants
       const events = await Event.find({
         "status": "aktivan",
@@ -441,7 +538,5 @@ cancelApplication = async (req: express.Request, res: express.Response) => {
       console.log("Došlo je do greške!", error);
     }
   };
-
-
 
 }
