@@ -9,8 +9,8 @@ let Sport = new Schema({
     name: {
         type: String
     },
-    pictures: {
-        type: Array
+    picture: {
+        type: String
     },
 })
 

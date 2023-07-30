@@ -1,6 +1,7 @@
 import * as express from 'express';
 import Event from '../models/event';
 import User from '../models/user';
+import Payment from '../models/payment';
 const schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
 
@@ -78,7 +79,7 @@ export class EventController {
         if (err) {
           return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja!" });
         }
-        else res.json(events);
+        else return res.json(events);
       });
   }
 
@@ -97,7 +98,7 @@ export class EventController {
         if (err) {
           return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja organizatora!" });
         }
-        else res.json(events);
+        else return res.json(events);
       });
   }
 
@@ -116,7 +117,7 @@ export class EventController {
         if (err) {
           return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!" });
         }
-        else res.json(events);
+        else return res.json(events);
       });
   }
 
@@ -248,18 +249,57 @@ export class EventController {
     }
   };
 
-  /**
+    /**
    * Prijava ucesnika za dogadjaj.
    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
    * @returns {Object} JSON objekat sa odgovarajucom porukom
    */
-  applyForEvent = (req: express.Request, res: express.Response) => {
+  applyForEvent = async (req: express.Request, res: express.Response) => {
+    try {
+      const username = req.body.username; // korisnicko ime ucesnika
+      const eventId = req.body.eventId; // id dogadjaja
+  
+      // trazenje dogadjaja
+      const event = await Event.findOne({ "id": eventId });
+  
+      // dodavanje ucesnika u niz
+      if (!event.participants.includes(username)) {
+        event.participants.push(username);
+        await event.save();
+      }
+  
+      return res.status(200).json({ message: "Uspešno ste se prijavili za događaj." });
+    } catch (error) {
+      return res.status(400).json({ message: "Došlo je do greške pri prijavi za događaj.", error });
+    }
+  };
+
+  /**
+ * Odjava ucesnika sa dogadjaja.
+ * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+ * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+ * @returns {Object} JSON objekat sa odgovarajucom porukom
+ */
+cancelApplication = async (req: express.Request, res: express.Response) => {
+  try {
     const username = req.body.username; // korisnicko ime ucesnika
-    const eventId = req.body.id; // korisnicko ime ucesnika
+    const eventId = req.body.eventId; // id dogadjaja
 
+    // trazenje dogadjaja
+    const event = await Event.findOne({ "id": eventId });
 
+    // uklanjanje ucesnika iz niza
+    if (event.participants.includes(username)) {
+      event.participants = event.participants.filter((participant) => participant != username);
+      await event.save();
+    }
+
+    return res.status(200).json({ message: "Uspešno ste odjavili učešće sa događaja." });
+  } catch (error) {
+    return res.status(400).json({ message: "Došlo je do greške pri odjavi sa događaja.", error });
   }
+};
 
   /**
    * Komentarisanje dogadjaja.
@@ -269,7 +309,7 @@ export class EventController {
    */
   addComment = async (req: express.Request, res: express.Response) => {
     const username: string = req.body.username;
-    const eventId: number = req.body.id;
+    const eventId: number = req.body.eventId;
     const name: string = req.body.name;
     const lastname: string = req.body.lastname;
     const text: string = req.body.text;
@@ -283,7 +323,7 @@ export class EventController {
       const lastComment = event.comments[event.comments.length - 1];
       const newCommentId = lastComment ? lastComment.id + 1 : 1;
 
-      // Create a new comment object with the new ID
+      // kreiranje novog komentara
       const newComment = {
         id: newCommentId,
         username: username,
@@ -321,6 +361,14 @@ export class EventController {
         const pricePerUser = Number((event.eventPrice / event.participants.length).toFixed(2));
         event.pricePerUser = pricePerUser;
         await event.save();
+
+        // za vodjenje evidencije placanja
+        const payment = new Payment({
+          eventId: event.id,
+          paid: []
+        });
+  
+        await payment.save();
       }
 
       // slanje mejlova
