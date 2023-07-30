@@ -58,10 +58,10 @@ class UserController {
                 };
                 // kreiranje i potpis tokena
                 const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-                return res.json({ token });
+                return res.status(200).json({ token });
             }
             catch (error) {
-                return res.status(400).json({ "message": "Greška prilikom prijave!" });
+                return res.status(400).json({ "message": "Greška prilikom prijave!", error });
             }
         });
         /**
@@ -112,7 +112,7 @@ class UserController {
             }
             catch (error) {
                 return res.status(400).json({
-                    "message": "Došlo je do greške prilikom slanja zahteva za registraciju!"
+                    "message": "Došlo je do greške prilikom slanja zahteva za registraciju!", error
                 });
             }
         });
@@ -147,9 +147,8 @@ class UserController {
                     });
                 }
                 catch (error) {
-                    console.error(error);
                     return res.status(400).json({
-                        "message": "Greška pri ažuriranju korisnika u bazi!"
+                        "message": "Greška pri ažuriranju korisnika u bazi!", error
                     });
                 }
             }));
@@ -162,13 +161,13 @@ class UserController {
         */
         this.getUser = (req, res) => {
             const username = req.body.username;
-            user_1.default.findOne({ "username": username }, (err, user) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!" });
+            user_1.default.findOne({ "username": username }, (error, user) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
                 }
                 else {
                     const _a = user._doc, { _id, id, password } = _a, userData = __rest(_a, ["_id", "id", "password"]);
-                    res.json(userData);
+                    res.status(200).json(userData);
                 }
             });
         };
@@ -179,7 +178,7 @@ class UserController {
         * @returns {Object} Profilna slika korisnika
         */
         this.getUserPicture = (req, res) => {
-            res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
+            return res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
         };
         /**
         * Dohvatanje svih ucesnika.
@@ -190,12 +189,12 @@ class UserController {
         this.getAllParticipants = (req, res) => {
             user_1.default.find({ "type": "ucesnik" }, { "_id": 0, "id": 0, "password": 0 })
                 .sort({ "status": 1, "username": 1 })
-                .exec((err, organizers) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri dohvatanju učesnika!" });
+                .exec((error, participants) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju učesnika!", error });
                 }
                 else {
-                    res.json(organizers);
+                    return res.status(200).json(participants);
                 }
             });
         };
@@ -208,12 +207,30 @@ class UserController {
         this.getAllOrganisers = (req, res) => {
             user_1.default.find({ "type": "organizator" }, { "_id": 0, "id": 0, "password": 0 })
                 .sort({ "status": 1, "username": 1 })
-                .exec((err, organizers) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri dohvatanju organizatora!" });
+                .exec((error, organizers) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju organizatora!", error });
                 }
                 else {
-                    res.json(organizers);
+                    res.status(200).json(organizers);
+                }
+            });
+        };
+        /**
+        * Dohvatanje svih organizatora.
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat sa nizom svih organizatora
+        */
+        this.getAllActiveOrganisers = (req, res) => {
+            user_1.default.find({ "type": "organizator", "status": "aktivan" }, { "_id": 0, "id": 0, "password": 0 })
+                .sort({ "username": 1 })
+                .exec((error, organizers) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju aktivnih organizatora!", error });
+                }
+                else {
+                    res.status(200).json(organizers);
                 }
             });
         };
@@ -225,12 +242,12 @@ class UserController {
         */
         this.deleteUser = (req, res) => {
             const username = req.body.username;
-            user_1.default.collection.updateOne({ 'username': username }, { $set: { status: "neaktivan" } }, (err, success) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri brisanju korisnika!" });
+            user_1.default.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (error, success) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri brisanju korisnika!", error });
                 }
                 else
-                    res.json({ "message": "Korisnik je obrisan!" });
+                    res.status(200).json({ "message": "Korisnik je obrisan!" });
             });
         };
         /**
@@ -243,17 +260,17 @@ class UserController {
             const username = req.body.username;
             const phone = req.body.phone;
             const email = req.body.email;
-            user_1.default.collection.updateOne({ 'username': username }, {
+            user_1.default.collection.updateOne({ "username": username }, {
                 $set: {
                     "phone": phone,
                     "email": email
                 }
-            }, (err, success) => {
-                if (err) {
-                    return res.status(400).json({ "message": "Greška pri ažuriranju podataka!" });
+            }, (error, success) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
                 }
                 else {
-                    res.json({ message: "Podaci su ažurirani!" });
+                    res.status(200).json({ message: "Podaci su ažurirani!" });
                 }
             });
         };
@@ -270,9 +287,6 @@ class UserController {
                 // trazenje korisnika
                 const participant = yield user_1.default.findOne({ "username": username });
                 const organizer = yield user_1.default.findOne({ "username": orgUsername });
-                if (!participant || !organizer) {
-                    return res.status(400).json({ message: 'Korisnik ili organizator nije pronađen.' });
-                }
                 // dodavanje organizatora u ucesnikove pretplate
                 if (!participant.subscriptions.includes(orgUsername)) {
                     participant.subscriptions.push(orgUsername);
@@ -283,10 +297,10 @@ class UserController {
                     organizer.subscriptions.push(username);
                     yield organizer.save();
                 }
-                return res.status(200).json({ message: 'Uspešno ste se pretplatili na organizatora!' });
+                return res.status(200).json({ "message": 'Uspešno ste se pretplatili na organizatora!' });
             }
             catch (error) {
-                return res.status(400).json({ message: 'Greška pri pretplati na organizatora!', error });
+                return res.status(400).json({ "message": 'Greška pri pretplati na organizatora!', error });
             }
         });
         /**
@@ -302,9 +316,6 @@ class UserController {
                 // trazenje korisnika
                 const participant = yield user_1.default.findOne({ "username": username });
                 const organizer = yield user_1.default.findOne({ "username": orgUsername });
-                if (!participant || !organizer) {
-                    return res.status(400).json({ message: 'Korisnik ili organizator nije pronađen.' });
-                }
                 // Removing organizer from participant's subscriptions
                 const orgIndex = participant.subscriptions.indexOf(orgUsername);
                 if (orgIndex != -1) {
@@ -317,10 +328,10 @@ class UserController {
                     organizer.subscriptions.splice(participantIndex, 1);
                     yield organizer.save();
                 }
-                return res.status(200).json({ message: 'Uspešno ste se odjavili od organizatora!' });
+                return res.status(200).json({ "message": 'Uspešno ste se odjavili od organizatora!' });
             }
             catch (error) {
-                return res.status(400).json({ message: 'Greška pri odjavi od organizatora!', error });
+                return res.status(400).json({ "message": 'Greška pri odjavi od organizatora!', error });
             }
         });
         this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -336,7 +347,7 @@ class UserController {
                     //console.log(user);
                     console.log(userData);
                     // Send all the other fields in a new object
-                    res.json(userData);
+                    res.status(200).json(userData);
                 }
             });
         });

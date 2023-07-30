@@ -12,6 +12,10 @@ let Sport = new Schema({
     picture: {
         type: String
     },
-})
+}, {
+versionKey: false,
+_id:false
+},
+);
 
 export default mongoose.model('Sport', Sport, 'sports');

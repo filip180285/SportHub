@@ -44,6 +44,9 @@ let Event = new Schema({
     },
     participants: {
         type: Array
+    },
+    paid: {
+        type: Array
     }
 });
 exports.default = mongoose_1.default.model('Event', Event, 'events');

@@ -44,8 +44,10 @@ let Event = new Schema({
     },
     paid: { // ucesnici koji su platili
         type: Array
-    }
-    
-})
+    } 
+}, {
+    versionKey: false,
+    _id:false
+});
 
 export default mongoose.model('Event', Event, 'events');

@@ -2,5 +2,35 @@
   "id": 1,
   "name": "fudbal",
   "picture": "fudbal.jpg"
+},
+{
+  "id": 2,
+  "name": "kosarka",
+  "picture": "kosarka.jpg"
+},
+{
+  "id": 3,
+  "name": "odbojka",
+  "picture": "odbojka.jpg"
+},
+{
+  "id": 4,
+  "name": "rukomet",
+  "picture": "rukomet.jpg"
+},
+{
+  "id": 5,
+  "name": "stoni tenis",
+  "picture": "stoniTenis.jpg"
+},
+{
+  "id": 6,
+  "name": "tenis",
+  "picture": "tenis.jpg"
+},
+{
+  "id": 7,
+  "name": "vaterpolo",
+  "picture": "vaterpolo.jpg"
 }
  ]

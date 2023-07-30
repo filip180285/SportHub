@@ -1,22 +1,107 @@
 [ {
   "id": 1,
-  "idOrg": 1,
-  "idSport": 1,
-  "pollDeadline": 1675987200000,
-  "dateTime": 1675987200000,
+  "organiser": "filip",
+  "sport": "fudbal",
+  "pollDeadline": 1691923919965,
+  "minParticipants": 4,
+  "maxParticipants": 15,
+  "dateTime": 1691923919965,
   "location": "Dunavski kej 19, Beograd",
-  "description": "Ovo je opis nekog skupa",
-  "status": "active",
-  "participationFee": "300",
+  "status": "aktivan",
+  "eventPrice": 10000,
+  "pricePerUser": 0,
   "comments": [
     {
-	  "username" : "jovica",
-      "name": "Jovica",
-	  "lastname": "Jovica",
-      "time": 1675956707413,
-      "text": "Fantasticna radionica."
+	  "username" : "filip",
+      "time": 1691923919965,
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
     }
   ],
-  "participants": [1, 2, 3]
+  "participants": ["petar", "milica", "milan"]
+},
+{
+  "id": 2,
+  "organiser": "filip",
+  "sport": "kosarka",
+  "pollDeadline": 1691923919965,
+  "minParticipants": 4,
+  "maxParticipants": 15,
+  "dateTime": 1691923919965,
+  "location": "Dunavski kej 20, Beograd",
+  "status": "aktivan",
+  "eventPrice": 20000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+	  "username" : "filip",
+      "time": 1691923919965,
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": ["petar", "milica", "milan"]
+},
+{
+  "id": 3,
+  "organiser": "filip",
+  "sport": "tenis",
+  "pollDeadline": 1691923919965,
+  "minParticipants": 2,
+  "maxParticipants": 4,
+  "dateTime": 1691923919965,
+  "location": "Dunavski kej 21, Beograd",
+  "status": "aktivan",
+  "eventPrice": 15000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+	  "username" : "filip",
+      "time": 1691923919965,
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": ["petar", "milica", "milan"]
+},
+{
+  "id": 4,
+  "organiser": "filip",
+  "sport": "tenis",
+  "pollDeadline": 1690323919965,
+  "minParticipants": 2,
+  "maxParticipants": 4,
+  "dateTime": 1690323919965,
+  "location": "Dunavski kej 21, Beograd",
+  "status": "zavrsen",
+  "eventPrice": 15000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+	  "username" : "filip",
+      "time": 1690323919965,
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": ["petar", "milica", "milan"]
+},
+{
+  "id": 5,
+  "organiser": "filip",
+  "sport": "tenis",
+  "pollDeadline": 1690323919965,
+  "minParticipants": 2,
+  "maxParticipants": 4,
+  "dateTime": 1690323919965,
+  "location": "Dunavski kej 21, Beograd",
+  "status": "zavrsen",
+  "eventPrice": 15000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+	  "username" : "filip",
+      "time": 1690323919965,
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": ["petar", "milica", "milan"]
 }
+
  ]

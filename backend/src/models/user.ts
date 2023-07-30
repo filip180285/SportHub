@@ -24,7 +24,7 @@ let User = new Schema({
     type: {
         type: String
     },
-    status: {
+    status: { // aktivan, neaktivan
         type: String
     },
     phone: {
@@ -36,6 +36,10 @@ let User = new Schema({
     subscriptions: { // za organizatora - subscribe-ovani ucesnici, za ucesnika - organizatori na koje je subscribe-ovan
         type: Array
     }
-})
+}, {
+    versionKey: false,
+    _id:false
+}
+);
 
 export default mongoose.model('User', User, 'users');

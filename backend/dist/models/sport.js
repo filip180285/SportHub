@@ -12,8 +12,8 @@ let Sport = new Schema({
     name: {
         type: String
     },
-    pictures: {
-        type: Array
+    picture: {
+        type: String
     },
 });
 exports.default = mongoose_1.default.model('Sport', Sport, 'sports');

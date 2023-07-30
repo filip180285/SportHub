@@ -156,7 +156,7 @@ export class UserController {
                 return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
             }
             else {
-                const { _id, id, password, ...userData } = user._doc;
+                const {id, password, ...userData } = user._doc;
                 res.status(200).json(userData);
             }
         });
