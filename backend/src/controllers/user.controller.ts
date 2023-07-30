@@ -209,6 +209,24 @@ export class UserController {
     };
 
     /**
+    * Dohvatanje svih organizatora.
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat sa nizom svih organizatora
+    */
+    getAllActiveOrganisers = (req: express.Request, res: express.Response) => { // ok
+        User.find({ "type": "organizator", "status" : "aktivan" }, { "_id": 0, "id": 0, "password": 0 })
+            .sort({"username": 1 })
+            .exec((error, organizers) => {
+                if (error) {
+                    return res.status(400).json({ "message": "Greška pri dohvatanju aktivnih organizatora!", error });
+                } else {
+                    res.status(200).json(organizers);
+                }
+            });
+    };
+
+    /**
     * Promena statusa korinika na neaktivan.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.

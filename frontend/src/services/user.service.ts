@@ -73,6 +73,16 @@ export class UserService {
     return this.http.get(`${this.uri}/getAllOrganisers`, { headers });
   }
 
+   /**
+  * Slanje GET zahteva za dohvatanje svih aktivnih organizatora.
+  * @param {string} token - Token korisnika za autorizaciju
+  * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+  */
+   getAllActiveOrganisers(token: string) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.get(`${this.uri}/getAllActiveOrganisers`, { headers });
+  }
+
   /**
    * Slanje POST zahteva za brisanje korisnika.
    * @param {Object} data - Objekat sa poljima sa korisnickim imenom

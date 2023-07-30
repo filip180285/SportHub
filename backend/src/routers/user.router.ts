@@ -47,8 +47,13 @@ userRouter.route("/getAllParticipants").get(
 );
 
 userRouter.route("/getAllOrganisers").get(
-  // verifyTokenMiddleware(["ucesnik", "administrator"]),
+  // verifyTokenMiddleware(["administrator"]),
   (req, res) => new UserController().getAllOrganisers(req, res)
+);
+
+userRouter.route("/getAllActiveOrganisers").get(
+  // verifyTokenMiddleware(["ucesnik"]),
+  (req, res) => new UserController().getAllActiveOrganisers(req, res)
 );
 
 userRouter.route("/deleteUser").post(

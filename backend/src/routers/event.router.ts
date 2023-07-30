@@ -7,7 +7,7 @@ eventRouter.route("/test").post( // testiranje
   (req, res) => new EventController().test(req, res)
 );
 
-eventRouter.route("/getEvent").get(
+eventRouter.route("/getEvent").post(
   // verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new EventController().getEvent(req, res)
 );
@@ -17,17 +17,17 @@ eventRouter.route("/getAllActiveEvents").get(
   (req, res) => new EventController().getAllActiveEvents(req, res)
 );
 
-eventRouter.route("/getAllPreviousEventsForParticipant").get(
+eventRouter.route("/getAllPreviousEventsForParticipant").post(
   // verifyTokenMiddleware(["ucesnik"]),
   (req, res) => new EventController().getAllPreviousEventsForParticipant(req, res)
 );
 
-eventRouter.route("/getAllActiveEventsForOrganiser").get(
+eventRouter.route("/getAllActiveEventsForOrganiser").post(
   // verifyTokenMiddleware(["organizator"]),
   (req, res) => new EventController().getAllActiveEventsForOrganiser(req, res)
 );
 
-eventRouter.route("/getAllPreviousEventsForOrganiser").get(
+eventRouter.route("/getAllPreviousEventsForOrganiser").post(
   // verifyTokenMiddleware(["organizator"]),
   (req, res) => new EventController().getAllPreviousEventsForOrganiser(req, res)
 );
