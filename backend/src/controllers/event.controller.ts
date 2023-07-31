@@ -233,6 +233,7 @@ export class EventController {
       });
 
     } catch (error) {
+      console.log(error)
       return res.status(400).json({
         "message": "Došlo je do greške prilikom dodavanja događaja!",
         error

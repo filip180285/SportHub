@@ -36,8 +36,8 @@
                 </select>
             </div>
             <div class="form-field">
-                <input type="file" id="slika" placeholder="Slika(opciono)..." name="image"
-                    (change)="selectImage($event)">
+                <input type="file" id="slika" name="image"
+                    (change)="selectImage($event)" title="Izaberite sliku(opciono)">
             </div>
             <button id="regBtn" (click)="sendRegistrationRequest()" class="btn btn-secondary dugmeReg">Registruj se</button>
             <br><br>

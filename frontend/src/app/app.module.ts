@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
@@ -28,6 +29,7 @@ import { UcesnikProfilComponent } from './ucesnik-profil/ucesnik-profil.componen
 import { OrganizatorProfilComponent } from './organizator-profil/organizator-profil.component';
 import { UcesnikAzuriranjeComponent } from './ucesnik-azuriranje/ucesnik-azuriranje.component';
 import { OrganizatorAzuriranjeComponent } from './organizator-azuriranje/organizator-azuriranje.component';
+import { OrganizatorNoviDogadjajComponent } from './organizator-novi-dogadjaj/organizator-novi-dogadjaj.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +53,8 @@ import { OrganizatorAzuriranjeComponent } from './organizator-azuriranje/organiz
     UcesnikProfilComponent,
     OrganizatorProfilComponent,
     UcesnikAzuriranjeComponent,
-    OrganizatorAzuriranjeComponent
+    OrganizatorAzuriranjeComponent,
+    OrganizatorNoviDogadjajComponent
   ],
   imports: [
     BrowserModule,

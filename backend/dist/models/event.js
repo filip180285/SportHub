@@ -48,6 +48,8 @@ let Event = new Schema({
     paid: {
         type: Array
     }
+}, {
+    versionKey: false
 });
 exports.default = mongoose_1.default.model('Event', Event, 'events');
 //# sourceMappingURL=event.js.map

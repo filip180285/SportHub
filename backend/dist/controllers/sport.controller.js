@@ -25,7 +25,7 @@ class SportController {
         */
         this.getAllSports = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                const sports = yield sport_1.default.find({}, { "id": 0 });
+                const sports = yield sport_1.default.find({}, { "id": 0, "_id": 0 });
                 return res.status(200).json(sports);
             }
             catch (error) {

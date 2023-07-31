@@ -1,0 +1,43 @@
+<app-header-logged></app-header-logged>
+<app-meni-organizator></app-meni-organizator>
+
+<div class="row sredina">
+    <div class="col-sm-6 offset-3 text-center boja">
+        <form class="forma2">
+            <h2>Novi događaj</h2>
+            <img src="../../assets/event.png">
+            <br><br>
+            <div class="form-field">
+                <select name="sport" id="sport" [(ngModel)]='sport'>
+                    <option value="" disabled selected>Izaberite sport</option>
+                    <option *ngFor = "let sport of sports">{{sport.name}}</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <input type="number" id="min" placeholder="Minimalno učesnika(2-10)..." name='min'
+                 [(ngModel)]='minParticipants' min="2" max="10">
+            </div>
+            <div class="form-field">
+                <input type="number" id="max" placeholder="Maksimalno učesnika(2-50)..." name='max' [(ngModel)]='maxParticipants'
+                min="2" max="50">
+            </div>
+            <div class="form-field">
+                <input type="text" id="location" placeholder="Lokacija..." name='location'
+                    [(ngModel)]='location'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="eventPrice" placeholder="Cena termina(u RSD)..." name='eventPrice'
+                    [(ngModel)]='eventPrice'>
+            </div>
+            <div class="form-field">
+                <input type="date" id="date" name="date" [(ngModel)]="date"  [min]="getMinDate()"
+                [max]="getMaxDate()" title="Izaberite datum">
+            </div>
+            <div class="form-field">
+                <input type="time" id="time" name="time" [(ngModel)]="time" title="Izaberite vreme">
+            </div>
+            <button id="regBtn" (click)="newEvent()" class="btn btn-secondary dugmeReg">Dodaj događaj</button>
+            <br><br>
+        </form>
+    </div>
+</div>

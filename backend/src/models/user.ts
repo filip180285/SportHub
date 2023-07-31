@@ -37,8 +37,7 @@ let User = new Schema({
         type: Array
     }
 }, {
-    versionKey: false,
-    _id:false
+    versionKey: false
 }
 );
 

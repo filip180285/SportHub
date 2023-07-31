@@ -12,7 +12,7 @@ export class SportController {
     */
     getAllSports = async (req: express.Request, res: express.Response) => {
         try {
-            const sports = await Sport.find({}, { "id": 0 });
+            const sports = await Sport.find({}, { "id": 0, "_id" : 0 });
             return res.status(200).json(sports);
         } catch (error) {
             return res.status(400).json({ "message": "Greška pri dohvatanju sportova!", error });

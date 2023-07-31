@@ -39,6 +39,8 @@ let User = new Schema({
     subscriptions: {
         type: Array
     }
+}, {
+    versionKey: false
 });
 exports.default = mongoose_1.default.model('User', User, 'users');
 //# sourceMappingURL=user.js.map

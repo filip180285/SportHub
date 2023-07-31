@@ -55,6 +55,13 @@ export class MeniOrganizatorComponent implements OnInit {
   }
 
   /**
+* Odlazak na stranicu za dodavanje novog dogadjaja.
+*/
+  noviDogadjaj(): void {
+    this.router.navigate(["organizatorNoviDogadjaj"]);
+  }
+
+  /**
   * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
   */
   logout(): void {

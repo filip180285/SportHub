@@ -46,8 +46,7 @@ let Event = new Schema({
         type: Array
     } 
 }, {
-    versionKey: false,
-    _id:false
+    versionKey: false
 });
 
 export default mongoose.model('Event', Event, 'events');
