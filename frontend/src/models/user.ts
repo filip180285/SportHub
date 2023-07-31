@@ -9,5 +9,5 @@ export class User {
     status: string;
     phone: string;
     picture: string;
-    subsriptions: Array<string>;
+    subscriptions: Array<string>;
 }

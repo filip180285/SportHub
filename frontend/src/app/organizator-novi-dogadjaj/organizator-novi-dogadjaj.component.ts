@@ -124,19 +124,19 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
-      try {
-        const decodedToken: any = jwt_decode(token);
-        const data: Object = { username: decodedToken.username };
-        // dohvatanje ulogovanog korisnika
-        const response: any = await lastValueFrom(this.userService.getUser(data, token));
-        this.loggedIn = response;
-        // dohvatanje sportova
-        const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
-        this.sports = responseSport;
-      } catch (error) {
-        console.log(error);
-      }
+    if (token == null) return;
+    
+    try {
+      const decodedToken: any = jwt_decode(token);
+      const data: Object = { username: decodedToken.username };
+      // dohvatanje ulogovanog korisnika
+      const response: any = await lastValueFrom(this.userService.getUser(data, token));
+      this.loggedIn = response;
+      // dohvatanje sportova
+      const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
+      this.sports = responseSport;
+    } catch (error) {
+      console.log(error);
     }
   }
 

@@ -30,15 +30,16 @@ export class AdminPrikazProfilaComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
-      try {
-        const params = await firstValueFrom(this.route.params);
-        this.username = params['username'];
-        const data: Object = { username: this.username };
-        const response: any = await lastValueFrom(this.userService.getUser(data, token));
-        this.user = response;
-      } catch (error) {
-      }
+    if (token == null) return;
+
+    try {
+      const params = await firstValueFrom(this.route.params);
+      this.username = params['username'];
+      const data: Object = { username: this.username };
+      const response: any = await lastValueFrom(this.userService.getUser(data, token));
+      this.user = response;
+    } catch (error) {
+      console.log(error);
     }
   }
 

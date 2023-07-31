@@ -25,14 +25,14 @@ export class AdministratorComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
+    if (token == null) return;
+
       try {
         const response: any = await lastValueFrom(this.userService.getAllParticipants(token));
         this.participants = response;
       } catch (error) {
         console.log(error);
       }
-    }
   }
 
 }

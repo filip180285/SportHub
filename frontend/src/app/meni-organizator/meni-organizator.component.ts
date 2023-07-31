@@ -29,22 +29,21 @@ export class MeniOrganizatorComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
-      try {
-        const decodedToken: any = jwt_decode(token);
-        // provera da li ucesnik pristupa stranici i preusmeravanje
-        // na odgovarajacu pocetnu stranu ako to nije slucaj
-        if (decodedToken.role != "organizator") {
-          this.router.navigate([`/${decodedToken.role}`]);
-        }
-        else {
-          const data: Object = { username: decodedToken.username };
-          const response: any = await lastValueFrom(this.userService.getUser(data, token));
-          this.loggedIn = response;
-        }
-      } catch (error) {
-        console.log(error);
+    if (token == null) return;
+    try {
+      const decodedToken: any = jwt_decode(token);
+      // provera da li ucesnik pristupa stranici i preusmeravanje
+      // na odgovarajacu pocetnu stranu ako to nije slucaj
+      if (decodedToken.role != "organizator") {
+        this.router.navigate([`/${decodedToken.role}`]);
       }
+      else {
+        const data: Object = { username: decodedToken.username };
+        const response: any = await lastValueFrom(this.userService.getUser(data, token));
+        this.loggedIn = response;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

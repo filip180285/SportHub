@@ -33,18 +33,18 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
-      try {
-        const decodedToken: any = jwt_decode(token);
-        const data: Object = { username: decodedToken.username };
-        const response: any = await lastValueFrom(this.userService.getUser(data, token));
-        this.loggedIn = response;
-        this.email = this.loggedIn.email;
-        this.phone = this.loggedIn.phone;
-        this.username = this.loggedIn.username;
-      } catch (error) {
-        console.log(error);
-      }
+    if (token == null) return;
+    
+    try {
+      const decodedToken: any = jwt_decode(token);
+      const data: Object = { username: decodedToken.username };
+      const response: any = await lastValueFrom(this.userService.getUser(data, token));
+      this.loggedIn = response;
+      this.email = this.loggedIn.email;
+      this.phone = this.loggedIn.phone;
+      this.username = this.loggedIn.username;
+    } catch (error) {
+      console.log(error);
     }
   }
 

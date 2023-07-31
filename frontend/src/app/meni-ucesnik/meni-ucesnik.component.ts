@@ -29,30 +29,37 @@ export class MeniUcesnikComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
-      try {
-        const decodedToken: any = jwt_decode(token);
-        // provera da li ucesnik pristupa stranici i preusmeravanje
-        // na odgovarajacu pocetnu stranu ako to nije slucaj
-        if (decodedToken.role != "ucesnik") {
-          this.router.navigate([`/${decodedToken.role}`]);
-        }
-        else {
-          const data: Object = { username: decodedToken.username };
-          const response: any = await lastValueFrom(this.userService.getUser(data, token));
-          this.loggedIn = response;
-        }
-      } catch (error) {
-        console.log(error);
+    if (token == null) return;
+
+    try {
+      const decodedToken: any = jwt_decode(token);
+      // provera da li ucesnik pristupa stranici i preusmeravanje
+      // na odgovarajacu pocetnu stranu ako to nije slucaj
+      if (decodedToken.role != "ucesnik") {
+        this.router.navigate([`/${decodedToken.role}`]);
       }
+      else {
+        const data: Object = { username: decodedToken.username };
+        const response: any = await lastValueFrom(this.userService.getUser(data, token));
+        this.loggedIn = response;
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
   /**
-* Odlazak na pocetnu stranicu za ucesnika.
+* Odlazak na stranicu sa profilom ucesnika.
 */
   profil(): void {
     this.router.navigate(["ucesnikProfil"]);
+  }
+
+  /**
+* Odlazak na stranicu za pregled organizatora.
+*/
+  organizatori(): void {
+    this.router.navigate(["ucesnikOrganizatori"]);
   }
 
   /**
@@ -62,7 +69,5 @@ export class MeniUcesnikComponent implements OnInit {
     sessionStorage.clear();
     this.router.navigate([""]);
   }
-
-
 
 }

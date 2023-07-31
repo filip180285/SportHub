@@ -39,30 +39,30 @@ export class UcesnikComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
-      try {
-        const decodedToken: any = jwt_decode(token);
-        const data: Object = { username: decodedToken.username };
-        // dohvatanje ulogovanog korisnika
-        const response: any = await lastValueFrom(this.userService.getUser(data, token));
-        this.loggedIn = response;
-        // dohvatanje sportova
-        const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
-        this.sports = responseSport;
-        // dohvatanje aktuelnih dogadjaja
-        const responseActive: any = await lastValueFrom(this.eventService.getAllActiveEvents(token));
-        this.activeEvents = responseActive;
-      } catch (error) {
-        console.log(error);
-      }
+    if (token == null) return;
+    
+    try {
+      const decodedToken: any = jwt_decode(token);
+      const data: Object = { username: decodedToken.username };
+      // dohvatanje ulogovanog korisnika
+      const response: any = await lastValueFrom(this.userService.getUser(data, token));
+      this.loggedIn = response;
+      // dohvatanje sportova
+      const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
+      this.sports = responseSport;
+      // dohvatanje aktuelnih dogadjaja
+      const responseActive: any = await lastValueFrom(this.eventService.getAllActiveEvents(token));
+      this.activeEvents = responseActive;
+    } catch (error) {
+      console.log(error);
     }
   }
 
-    /**
-   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-   */
-    convertToDate(numOfMs:number) {
-      return new Date(numOfMs);
-    }
+  /**
+ * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+ */
+  convertToDate(numOfMs: number) {
+    return new Date(numOfMs);
+  }
 
 }

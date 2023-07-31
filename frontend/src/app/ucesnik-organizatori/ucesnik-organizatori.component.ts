@@ -1,24 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import jwt_decode from "jwt-decode";
 import { ToastrService } from 'ngx-toastr';
-import { lastValueFrom } from 'rxjs';
-import { Sport } from 'src/models/sport';
 import { User } from 'src/models/user';
-import { Event } from 'src/models/event';
 import { EventService } from 'src/services/event.service';
 import { SportService } from 'src/services/sport.service';
 import { UserService } from 'src/services/user.service';
 
+import jwt_decode from "jwt-decode";
+import { lastValueFrom } from 'rxjs';
+
 @Component({
-  selector: 'app-organizator',
-  templateUrl: './organizator.component.html',
-  styleUrls: ['./organizator.component.css']
+  selector: 'app-ucesnik-organizatori',
+  templateUrl: './ucesnik-organizatori.component.html',
+  styleUrls: ['./ucesnik-organizatori.component.css']
 })
-
-
-export class OrganizatorComponent implements OnInit {
+export class UcesnikOrganizatoriComponent implements OnInit {
 
   /**
  * Injects the API service and Angular Router.
@@ -33,44 +29,38 @@ export class OrganizatorComponent implements OnInit {
   }
 
   loggedIn: User;
-  sports: Sport[];
-  activeEvents: Event[] = [];
-  previousEvents: Event[] = [];
+  organisers: User[] = [];
+  following: User[] = [];
 
   /**
-   * Poziva se pri ucitavanju komponente.
-   */
+ * Poziva se pri ucitavanju komponente.
+ */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-
+    
     try {
       const decodedToken: any = jwt_decode(token);
       const data: Object = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
-      // dohvatanje sportova
-      const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
-      this.sports = responseSport;
-      // dohvatanje aktuelnih dogadjaja za organizatora
-      const dataEvent: Object = {
-        username: this.loggedIn.username
-      }
-      const responseActive: any = await lastValueFrom(this.eventService.getAllActiveEventsForOrganiser(dataEvent, token));
-      this.activeEvents = responseActive;
-      // dohvatanje prethodnih dogadjaja za organizatora
-      const responsePrevious: any = await lastValueFrom(this.eventService.getAllPreviousEventsForOrganiser(dataEvent, token));
-      this.previousEvents = responsePrevious;
+      // dohvatanje akitvnih organizatora
+      const responseOrganisers: any = await lastValueFrom(this.userService.getAllActiveOrganisers(token));
+      this.organisers = responseOrganisers;
+
+      // razdvajanje organizatora na one koji su vec praceni od strane 
+      // ucesnika i preostale
+      this.following = this.organisers.filter((organiser) => {
+        return this.loggedIn.subscriptions.includes(organiser.username);
+      });
+
+      this.organisers = this.organisers.filter((organiser) => {
+        return !this.loggedIn.subscriptions.includes(organiser.username);
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
-  /**
-   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-   */
-  convertToDate(numOfMs: number) {
-    return new Date(numOfMs);
-  }
 }

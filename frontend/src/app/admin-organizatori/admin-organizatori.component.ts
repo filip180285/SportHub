@@ -25,13 +25,13 @@ export class AdminOrganizatoriComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
+    if (token == null) return;
+    
       try {
         const response: any = await lastValueFrom(this.userService.getAllOrganisers(token));
         this.organisers = response;
       } catch (error) {
         console.log(error);
       }
-    }
   }
 }

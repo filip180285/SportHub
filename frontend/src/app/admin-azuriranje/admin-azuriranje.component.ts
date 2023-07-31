@@ -34,7 +34,8 @@ export class AdminAzuriranjeComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    if (token != null) {
+    if (token == null) return;
+    
       try {
         const decodedToken: any = jwt_decode(token);
         const data: Object = { username: decodedToken.username };
@@ -46,7 +47,6 @@ export class AdminAzuriranjeComponent implements OnInit {
       } catch (error) {
         console.log(error);
       }
-    }
   }
 
   /**
