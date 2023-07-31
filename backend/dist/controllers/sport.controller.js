@@ -29,6 +29,7 @@ class SportController {
                 return res.status(200).json(sports);
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška pri dohvatanju sportova!", error });
             }
         });
@@ -39,8 +40,14 @@ class SportController {
         * @returns {Object} Slika
         */
         this.getSportPicture = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const sport = yield sport_1.default.findOne({ "name": req.query.name });
-            return res.sendFile(path.join(__dirname, `../../uploads/sports/${sport.picture}`));
+            try {
+                const sport = yield sport_1.default.findOne({ "name": req.query.name });
+                return res.sendFile(path.join(__dirname, `../../uploads/sports/${sport.picture}`));
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(400).json({ "message": "Greška pri dohvatanju slike za sport!", error });
+            }
         });
     }
 }

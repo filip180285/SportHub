@@ -85,6 +85,7 @@ class EventController {
             const id = req.body.eventId;
             event_1.default.findOne({ "id": id }, (error, event) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju pojedinačnog događaja!", error });
                 }
                 else {
@@ -100,9 +101,10 @@ class EventController {
          */
         this.getAllActiveEvents = (req, res) => {
             event_1.default.find({ "status": "aktivan" })
-                .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
+                .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
                 .exec((error, events) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja!", error });
                 }
                 else
@@ -123,6 +125,7 @@ class EventController {
                 return res.status(200).json(events);
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!", error });
             }
         });
@@ -135,9 +138,10 @@ class EventController {
         this.getAllActiveEventsForOrganiser = (req, res) => {
             const username = req.body.username; // korisnicko ime organizatora
             event_1.default.find({ "organiser": username, status: "aktivan" })
-                .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
+                .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
                 .exec((error, events) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja organizatora!", error });
                 }
                 else
@@ -151,11 +155,12 @@ class EventController {
          * @returns {Object} JSON objekat sa nizom aktuelnih dogadjaja ili odgovarajucom porukom
          */
         this.getAllPreviousEventsForOrganiser = (req, res) => {
-            const organiser = req.body.organiser; // korisnicko ime organizatora
+            const organiser = req.body.username; // korisnicko ime organizatora
             event_1.default.find({ "organiser": organiser, status: "zavrsen" })
                 .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
                 .exec((error, events) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!", error });
                 }
                 else
@@ -283,6 +288,7 @@ class EventController {
                 return res.status(200).json({ "message": "Događaj je uspešno otkazan!" });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška prilikom otkazivanja dogadjaja!", error });
             }
         });
@@ -306,6 +312,7 @@ class EventController {
                 return res.status(200).json({ "message": "Uspešno ste se prijavili za događaj." });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Došlo je do greške pri prijavi za događaj.", error });
             }
         });
@@ -329,6 +336,7 @@ class EventController {
                 return res.status(200).json({ "message": "Uspešno ste odjavili učešće sa događaja." });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Došlo je do greške pri odjavi sa događaja.", error });
             }
         });
@@ -366,6 +374,7 @@ class EventController {
                 return res.status(200).json({ "message": "Komentar uspešno dodat!" });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška pri dodavanju komentara!", error });
             }
         });
@@ -392,6 +401,7 @@ class EventController {
                 return res.status(200).json({ events, totalOwing });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Došlo je do greške prilikom dohvatanja događaja.", error });
             }
         });
@@ -411,6 +421,7 @@ class EventController {
                 return res.status(200).json({ eventsWithOwing });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Došlo je do greške prilikom dohvatanja događaja.", error });
             }
         });
@@ -432,6 +443,7 @@ class EventController {
                 return res.status(200).json({ "message": "Plaćanje je uspesno ažurirano." });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja placanja.", error });
             }
         });
@@ -471,6 +483,7 @@ class EventController {
                 console.log("Uspešno ažurirani događaji!");
             }
             catch (error) {
+                console.log(error);
                 console.log("Došlo je do greške!", error);
             }
         });
@@ -514,6 +527,7 @@ class EventController {
                 console.log("Uspešno otkazani događaji!");
             }
             catch (error) {
+                console.log(error);
                 console.log("Došlo je do greške!", error);
             }
         });

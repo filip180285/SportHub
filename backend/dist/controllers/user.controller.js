@@ -61,6 +61,7 @@ class UserController {
                 return res.status(200).json({ token });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška prilikom prijave!", error });
             }
         });
@@ -111,6 +112,7 @@ class UserController {
                 });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({
                     "message": "Došlo je do greške prilikom slanja zahteva za registraciju!", error
                 });
@@ -147,6 +149,7 @@ class UserController {
                     });
                 }
                 catch (error) {
+                    console.log(error);
                     return res.status(400).json({
                         "message": "Greška pri ažuriranju korisnika u bazi!", error
                     });
@@ -163,6 +166,7 @@ class UserController {
             const username = req.body.username;
             user_1.default.findOne({ "username": username }, (error, user) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
                 }
                 else {
@@ -187,8 +191,14 @@ class UserController {
         * @returns {Object} Slika
         */
         this.getPictureByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const user = yield user_1.default.findOne({ "username": req.query.username });
-            return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+            try {
+                const user = yield user_1.default.findOne({ "username": req.query.username });
+                return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(400).json({ "message": "Greška pri dohvatanju slike korisnika!", error });
+            }
         });
         /**
         * Dohvatanje svih ucesnika.
@@ -201,6 +211,7 @@ class UserController {
                 .sort({ "status": 1, "username": 1 })
                 .exec((error, participants) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju učesnika!", error });
                 }
                 else {
@@ -219,6 +230,7 @@ class UserController {
                 .sort({ "status": 1, "username": 1 })
                 .exec((error, organizers) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju organizatora!", error });
                 }
                 else {
@@ -237,6 +249,7 @@ class UserController {
                 .sort({ "username": 1 })
                 .exec((error, organizers) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju aktivnih organizatora!", error });
                 }
                 else {
@@ -254,6 +267,7 @@ class UserController {
             const username = req.body.username;
             user_1.default.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (error, success) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri brisanju korisnika!", error });
                 }
                 else
@@ -277,6 +291,7 @@ class UserController {
                 }
             }, (error, success) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
                 }
                 else {
@@ -310,6 +325,7 @@ class UserController {
                 return res.status(200).json({ "message": 'Uspešno ste se pretplatili na organizatora!' });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": 'Greška pri pretplati na organizatora!', error });
             }
         });
@@ -341,6 +357,7 @@ class UserController {
                 return res.status(200).json({ "message": 'Uspešno ste se odjavili od organizatora!' });
             }
             catch (error) {
+                console.log(error);
                 return res.status(400).json({ "message": 'Greška pri odjavi od organizatora!', error });
             }
         });

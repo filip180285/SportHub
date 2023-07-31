@@ -97,7 +97,7 @@ export class EventController {
    */
   getAllActiveEvents = (req: express.Request, res: express.Response) => {
     Event.find({ "status": "aktivan" })
-      .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
+      .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
       .exec((error, events) => {
         if (error) {
           console.log(error);
@@ -136,7 +136,7 @@ export class EventController {
     const username: string = req.body.username; // korisnicko ime organizatora
 
     Event.find({ "organiser": username, status: "aktivan" })
-      .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
+      .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
       .exec((error, events) => {
         if (error) {
           console.log(error);
@@ -153,7 +153,7 @@ export class EventController {
    * @returns {Object} JSON objekat sa nizom aktuelnih dogadjaja ili odgovarajucom porukom
    */
   getAllPreviousEventsForOrganiser = (req: express.Request, res: express.Response) => {
-    const organiser: string = req.body.organiser; // korisnicko ime organizatora
+    const organiser: string = req.body.username; // korisnicko ime organizatora
 
     Event.find({ "organiser": organiser, status: "zavrsen" })
       .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
