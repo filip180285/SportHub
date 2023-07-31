@@ -166,6 +166,7 @@ class UserController {
             const username = req.body.username;
             user_1.default.findOne({ "username": username }, (error, user) => {
                 if (error) {
+                    console.log("ovde");
                     console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
                 }

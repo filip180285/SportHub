@@ -156,6 +156,7 @@ export class UserController {
         const username: string = req.body.username;
         User.findOne({ "username": username }, (error, user) => {
             if (error) {
+                console.log("ovde");
                 console.log(error);
                 return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
             }

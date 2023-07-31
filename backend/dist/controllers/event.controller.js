@@ -371,7 +371,7 @@ class EventController {
                 // Update the comments array in the event document
                 event.comments.push(newComment);
                 yield event.save();
-                return res.status(200).json({ "message": "Komentar uspešno dodat!" });
+                return res.status(200).json({ "message": "Komentar uspešno dodat!", newComment });
             }
             catch (error) {
                 console.log(error);

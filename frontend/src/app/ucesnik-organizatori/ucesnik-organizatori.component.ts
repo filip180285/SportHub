@@ -65,6 +65,10 @@ export class UcesnikOrganizatoriComponent implements OnInit {
     }
   }
 
+  /**
+    * Pracenje organizatora od strane korisnika
+    * @param {User} organiser - Organizator koga korisnik zapracuje.
+    */
   async subscribe(organiser: User): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     const data = {
@@ -81,10 +85,14 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       this.following.push(removedOrganiser);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"]);
+      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
     }
   }
 
+  /**
+  * Pracenje organizatora od strane korisnika
+  * @param {User} organiser - Organizator koga korisnik otpracuje.
+  */
   async unsubscribe(organiser: User): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     const data = {
@@ -101,7 +109,7 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       this.organisers.push(removedOrganiser);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"]);
+      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
     }
   }
 

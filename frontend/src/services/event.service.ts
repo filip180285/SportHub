@@ -24,7 +24,7 @@ export class EventService {
    */
   getEvent(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    return this.http.post(`${this.uri}/getAllActiveEvents`, data, { headers });
+    return this.http.post(`${this.uri}/getEvent`, data, { headers });
   }
 
   /**

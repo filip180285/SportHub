@@ -62,6 +62,13 @@ export class MeniUcesnikComponent implements OnInit {
     this.router.navigate(["ucesnikOrganizatori"]);
   }
 
+   /**
+* Odlazak na stranicu za pregled organizatora.
+*/
+ucesnik(): void {
+  this.router.navigate(["ucesnik"]);
+}
+
   /**
  * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
  */

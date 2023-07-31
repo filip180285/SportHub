@@ -17,8 +17,9 @@
 <div class="row sredina" *ngIf="activeEvents.length > 0">
     <div *ngFor="let event of activeEvents" class="col-sm-4">
         <div class="event-container">
-            <img src="http://localhost:4000/sports/getSportPicture/?name={{event.sport}}"
-                class="rounded-circle stil velicina">
+            <img [routerLink]="['/ucesnikDogadjaj', event.id]"
+                src="http://localhost:4000/sports/getSportPicture/?name={{event.sport}}"
+                class="rounded-circle stil velicina" title="Prikaži detalje">
             <div class="event-info">
                 <span class="orangered">Sport: </span> <span class="slova">{{event.sport}}<br></span>
                 <span class="orangered">Mesto: </span> <span class="slova">{{event.location}} <br> </span>
