@@ -182,6 +182,20 @@ h2 {
     height: 20px;
 }
 
+.forma2 .form-field:nth-child(11)::before {
+    margin-left: 10%;
+    background-image: url("../../assets/type.png");
+    width: 20px;
+    height: 20px;
+}
+
+.forma2 .form-field:nth-child(12)::before {
+    margin-left: 10%;
+    background-image: url("../../assets/image.png");
+    width: 20px;
+    height: 20px;
+}
+
 #ponistavanje a {
     color: #5F7A61;
     text-decoration: none;

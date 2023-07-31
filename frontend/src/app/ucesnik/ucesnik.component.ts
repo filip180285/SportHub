@@ -36,6 +36,7 @@ export class UcesnikComponent implements OnInit {
         const response: any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;
       } catch (error) {
+        console.log(error);
       }
     }
   }

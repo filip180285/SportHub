@@ -44,6 +44,7 @@ export class AdminAzuriranjeComponent implements OnInit {
         this.phone = this.loggedIn.phone;
         this.username = this.loggedIn.username;
       } catch (error) {
+        console.log(error);
       }
     }
   }
@@ -118,6 +119,7 @@ export class AdminAzuriranjeComponent implements OnInit {
       // preusmeravanje na stranicu sa pregledom profila
       this.router.navigate(["adminProfil"]);
     } catch (error: any) {
+      console.log(error);
       this.toastr.error("", error.error.message);
       this.router.navigate([""]);
     }

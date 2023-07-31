@@ -60,6 +60,7 @@ export class AdminPrikazProfilaComponent implements OnInit {
         this.router.navigate(["adminOrganizatori"]);
       }
     } catch (error: any) {
+      console.log(error);
       this.toastr.error("", error.error.message);
       this.router.navigate([""]);
     }

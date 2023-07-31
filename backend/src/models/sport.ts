@@ -13,8 +13,7 @@ let Sport = new Schema({
         type: String
     },
 }, {
-versionKey: false,
-_id:false
+versionKey: false
 },
 );
 

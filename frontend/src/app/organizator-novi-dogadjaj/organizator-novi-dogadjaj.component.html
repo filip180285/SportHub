@@ -31,10 +31,10 @@
             </div>
             <div class="form-field">
                 <input type="date" id="date" name="date" [(ngModel)]="date"  [min]="getMinDate()"
-                [max]="getMaxDate()" title="Izaberite datum">
+                [max]="getMaxDate()" title="Izaberite datum događaja">
             </div>
             <div class="form-field">
-                <input type="time" id="time" name="time" [(ngModel)]="time" title="Izaberite vreme">
+                <input type="time" id="time" name="time" [(ngModel)]="time" title="Izaberite vreme događaja">
             </div>
             <button id="regBtn" (click)="newEvent()" class="btn btn-secondary dugmeReg">Dodaj događaj</button>
             <br><br>

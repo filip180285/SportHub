@@ -38,9 +38,10 @@ class SportController {
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
         * @returns {Object} Slika
         */
-        this.getSportPicture = (req, res) => {
-            return res.sendFile(path.join(__dirname, `../../uploads/sports/${req.query.image}`));
-        };
+        this.getSportPicture = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const sport = yield sport_1.default.findOne({ "name": req.query.name });
+            return res.sendFile(path.join(__dirname, `../../uploads/sports/${sport.picture}`));
+        });
     }
 }
 exports.SportController = SportController;

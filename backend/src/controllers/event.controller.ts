@@ -6,14 +6,19 @@ const nodemailer = require("nodemailer");
 
 schedule.scheduleJob("1 6 * * *", () => {
   console.log("filip");
+  console.log(Date.now());
 });
 
 schedule.scheduleJob("5 0 * * *", () => {
+  console.log("cancel");
   new EventController().cancelEventsWithoutMinimum();
+  console.log(Date.now());
 });
 
 schedule.scheduleJob("10 0 * * *", () => {
+  console.log("update");
   new EventController().updateEventsStatus();
+  console.log(Date.now());
 });
 
 const options = {
@@ -75,6 +80,7 @@ export class EventController {
     const id: number = req.body.eventId;
     Event.findOne({ "id": id }, (error, event) => {
       if (error) {
+        console.log(error);
         return res.status(400).json({ "message": "Greška pri dohvatanju pojedinačnog događaja!", error });
       }
       else {
@@ -94,6 +100,7 @@ export class EventController {
       .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
       .exec((error, events) => {
         if (error) {
+          console.log(error);
           return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja!", error });
         }
         else return res.status(200).json(events);
@@ -114,6 +121,7 @@ export class EventController {
         .sort({ dateTime: -1 }) // vrati prvo najskorije dogadjaje
       return res.status(200).json(events);
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!", error });
     }
   };
@@ -131,6 +139,7 @@ export class EventController {
       .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
       .exec((error, events) => {
         if (error) {
+          console.log(error);
           return res.status(400).json({ "message": "Greška pri dohvatanju aktuelnih dogadjaja organizatora!", error });
         }
         else return res.status(200).json(events);
@@ -150,6 +159,7 @@ export class EventController {
       .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
       .exec((error, events) => {
         if (error) {
+          console.log(error);
           return res.status(400).json({ "message": "Greška pri dohvatanju prethodnih dogadjaja!", error });
         }
         else return res.status(200).json(events);
@@ -172,6 +182,9 @@ export class EventController {
       }
 
       const organiserUsername: string = req.body.organiser;
+      const organiserName: string = req.body.name;
+      const organiserLastname: string = req.body.lastname;
+      const now: number = req.body.now;
       const sport: string = req.body.sport;
       const pollDeadline: number = req.body.pollDeadline;
       const minParticipants: number = req.body.minParticipants;
@@ -180,7 +193,19 @@ export class EventController {
       const location: string = req.body.location;
       const eventPrice: number = req.body.eventPrice;
 
+      // kreiranje novog komentara
+      const newComment = {
+        id: 1,
+        username: organiserUsername,
+        name: organiserName,
+        lastname: organiserLastname,
+        datetime: now,
+        text: "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj.",
+      };
+
+
       const comments: Array<Object> = [];
+      comments.push(newComment);
       const participants: Array<string> = [];
 
       const newEvent = new Event({
@@ -233,7 +258,7 @@ export class EventController {
       });
 
     } catch (error) {
-      console.log(error)
+      console.log(error);
       return res.status(400).json({
         "message": "Došlo je do greške prilikom dodavanja događaja!",
         error
@@ -282,6 +307,7 @@ export class EventController {
 
       return res.status(200).json({ "message": "Događaj je uspešno otkazan!" });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Greška prilikom otkazivanja dogadjaja!", error });
     }
   };
@@ -307,6 +333,7 @@ export class EventController {
 
       return res.status(200).json({ "message": "Uspešno ste se prijavili za događaj." });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Došlo je do greške pri prijavi za događaj.", error });
     }
   };
@@ -332,6 +359,7 @@ export class EventController {
 
       return res.status(200).json({ "message": "Uspešno ste odjavili učešće sa događaja." });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Došlo je do greške pri odjavi sa događaja.", error });
     }
   };
@@ -356,7 +384,7 @@ export class EventController {
 
       // id novog komentara
       const lastComment = event.comments[event.comments.length - 1];
-      const newCommentId = lastComment ? lastComment.id + 1 : 1;
+      const newCommentId = lastComment.id + 1;
 
       // kreiranje novog komentara
       const newComment = {
@@ -374,6 +402,7 @@ export class EventController {
 
       return res.status(200).json({ "message": "Komentar uspešno dodat!" });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Greška pri dodavanju komentara!", error });
     }
   };
@@ -402,6 +431,7 @@ export class EventController {
 
       return res.status(200).json({ events, totalOwing });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Došlo je do greške prilikom dohvatanja događaja.", error });
     }
   };
@@ -423,6 +453,7 @@ export class EventController {
 
       return res.status(200).json({ eventsWithOwing });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Došlo je do greške prilikom dohvatanja događaja.", error });
     }
   };
@@ -446,6 +477,7 @@ export class EventController {
 
       return res.status(200).json({ "message": "Plaćanje je uspesno ažurirano." });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja placanja.", error });
     }
   };
@@ -490,6 +522,7 @@ export class EventController {
 
       console.log("Uspešno ažurirani događaji!");
     } catch (error) {
+      console.log(error);
       console.log("Došlo je do greške!", error);
     }
   };
@@ -536,6 +569,7 @@ export class EventController {
       }
       console.log("Uspešno otkazani događaji!");
     } catch (error) {
+      console.log(error);
       console.log("Došlo je do greške!", error);
     }
   };

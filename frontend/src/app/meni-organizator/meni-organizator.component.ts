@@ -43,6 +43,7 @@ export class MeniOrganizatorComponent implements OnInit {
           this.loggedIn = response;
         }
       } catch (error) {
+        console.log(error);
       }
     }
   }

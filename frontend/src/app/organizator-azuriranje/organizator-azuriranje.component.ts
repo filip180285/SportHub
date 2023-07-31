@@ -43,6 +43,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
         this.phone = this.loggedIn.phone;
         this.username = this.loggedIn.username;
       } catch (error) {
+        console.log(error);
       }
     }
   }
@@ -116,7 +117,8 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
       // preusmeravanje na stranicu sa pregledom profila
       this.router.navigate(["organizatorProfil"]);
-    } catch (error: any) {
+    } catch (error) {
+      console.log(error);
       this.toastr.error("", error.error.message);
       this.router.navigate([""]);
     }

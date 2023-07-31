@@ -110,7 +110,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
       return false;
     }
 
-    if (isNaN(this.eventPrice)) {
+    if (isNaN(this.eventPrice) || this.eventPrice < 0) {
       this.toastr.error("", "Niste izabrali validan broj za cenu!");
       return false;
     }
@@ -144,10 +144,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
   * Obrada submit-a forme za dodavanje novog dogadjaja.
   */
   async newEvent(): Promise<void> {
-    //if (this.checkInputValues() == false) { return; }
-
-    alert(new Date(1690902000000));
-    return;
+    if (this.checkInputValues() == false) { return; }
 
     try {
       const token: string = sessionStorage.getItem("token");
@@ -163,6 +160,9 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
       // podaci
       const data = {
         organiser: this.loggedIn.username,
+        name: this.loggedIn.name,
+        lastname: this.loggedIn.lastname,
+        now: Date.now(),
         sport: this.sport,
         pollDeadline: this.pollDeadline,
         minParticipants: this.minParticipants,
@@ -176,7 +176,8 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
       this.router.navigate(["organizator"]);
     } catch (error) {
-      this.toastr.error("", error.error.message);
+      console.log(error);
+      this.toastr.error("", error.error.message, { positionClass: "toast-top-center" });
       this.router.navigate([""]);
     }
 

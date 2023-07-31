@@ -19,12 +19,17 @@ const schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
 schedule.scheduleJob("1 6 * * *", () => {
     console.log("filip");
+    console.log(Date.now());
 });
 schedule.scheduleJob("5 0 * * *", () => {
+    console.log("cancel");
     new EventController().cancelEventsWithoutMinimum();
+    console.log(Date.now());
 });
 schedule.scheduleJob("10 0 * * *", () => {
+    console.log("update");
     new EventController().updateEventsStatus();
+    console.log(Date.now());
 });
 const options = {
     day: '2-digit',
@@ -172,6 +177,9 @@ class EventController {
                     id = events[0].id + 1;
                 }
                 const organiserUsername = req.body.organiser;
+                const organiserName = req.body.name;
+                const organiserLastname = req.body.lastname;
+                const now = req.body.now;
                 const sport = req.body.sport;
                 const pollDeadline = req.body.pollDeadline;
                 const minParticipants = req.body.minParticipants;
@@ -179,7 +187,17 @@ class EventController {
                 const dateTime = req.body.dateTime;
                 const location = req.body.location;
                 const eventPrice = req.body.eventPrice;
+                // kreiranje novog komentara
+                const newComment = {
+                    id: 1,
+                    username: organiserUsername,
+                    name: organiserName,
+                    lastname: organiserLastname,
+                    datetime: now,
+                    text: "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj.",
+                };
                 const comments = [];
+                comments.push(newComment);
                 const participants = [];
                 const newEvent = new event_1.default({
                     id: id,
@@ -332,7 +350,7 @@ class EventController {
                 const event = yield event_1.default.findOne({ "id": eventId });
                 // id novog komentara
                 const lastComment = event.comments[event.comments.length - 1];
-                const newCommentId = lastComment ? lastComment.id + 1 : 1;
+                const newCommentId = lastComment.id + 1;
                 // kreiranje novog komentara
                 const newComment = {
                     id: newCommentId,

@@ -13,29 +13,30 @@ import jwt_decode from "jwt-decode";
 })
 export class UcesnikProfilComponent implements OnInit {
 
- /**
- * Injects the API service and Angular Router.
- * @param userService API service to inject
- * @param router Angular Router to inject
- */
- constructor(private userService: UserService, private router: Router) { }
-
- loggedIn: User;
-
- /**
-  * Poziva se pri ucitavanju komponente.
+  /**
+  * Injects the API service and Angular Router.
+  * @param userService API service to inject
+  * @param router Angular Router to inject
   */
- async ngOnInit(): Promise<void> {
-   const token: string = sessionStorage.getItem("token");
-   if (token != null) {
-     try {
-       const decodedToken: any = jwt_decode(token);
-       const data: Object = { username: decodedToken.username };
-       const response: any = await lastValueFrom(this.userService.getUser(data, token));
-       this.loggedIn = response;
-     } catch (error) {
-     }
-   }
- }
+  constructor(private userService: UserService, private router: Router) { }
+
+  loggedIn: User;
+
+  /**
+   * Poziva se pri ucitavanju komponente.
+   */
+  async ngOnInit(): Promise<void> {
+    const token: string = sessionStorage.getItem("token");
+    if (token != null) {
+      try {
+        const decodedToken: any = jwt_decode(token);
+        const data: Object = { username: decodedToken.username };
+        const response: any = await lastValueFrom(this.userService.getUser(data, token));
+        this.loggedIn = response;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
 }

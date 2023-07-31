@@ -129,3 +129,49 @@ h2 {
     color: #4A4A4A;
     text-indent: 40px;
 }
+
+.forma2 .form-field:nth-child(5)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/football.png");
+    width: 20px;
+    height: 20px;
+    top: -5px;
+}
+
+
+.forma2 .form-field:nth-child(6)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/min.png");
+    width: 20px;
+    height: 20px;
+    top: -5px;
+}
+
+.forma2 .form-field:nth-child(7)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/max.png");
+    width: 20px;
+    height: 20px;
+    top: -5px;
+}
+
+.forma2 .form-field:nth-child(8)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/location.png");
+    width: 20px;
+    height: 20px;
+    top: -5px;
+}
+
+.forma2 .form-field:nth-child(9)::before {
+    margin-top: 20px;
+    margin-left: 10%;
+    background-image: url("../../assets/price.png");
+    width: 20px;
+    height: 20px;
+    top: -5px;
+}

@@ -39,6 +39,7 @@ export class HeaderLoggedComponent implements OnInit {
         const response: any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;
       } catch (error) {
+        console.log(error);
         this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
         this.router.navigate([""]);
       }

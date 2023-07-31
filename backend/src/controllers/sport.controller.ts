@@ -12,9 +12,10 @@ export class SportController {
     */
     getAllSports = async (req: express.Request, res: express.Response) => {
         try {
-            const sports = await Sport.find({}, { "id": 0, "_id" : 0 });
+            const sports = await Sport.find({}, { "id": 0, "_id": 0 });
             return res.status(200).json(sports);
         } catch (error) {
+            console.log(error);
             return res.status(400).json({ "message": "Greška pri dohvatanju sportova!", error });
         }
     };
@@ -25,8 +26,14 @@ export class SportController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} Slika
     */
-    getSportPicture = (req, res) => { // ok
-        return res.sendFile(path.join(__dirname, `../../uploads/sports/${req.query.image}`));
+    getSportPicture = async (req, res) => { // ok
+        try {
+            const sport = await Sport.findOne({ "name": req.query.name });
+            return res.sendFile(path.join(__dirname, `../../uploads/sports/${sport.picture}`));
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ "message": "Greška pri dohvatanju slike za sport!", error });
+        }
     };
 
 }

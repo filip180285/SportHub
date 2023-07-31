@@ -30,6 +30,7 @@ export class AdministratorComponent implements OnInit {
         const response: any = await lastValueFrom(this.userService.getAllParticipants(token));
         this.participants = response;
       } catch (error) {
+        console.log(error);
       }
     }
   }

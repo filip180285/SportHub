@@ -30,6 +30,7 @@ export class AdminOrganizatoriComponent implements OnInit {
         const response: any = await lastValueFrom(this.userService.getAllOrganisers(token));
         this.organisers = response;
       } catch (error) {
+        console.log(error);
       }
     }
   }

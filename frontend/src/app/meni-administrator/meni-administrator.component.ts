@@ -43,6 +43,7 @@ export class MeniAdministratorComponent implements OnInit {
           this.loggedIn = response;
         }
       } catch (error) {
+        console.log(error);
         //this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
         //this.router.navigate([""]);
       }

@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
       const decodedToken: any = jwt_decode(response["token"]);
       this.router.navigate([`/${decodedToken.role}`]);
     } catch (error) {
+      console.log(error);
       this.toastr.error("", error.error["message"]);
     }
   }

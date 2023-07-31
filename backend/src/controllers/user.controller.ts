@@ -41,6 +41,7 @@ export class UserController {
             const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
             return res.status(200).json({ token });
         } catch (error) {
+            console.log(error);
             return res.status(400).json({ "message": "Greška prilikom prijave!", error });
         }
     }
@@ -98,6 +99,7 @@ export class UserController {
                 "message": "Uspešno ste se registrovali kao " + type + "!"
             });
         } catch (error) {
+            console.log(error);
             return res.status(400).json({
                 "message": "Došlo je do greške prilikom slanja zahteva za registraciju!", error
             });
@@ -136,6 +138,7 @@ export class UserController {
                     "message": "Dodata profilna slika u bazu!"
                 });
             } catch (error) {
+                console.log(error);
                 return res.status(400).json({
                     "message": "Greška pri ažuriranju korisnika u bazi!", error
                 });
@@ -150,13 +153,14 @@ export class UserController {
     * @returns {Object} JSON objekat korisnika ili odgovarajuca poruka
     */
     getUser = (req: express.Request, res: express.Response) => { // ok
-        const username:string = req.body.username;
+        const username: string = req.body.username;
         User.findOne({ "username": username }, (error, user) => {
             if (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
             }
             else {
-                const {_id, id, password, ...userData } = user._doc;
+                const { _id, id, password, ...userData } = user._doc;
                 res.status(200).json(userData);
             }
         });
@@ -173,6 +177,22 @@ export class UserController {
     };
 
     /**
+    * Dohvatanje slike za dogadjaj
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} Slika
+    */
+    getPictureByUsername = async (req, res) => { // ok
+        try {
+            const user = await User.findOne({ "username": req.query.username });
+            return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ "message": "Greška pri dohvatanju slike korisnika!", error });
+        }
+    };
+
+    /**
     * Dohvatanje svih ucesnika.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
@@ -183,6 +203,7 @@ export class UserController {
             .sort({ "status": 1, "username": 1 })
             .exec((error, participants) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju učesnika!", error });
                 } else {
                     return res.status(200).json(participants);
@@ -201,6 +222,7 @@ export class UserController {
             .sort({ "status": 1, "username": 1 })
             .exec((error, organizers) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju organizatora!", error });
                 } else {
                     res.status(200).json(organizers);
@@ -215,10 +237,11 @@ export class UserController {
     * @returns {Object} JSON objekat sa nizom svih organizatora
     */
     getAllActiveOrganisers = (req: express.Request, res: express.Response) => { // ok
-        User.find({ "type": "organizator", "status" : "aktivan" }, { "_id": 0, "id": 0, "password": 0 })
-            .sort({"username": 1 })
+        User.find({ "type": "organizator", "status": "aktivan" }, { "_id": 0, "id": 0, "password": 0 })
+            .sort({ "username": 1 })
             .exec((error, organizers) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju aktivnih organizatora!", error });
                 } else {
                     res.status(200).json(organizers);
@@ -237,6 +260,7 @@ export class UserController {
 
         User.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (error, success) => {
             if (error) {
+                console.log(error);
                 return res.status(400).json({ "message": "Greška pri brisanju korisnika!", error });
             }
             else res.status(200).json({ "message": "Korisnik je obrisan!" })
@@ -264,6 +288,7 @@ export class UserController {
             },
             (error, success) => {
                 if (error) {
+                    console.log(error);
                     return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
                 }
                 else {
@@ -279,8 +304,8 @@ export class UserController {
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
     subscribe = async (req: express.Request, res: express.Response) => {
-        const username:string = req.body.username; // korisnicko ime ucesnika
-        const orgUsername:string = req.body.orgUsername; // korisnicko ime organizatora
+        const username: string = req.body.username; // korisnicko ime ucesnika
+        const orgUsername: string = req.body.orgUsername; // korisnicko ime organizatora
 
         try {
             // trazenje korisnika
@@ -301,6 +326,7 @@ export class UserController {
 
             return res.status(200).json({ "message": 'Uspešno ste se pretplatili na organizatora!' });
         } catch (error) {
+            console.log(error);
             return res.status(400).json({ "message": 'Greška pri pretplati na organizatora!', error });
         }
     };
@@ -312,8 +338,8 @@ export class UserController {
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
     unsubscribe = async (req: express.Request, res: express.Response) => {
-        const username:string = req.body.username; // korisnicko ime ucesnika
-        const orgUsername:string = req.body.orgUsername; // korisnicko ime organizatora
+        const username: string = req.body.username; // korisnicko ime ucesnika
+        const orgUsername: string = req.body.orgUsername; // korisnicko ime organizatora
 
         try {
             // trazenje korisnika
@@ -336,13 +362,14 @@ export class UserController {
 
             return res.status(200).json({ "message": 'Uspešno ste se odjavili od organizatora!' });
         } catch (error) {
+            console.log(error);
             return res.status(400).json({ "message": 'Greška pri odjavi od organizatora!', error });
         }
     };
 
 
     test = async (req: express.Request, res: express.Response) => { // ok
-        const orgUsername:string = req.body.username;
+        const orgUsername: string = req.body.username;
         //console.log(username)
         User.findOne({ "username": "jovica" }, (err, user) => {
             if (err) {

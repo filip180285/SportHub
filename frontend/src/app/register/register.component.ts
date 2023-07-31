@@ -128,7 +128,8 @@ export class RegisterComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
       // preusmeravanje na stranicu za prijavu
       this.router.navigate([""]);
-    } catch (error: any) {
+    } catch (error) {
+      console.log(error);
       this.toastr.error("", error.error.message);
     }
   }

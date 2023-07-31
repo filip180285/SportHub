@@ -43,6 +43,7 @@ export class MeniUcesnikComponent implements OnInit {
           this.loggedIn = response;
         }
       } catch (error) {
+        console.log(error);
       }
     }
   }

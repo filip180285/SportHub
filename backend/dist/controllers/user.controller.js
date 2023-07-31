@@ -181,6 +181,16 @@ class UserController {
             return res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
         };
         /**
+        * Dohvatanje slike za dogadjaj
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} Slika
+        */
+        this.getPictureByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_1.default.findOne({ "username": req.query.username });
+            return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+        });
+        /**
         * Dohvatanje svih ucesnika.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
