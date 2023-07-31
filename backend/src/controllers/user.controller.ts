@@ -231,13 +231,24 @@ export class UserController {
     };
 
     /**
-    * Dohvatanje svih organizatora.
+    * Dohvatanje svih aktivnih organizatora.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-    * @returns {Object} JSON objekat sa nizom svih organizatora
+    * @returns {Object} JSON objekat sa nizom svih organizatora ili odgovarajuca poruka
     */
     getAllActiveOrganisers = (req: express.Request, res: express.Response) => { // ok
-        User.find({ "type": "organizator", "status": "aktivan" }, { "_id": 0, "id": 0, "password": 0 })
+        const exclude = {
+            "_id": 0,
+            "id": 0,
+            "password": 0,
+            "email": 0,
+            "phone": 0,
+            "type": 0,
+            "status": 0,
+            "subscriptions": 0
+        };
+
+        User.find({ "type": "organizator", "status": "aktivan" }, exclude)
             .sort({ "username": 1 })
             .exec((error, organizers) => {
                 if (error) {

@@ -36,6 +36,9 @@ let User = new Schema({
     picture: {
         type: String
     },
+    description: {
+        type: String
+    },
     subscriptions: {
         type: Array
     }

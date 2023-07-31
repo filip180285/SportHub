@@ -17,8 +17,10 @@
 <div class="row sredina">
     <div *ngFor="let organiser of following" class="col-sm-4">
         <div class="event-container">
-            <img src="http://localhost:4000/users/getPictureByUsername/?username={{organiser.username}}"
-                class="rounded-circle stil">
+            <img class="rounded-circle stil"
+                src="http://localhost:4000/users/getUserPicture/?image={{organiser.picture}}"
+                *ngIf="organiser.picture != ''">
+            <img class="rounded-circle stil" src="../../assets/unknownuser.png" *ngIf="organiser.picture == ''">
             <div class="event-info">
                 <span class="slova vece">{{organiser.name}} {{organiser.lastname}}<br></span>
                 <span class="slova">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Numquam suscipit debitis
@@ -46,8 +48,7 @@
 <div class="row sredina">
     <div *ngFor="let organiser of organisers" class="col-sm-4">
         <div class="event-container">
-            <img [routerLink]="['/ucesnikOrgPrikaz', organiser.username]"
-                src="http://localhost:4000/users/getPictureByUsername/?username={{organiser.username}}"
+            <img src="http://localhost:4000/users/getPictureByUsername/?username={{organiser.username}}"
                 class="rounded-circle stil">
             <div class="event-info">
                 <span class="slova vece">{{organiser.name}} {{organiser.lastname}}<br></span>

@@ -16,7 +16,6 @@ import { OrganizatorProfilComponent } from './organizator-profil/organizator-pro
 import { OrganizatorAzuriranjeComponent } from './organizator-azuriranje/organizator-azuriranje.component';
 import { OrganizatorNoviDogadjajComponent } from './organizator-novi-dogadjaj/organizator-novi-dogadjaj.component';
 import { UcesnikOrganizatoriComponent } from './ucesnik-organizatori/ucesnik-organizatori.component';
-import { UcesnikOrgPrikazComponent } from './ucesnik-org-prikaz/ucesnik-org-prikaz.component';
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -34,8 +33,7 @@ const routes: Routes = [
   { path: "organizatorProfil", component: OrganizatorProfilComponent },
   { path: "organizatorAzuriranje", component: OrganizatorAzuriranjeComponent },
   { path: "organizatorNoviDogadjaj", component: OrganizatorNoviDogadjajComponent },
-  { path: "ucesnikOrganizatori", component: UcesnikOrganizatoriComponent },
-  { path: "ucesnikOrgPrikaz/:username", component: UcesnikOrgPrikazComponent }
+  { path: "ucesnikOrganizatori", component: UcesnikOrganizatoriComponent }
 ];
 
 @NgModule({

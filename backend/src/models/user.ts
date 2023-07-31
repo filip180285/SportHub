@@ -33,6 +33,9 @@ let User = new Schema({
     picture: {
         type: String
     },
+    description: {
+        type: String
+    },
     subscriptions: { // za organizatora - subscribe-ovani ucesnici, za ucesnika - organizatori na koje je subscribe-ovan
         type: Array
     }
