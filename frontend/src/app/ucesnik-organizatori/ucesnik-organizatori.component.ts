@@ -38,7 +38,7 @@ export class UcesnikOrganizatoriComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-    
+
     try {
       const decodedToken: any = jwt_decode(token);
       const data: Object = { username: decodedToken.username };
@@ -58,8 +58,50 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       this.organisers = this.organisers.filter((organiser) => {
         return !this.loggedIn.subscriptions.includes(organiser.username);
       });
+      console.log(this.following);
+      console.log(this.organisers)
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async subscribe(organiser: User): Promise<void> {
+    const token: string = sessionStorage.getItem("token");
+    const data = {
+      username: this.loggedIn.username,
+      orgUsername: organiser.username
+    };
+    try {
+      const response = await lastValueFrom(this.userService.subscribe(data, token));
+      this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
+
+      // Find the index of the organiser in the organisers array
+      const organiserIndex = this.organisers.findIndex((o) => o.username == organiser.username);
+      const [removedOrganiser] = this.organisers.splice(organiserIndex, 1);
+      this.following.push(removedOrganiser);
+    } catch (error) {
+      console.log(error);
+      this.toastr.error("", error.error["message"]);
+    }
+  }
+
+  async unsubscribe(organiser: User): Promise<void> {
+    const token: string = sessionStorage.getItem("token");
+    const data = {
+      username: this.loggedIn.username,
+      orgUsername: organiser.username
+    };
+    try {
+      const response = await lastValueFrom(this.userService.unsubscribe(data, token));
+      this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
+
+      // Find the index of the organiser in the organisers array
+      const organiserIndex = this.following.findIndex((o) => o.username == organiser.username);
+      const [removedOrganiser] = this.following.splice(organiserIndex, 1);
+      this.organisers.push(removedOrganiser);
+    } catch (error) {
+      console.log(error);
+      this.toastr.error("", error.error["message"]);
     }
   }
 

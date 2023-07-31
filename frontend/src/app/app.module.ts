@@ -31,6 +31,7 @@ import { UcesnikAzuriranjeComponent } from './ucesnik-azuriranje/ucesnik-azurira
 import { OrganizatorAzuriranjeComponent } from './organizator-azuriranje/organizator-azuriranje.component';
 import { OrganizatorNoviDogadjajComponent } from './organizator-novi-dogadjaj/organizator-novi-dogadjaj.component';
 import { UcesnikOrganizatoriComponent } from './ucesnik-organizatori/ucesnik-organizatori.component';
+import { UcesnikOrgPrikazComponent } from './ucesnik-org-prikaz/ucesnik-org-prikaz.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { UcesnikOrganizatoriComponent } from './ucesnik-organizatori/ucesnik-org
     UcesnikAzuriranjeComponent,
     OrganizatorAzuriranjeComponent,
     OrganizatorNoviDogadjajComponent,
-    UcesnikOrganizatoriComponent
+    UcesnikOrganizatoriComponent,
+    UcesnikOrgPrikazComponent
   ],
   imports: [
     BrowserModule,

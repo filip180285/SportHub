@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="row sredina">
+<div class="row sredina" *ngIf="activeEvents.length > 0">
     <div *ngFor="let event of activeEvents" class="col-sm-4">
         <div class="event-container">
             <img src="http://localhost:4000/sports/getSportPicture/?name={{event.sport}}"
@@ -54,7 +54,7 @@
     </div>
 </div>
 
-<div class="row sredina">
+<div class="row sredina" *ngIf="previousEvents.length > 0">
     <div *ngFor="let event of previousEvents" class="col-sm-4">
         <div class="event-container">
             <img src="http://localhost:4000/sports/getSportPicture/?name={{event.sport}}"
