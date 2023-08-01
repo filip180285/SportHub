@@ -194,7 +194,10 @@ class UserController {
         this.getPictureByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield user_1.default.findOne({ "username": req.query.username });
-                return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+                if (user.picture != "") {
+                    return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+                }
+                return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));
             }
             catch (error) {
                 console.log(error);

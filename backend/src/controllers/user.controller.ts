@@ -186,7 +186,10 @@ export class UserController {
     getPictureByUsername = async (req, res) => { // ok
         try {
             const user = await User.findOne({ "username": req.query.username });
-            return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+            if(user.picture != "") {
+                return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
+            }
+            return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));
         } catch (error) {
             console.log(error);
             return res.status(400).json({ "message": "Greška pri dohvatanju slike korisnika!", error });

@@ -324,7 +324,7 @@ export class EventController {
     try {
       // trazenje dogadjaja
       const event = await Event.findOne({ "id": eventId });
-      if (event.participants.length <= event.maxParticipants) {
+      if (event.participants.length >= event.maxParticipants) {
         return res.status(400).json({ "message": "Došlo je do greške pri prijavi za događaj." });
       }
 

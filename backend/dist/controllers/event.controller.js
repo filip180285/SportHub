@@ -304,6 +304,9 @@ class EventController {
             try {
                 // trazenje dogadjaja
                 const event = yield event_1.default.findOne({ "id": eventId });
+                if (event.participants.length >= event.maxParticipants) {
+                    return res.status(400).json({ "message": "Došlo je do greške pri prijavi za događaj." });
+                }
                 // dodavanje ucesnika u niz
                 if (!event.participants.includes(username)) {
                     event.participants.push(username);
