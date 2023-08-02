@@ -1,1 +1,161 @@
-<p>organizator-dogadjaj works!</p>
+<app-header-logged></app-header-logged>
+<app-meni-organizator></app-meni-organizator>
+
+<div class="row sredina">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Događaj</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina">
+    <div class="col-sm-6 offset-3">
+        <div class="event-container">
+            <img src="http://localhost:4000/sports/getSportPicture/?name={{event.sport}}" class="rounded-circle stil"
+                title="Prikaži detalje">
+            <div class="event-info">
+                <span class="orangered-label">Sport: <span class="slova">{{event.sport}} </span></span>
+                <span class="orangered-label">Mesto: <span class="slova">{{event.location}} </span></span>
+                <span class="orangered-label">Datum: <span
+                    class="slova">{{convertToDate(event.dateTime).toLocaleString(['en-GB'],
+                    {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute:'numeric'})}}
+                    </span></span>
+                <span class="orangered-label">Cena termina: <span class="slova">{{event.eventPrice}} RSD</span></span>
+                <span class="orangered-label" *ngIf="event.status == 'zavrsen'">Cena po učesniku: <span class="slova">{{event.pricePerUser}} RSD</span></span>
+                <span class="orangered-label" *ngIf="event.status == 'aktivan'">Potrebno: <span class="slova">{{event.minParticipants}} - {{event.maxParticipants}}
+                    učesnika </span></span>
+                <span class="orangered-label">Prijavljeno: <span class="slova">{{event.participants.length}}
+                    učesnika </span></span>
+                <span class="orangered-label" *ngIf="event.status == 'aktivan'">Rok za prijavu: <span
+                        class="slova">{{convertToDate(event.pollDeadline).toLocaleString(['en-GB'],
+                        {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute:'numeric'})}}
+                </span></span>
+                <button id="btnPretraga2" (click)="cancelEvent()"
+                    *ngIf="event.status == 'aktivan'"
+                    class="btn btn-primary">Otkaži događaj</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row sredina">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Lokacija</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina">
+    <div class="col-sm-6 offset-3 text-center">
+        <div id="map">
+            <h3>Ovde ce da stoji mapa {{event.location}}</h3>
+        </div>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="event.participants.length > 0">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Učesnici</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="event.participants.length == 0">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Nema prijavljenih učesnika</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="event.participants.length > 0">
+    <div class="col-sm-12 text-center">
+        <table class="table table-bordered" id="tabela">
+            <th>Korisničko ime</th>
+            <th>Ime</th>
+            <th>Prezime</th>
+            <th>Detalji</th>
+            <th *ngIf="event.status == 'zavrsen'">Platio</th>
+            <tr *ngFor="let user of participants">
+                <td>{{user.username}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.lastname}}</td>
+                <td><a [routerLink]="['/prikazProfila', user.username]">LINK</a></td>
+                <td *ngIf="event.status == 'zavrsen'">
+                    <input type="checkbox"
+                     [checked]="event.paid.includes(user.username)"
+                     (change)="paymentUpdate(user.username, $event)">
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="event.status == 'zavrsen'">
+    <div class="col-sm-4 offset-4 text-center">
+        <button (click)="savePayments()" class="btn btn-secondary dugmePrijava">Sačuvaj</button>
+    </div>
+</div>
+
+<div class="row sredina">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Komentari</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12">
+        <div class="likes">
+            <hr class="black">
+            <div *ngFor="let comment of event.comments">
+                <div class="kor1ime" *ngIf="comment.username == loggedIn.username">
+                    <b> Ja </b>, {{convertToDate(comment.datetime).toLocaleString(['en-GB'], {year: 'numeric',
+                    month:'numeric', day:'numeric', hour: '2-digit', minute: '2-digit'})}}
+                </div>
+                <div class="kor1ime" *ngIf="comment.username != loggedIn.username">
+                    <b> {{comment.name}} {{comment.lastname}}</b>,
+                    {{convertToDate(comment.datetime).toLocaleString(['en-GB'], {year: 'numeric', month:'numeric', day:
+                    'numeric', hour: '2-digit', minute: '2-digit'})}}
+                </div>
+                <div class="inline">
+                    <img class="rounded-circle slika"
+                        src="http://localhost:4000/users/getPictureByUsername/?username={{comment.username}}">
+                </div>
+                <div class="kor1">
+                    {{comment.text}}
+                </div>
+            </div>
+            <hr class="black">
+            <div class="porukaKom">
+                <span id="desno">Komentar:</span> <span> <input type="text" [(ngModel)]='newComment'> </span>
+                <button class="btn btn-secondary dugmeKom" (click)="sendComment()">Pošalji</button>
+            </div>
+        </div>
+    </div>
+</div>

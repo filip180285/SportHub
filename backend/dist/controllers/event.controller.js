@@ -168,6 +168,25 @@ class EventController {
             });
         };
         /**
+         * Dohvatanje ucesnika dogadjaja.
+         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+         * @returns {Object} JSON objekat sa nizom ucesnika ili odgovarajucom porukom
+         */
+        this.getEventParticipants = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const eventId = req.body.eventId;
+            try {
+                const event = yield event_1.default.findOne({ "id": eventId });
+                const participants = yield user_1.default.find({ "username": { $in: event.participants } })
+                    .select('-id -password -_id -subscriptions').sort({ "username": 1 });
+                return res.status(200).json(participants);
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(400).json({ "message": 'Greška pri dohvatanju učesnika', error });
+            }
+        });
+        /**
           * Dodavanje novog dogadjaja i obavestavanje organizatorovih subscriber-a putem mejla.
           * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
           * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
@@ -443,7 +462,7 @@ class EventController {
                 // azuriranje placanja
                 event.paid = paidArray;
                 yield event.save();
-                return res.status(200).json({ "message": "Plaćanje je uspesno ažurirano." });
+                return res.status(200).json({ "message": "Plaćanje je uspešno ažurirano." });
             }
             catch (error) {
                 console.log(error);

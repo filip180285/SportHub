@@ -167,6 +167,26 @@ export class EventController {
   }
 
   /**
+   * Dohvatanje ucesnika dogadjaja.
+   * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+   * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+   * @returns {Object} JSON objekat sa nizom ucesnika ili odgovarajucom porukom
+   */
+  getEventParticipants = async (req, res) => {
+    const eventId = req.body.eventId;
+
+    try {
+      const event = await Event.findOne({ "id": eventId });
+      const participants = await User.find({ "username": { $in: event.participants } })
+        .select('-id -password -_id -subscriptions').sort({ "username": 1 });
+      return res.status(200).json(participants);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ "message": 'Greška pri dohvatanju učesnika', error });
+    }
+  };
+
+  /**
     * Dodavanje novog dogadjaja i obavestavanje organizatorovih subscriber-a putem mejla.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
@@ -478,7 +498,7 @@ export class EventController {
       event.paid = paidArray;
       await event.save();
 
-      return res.status(200).json({ "message": "Plaćanje je uspesno ažurirano." });
+      return res.status(200).json({ "message": "Plaćanje je uspešno ažurirano." });
     } catch (error) {
       console.log(error);
       return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja placanja.", error });

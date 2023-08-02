@@ -32,6 +32,11 @@ eventRouter.route("/getAllPreviousEventsForOrganiser").post(
   (req, res) => new EventController().getAllPreviousEventsForOrganiser(req, res)
 );
 
+eventRouter.route("/getEventParticipants").post(
+  // verifyTokenMiddleware(["organizator"]),
+  (req, res) => new EventController().getEventParticipants(req, res)
+);
+
 eventRouter.route("/newEvent").post(
   // verifyTokenMiddleware(["organizator"]),
   (req, res) => new EventController().newEvent(req, res)

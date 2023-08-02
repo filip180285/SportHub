@@ -32,7 +32,7 @@ export class EventService {
    * @param {string} token - Token korisnika za autorizaciju
    * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
    */
-  getAllActiveEvents(token: string): Observable<Object>  {
+  getAllActiveEvents(token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(`${this.uri}/getAllActiveEvents`, { headers });
   }
@@ -69,6 +69,18 @@ export class EventService {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(`${this.uri}/getAllPreviousEventsForOrganiser`, data, { headers });
   }
+
+  /**
+    * Slanje POST zahteva za dohvatanje ucesnika dogadjaja.
+    * @param {Object} data - Objekat sa id dogadjaja
+    * @param {string} token - Token korisnika za autorizaciju
+    * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+    */
+  getEventParticipants(data: Object, token: string): Observable<Object> {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+    return this.http.post(`${this.uri}/getEventParticipants`, data, { headers });
+  }
+
 
   /**
    * Slanje POST zahteva za kreiranje novog dogadjaja.
