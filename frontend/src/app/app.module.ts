@@ -33,6 +33,7 @@ import { OrganizatorNoviDogadjajComponent } from './organizator-novi-dogadjaj/or
 import { UcesnikOrganizatoriComponent } from './ucesnik-organizatori/ucesnik-organizatori.component';
 import { UcesnikDogadjajComponent } from './ucesnik-dogadjaj/ucesnik-dogadjaj.component';
 import { OrganizatorDogadjajComponent } from './organizator-dogadjaj/organizator-dogadjaj.component';
+import { OrgUcesnikComponent } from './org-ucesnik/org-ucesnik.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { OrganizatorDogadjajComponent } from './organizator-dogadjaj/organizator
     OrganizatorNoviDogadjajComponent,
     UcesnikOrganizatoriComponent,
     UcesnikDogadjajComponent,
-    OrganizatorDogadjajComponent
+    OrganizatorDogadjajComponent,
+    OrgUcesnikComponent
   ],
   imports: [
     BrowserModule,

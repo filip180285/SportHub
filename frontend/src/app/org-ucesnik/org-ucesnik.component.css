@@ -1,0 +1,25 @@
+.velicina {
+    width: 300px;
+    height: 300px;
+    margin-top: 20px;
+}
+
+#tabela {
+    background-color: white;
+    margin-top: 30px;
+    border-radius: 30px;
+}
+
+#tabela td {
+    border: 1px solid #444941;
+}
+
+#ponistavanje a {
+    color: #5F7A61;
+    text-decoration: none;
+}
+
+#ponistavanje a:hover {
+    color: orangered;
+    font-weight: 500;
+}

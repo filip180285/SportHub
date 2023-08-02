@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { User } from 'src/models/user';
+import { Event } from 'src/models/event';
 import { UserService } from 'src/services/user.service';
+import { EventService } from 'src/services/event.service';
 
 @Component({
   selector: 'app-admin-prikaz-profila',
@@ -19,11 +21,13 @@ export class AdminPrikazProfilaComponent implements OnInit {
  * @param toastr Toastr ToastrService to inject
  * @param route ActivatedRoute to inject
  */
-  constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private route: ActivatedRoute) { }
+  constructor(private userService: UserService, private eventService: EventService, private router: Router, private toastr: ToastrService, private route: ActivatedRoute) { }
 
 
   user: User;
   username: string
+  events: Event[] = [];
+  totalOwing: number = 0;
 
   /**
    * Poziva se pri ucitavanju komponente.
@@ -38,6 +42,11 @@ export class AdminPrikazProfilaComponent implements OnInit {
       const data: Object = { username: this.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.user = response;
+      if (this.user.type == "ucesnik") {
+        const responseEvents: any = await lastValueFrom(this.eventService.findOwingEventsForParticipant(data, token));
+        this.events = responseEvents["events"];
+        this.totalOwing = responseEvents["totalOwing"];
+      }
     } catch (error) {
       console.log(error);
     }
@@ -65,6 +74,13 @@ export class AdminPrikazProfilaComponent implements OnInit {
       this.toastr.error("", error.error.message);
       this.router.navigate([""]);
     }
+  }
+
+  /**
+* Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+*/
+  convertToDate(numOfMs: number) {
+    return new Date(numOfMs);
   }
 
 }

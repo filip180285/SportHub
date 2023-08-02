@@ -44,3 +44,50 @@
         <button id="btnPretraga" *ngIf="user.status == 'aktivan'" (click)="deleteUser()" class="btn btn-primary">Ukloni korisnika</button>
     </div>
 </div>
+
+<div class="row sredina" *ngIf="user.type == 'ucesnik' && events.length > 0">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Dugovanja</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="events.length == 0 && user.type == 'ucesnik'">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Učesnik nema dugova</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="events.length > 0">
+    <div class="col-sm-12 text-center">
+        <table class="table table-bordered" id="tabela2">
+            <th>Sport</th>
+            <th>Mesto</th>
+            <th>Datum</th>
+            <th>Cena po učesniku</th>
+            <th>Detalji</th>
+            <tr *ngFor="let event of events">
+                <td>{{event.sport}}</td>
+                <td>{{event.location}}</td>
+                <td>{{convertToDate(event.pollDeadline).toLocaleString(['en-GB'],
+                    {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute:'numeric'})}}</td>
+                <td>{{event.pricePerUser}} RSD</td>
+                <td><a [routerLink]="['/orgUcenik', user.username]">LINK</a></td>
+            </tr>
+            <tr>
+                <td colspan="5" id="dug" class="text-center">Ukupan dug: {{totalOwing}} RSD</td>
+            </tr>
+        </table>
+    </div>
+</div>

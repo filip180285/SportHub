@@ -2,7 +2,7 @@
     background: linear-gradient(to right,white,#D5EEBB) !important;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
     height: 50px;
     font-size: x-large;
     font-size:1.3vw;
