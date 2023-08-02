@@ -39,3 +39,56 @@
                 routerLink="../organizatorAzuriranje">OVDE</a></span>
     </div>
 </div>
+
+<div class="row sredina" *ngIf="events.length > 0">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Prethodni događaji</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="events.length == 0">
+    <div class="col-sm-12">
+        <hr>
+    </div>
+    <div class="col-sm-12 text-center">
+        <h3>Nema prethodnih događaja</h3>
+    </div>
+    <div class="col-sm-12">
+        <hr>
+    </div>
+</div>
+
+<div class="row sredina" *ngIf="events.length > 0">
+    <div class="col-sm-12 text-center">
+        <table class="table table-bordered" id="tabela3">
+            <th>Sport</th>
+            <th>Mesto</th>
+            <th>Datum</th>
+            <th>Cena po učesniku</th>
+            <th>Svi platili</th>
+            <th>Detalji</th>
+            <tr *ngFor="let event of events">
+                <td>{{event.sport}}</td>
+                <td>{{event.location}}</td>
+                <td>{{convertToDate(event.dateTime).toLocaleString(['en-GB'],
+                    {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute:'numeric'})}}</td>
+                <td>{{event.pricePerUser}} RSD</td>
+                <td *ngIf="!(event.participants.length == event.paid.length)"
+                [ngClass]="{'orange-bg': !(event.participants.length == event.paid.length)}">
+                    <img src="../../assets/remove.png">
+                </td>
+                <td *ngIf="event.participants.length == event.paid.length"
+                [ngClass]="{'orange-bg':event.participants.length == event.paid.length}">
+                    <img src="../../assets/accept.png">
+                </td>
+                <td><a [routerLink]="['/organizatorDogadjaj', event.id]">LINK</a></td>
+            </tr>
+        </table>
+    </div>
+</div>

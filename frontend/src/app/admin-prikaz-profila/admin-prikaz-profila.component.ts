@@ -43,9 +43,18 @@ export class AdminPrikazProfilaComponent implements OnInit {
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.user = response;
       if (this.user.type == "ucesnik") {
-        const responseEvents: any = await lastValueFrom(this.eventService.findOwingEventsForParticipant(data, token));
-        this.events = responseEvents["events"];
-        this.totalOwing = responseEvents["totalOwing"];
+        const responseEvents: any = await lastValueFrom(this.eventService.getAllPreviousEventsForParticipant(data, token));
+        this.events = responseEvents;
+        this.totalOwing = this.events.reduce((total, event) => {
+          if (!event.paid.includes(this.user.username)) {
+            total += event.pricePerUser;
+          }
+          return total;
+        }, 0);
+      }
+      else if (this.user.type == "organizator") {
+        const responseEvents: any = await lastValueFrom(this.eventService.getAllPreviousEventsForOrganiser(data, token));
+        this.events = responseEvents;
       }
     } catch (error) {
       console.log(error);

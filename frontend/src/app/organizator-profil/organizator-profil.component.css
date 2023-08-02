@@ -30,3 +30,41 @@
     color: orangered;
     font-weight: 500;
 }
+
+#tabela3 {
+    background-color: white;
+    color: black;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 30px;
+    border-radius: 30px;
+}
+
+#tabela3 td, th, tr {
+    border: 1px solid #444941;
+}
+
+#tabela3 tr:hover {
+    background-color: lightblue;
+}
+
+.orange-bg img{
+    width: 20px;
+    height: 20px;
+}
+
+.green-bg img{
+    width: 20px;
+    height: 20px;
+}
+
+a {
+    color: #5F7A61;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: orangered;
+    font-weight: 500;
+}

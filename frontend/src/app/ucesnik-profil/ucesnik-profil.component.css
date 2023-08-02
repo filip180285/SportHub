@@ -66,3 +66,13 @@ a:hover {
     color: orangered;
     font-weight: 500;
 }
+
+.orange-bg img{
+    width: 20px;
+    height: 20px;
+}
+
+.green-bg img{
+    width: 20px;
+    height: 20px;
+}

@@ -19,6 +19,7 @@ import { UcesnikOrganizatoriComponent } from './ucesnik-organizatori/ucesnik-org
 import { UcesnikDogadjajComponent } from './ucesnik-dogadjaj/ucesnik-dogadjaj.component';
 import { OrganizatorDogadjajComponent } from './organizator-dogadjaj/organizator-dogadjaj.component';
 import { OrgUcesnikComponent } from './org-ucesnik/org-ucesnik.component';
+import { AdminDogadjajComponent } from './admin-dogadjaj/admin-dogadjaj.component';
 
 const routes: Routes = [
   { path: "", component: LoginComponent },
@@ -39,7 +40,7 @@ const routes: Routes = [
   { path: "ucesnikOrganizatori", component: UcesnikOrganizatoriComponent },
   { path: "ucesnikDogadjaj/:id", component: UcesnikDogadjajComponent },
   { path: "organizatorDogadjaj/:id", component: OrganizatorDogadjajComponent },
-  { path: "orgUcenik/:username", component: OrgUcesnikComponent }
+  { path: "adminDogadjaj/:id", component: AdminDogadjajComponent }
 ];
 
 @NgModule({

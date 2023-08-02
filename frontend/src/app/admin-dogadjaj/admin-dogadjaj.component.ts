@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { lastValueFrom, firstValueFrom } from 'rxjs';
 import { User } from 'src/models/user';
-import { Event as MyEvent } from 'src/models/event'; // Use the "as" keyword to import your custom Event class
+import { Event as MyEvent } from 'src/models/event';
 import { EventService } from 'src/services/event.service';
 import { SportService } from 'src/services/sport.service';
 import { UserService } from 'src/services/user.service';
@@ -11,26 +11,25 @@ import { UserService } from 'src/services/user.service';
 import jwt_decode from "jwt-decode";
 
 @Component({
-  selector: 'app-organizator-dogadjaj',
-  templateUrl: './organizator-dogadjaj.component.html',
-  styleUrls: ['./organizator-dogadjaj.component.css']
+  selector: 'app-admin-dogadjaj',
+  templateUrl: './admin-dogadjaj.component.html',
+  styleUrls: ['./admin-dogadjaj.component.css']
 })
-export class OrganizatorDogadjajComponent implements OnInit {
+export class AdminDogadjajComponent implements OnInit {
 
   /**
- * Injects the API service and Angular Router.
- * @param userService API service to inject
- * @param eventService API service to inject
- * @param sportService API service to inject
- * @param router Angular Router to inject
- * @param toastr Toastr ToastrService to inject
- */
+  * Injects the API service and Angular Router.
+  * @param userService API service to inject
+  * @param eventService API service to inject
+  * @param sportService API service to inject
+  * @param router Angular Router to inject
+  * @param toastr Toastr ToastrService to inject
+  */
   constructor(private userService: UserService, private eventService: EventService,
     private sportService: SportService, private router: Router, private toastr: ToastrService,
     private route: ActivatedRoute) {
   }
 
-  loggedIn: User;
   id: number;
   event: MyEvent;
   participants: User[];
@@ -47,9 +46,6 @@ export class OrganizatorDogadjajComponent implements OnInit {
     try {
       const decodedToken: any = jwt_decode(token);
       const data: Object = { username: decodedToken.username };
-      // dohvatanje ulogovanog korisnika
-      const response: any = await lastValueFrom(this.userService.getUser(data, token));
-      this.loggedIn = response;
       const params = await firstValueFrom(this.route.params);
       this.id = params['id'];
       const dataEvent: Object = { eventId: this.id };
@@ -71,25 +67,6 @@ export class OrganizatorDogadjajComponent implements OnInit {
 */
   convertToDate(numOfMs: number) {
     return new Date(numOfMs);
-  }
-
-  /**
-* Otkazivanje dogadjaja.
-*/
-  async cancelEvent(): Promise<void> {
-    const token: string = sessionStorage.getItem("token");
-    const data: Object = {
-      organiser: this.loggedIn.username,
-      eventId: this.id
-    }
-    try {
-      const response = await lastValueFrom(this.eventService.cancelEvent(data, token));
-      this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
-      this.event.status = "otkazan";
-    } catch (error) {
-      console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
-    }
   }
 
   /**
@@ -120,37 +97,6 @@ export class OrganizatorDogadjajComponent implements OnInit {
     try {
       const response = await lastValueFrom(this.eventService.updatePayments(data, token));
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
-    } catch (error) {
-      console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
-    }
-  }
-
-
-    /**
-     * Slanje komentara o dogadjaju.
-     */
-  async sendComment(): Promise<void> {
-    if (this.newComment == "") {
-      this.toastr.error("", "Ne možete poslati prazan komentar!", { positionClass: "toast-bottom-center" });
-      return;
-    }
-    const token: string = sessionStorage.getItem("token");
-    // novi komentar
-    const data: Object = {
-      username: this.loggedIn.username,
-      eventId: this.id,
-      name: this.loggedIn.name,
-      lastname: this.loggedIn.lastname,
-      text: this.newComment,
-      datetime: Date.now()
-    }
-    try {
-      const response = await lastValueFrom(this.eventService.addComment(data, token));
-      this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
-
-      this.event.comments.push(response["newComment"]);
-      this.newComment = "";
     } catch (error) {
       console.log(error);
       this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });

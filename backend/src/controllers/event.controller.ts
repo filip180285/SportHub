@@ -441,10 +441,10 @@ export class EventController {
     try {
       // trazi sve dogadjaje za koje je ucesnik duzan
       const events = await Event.find({
-        status: "zavrsen",
-        participants: username,
-        paid: { $nin: [username] }
-      });
+        "status": "zavrsen",
+        "participants": username,
+        "paid": { $nin: [username] }
+      }).sort({ "dateTime": -1 });
 
       // racuna ukupan dug korisnika
       let totalOwing = 0;
@@ -469,7 +469,7 @@ export class EventController {
     const username: string = req.body.username;
     try {
       // pronalazenje svih dogadjaja organizatora
-      const events = await Event.find({ status: "zavrsen", organiser: username });
+      const events = await Event.find({ "status": "zavrsen", "organiser": username }).sort({ "dateTime": -1 });
 
       // filtriranje dogadjaja za koje postoje dugovanja
       const eventsWithOwing = events.filter((event) => (event.paid).length < (event.participants).length);

@@ -1,0 +1,202 @@
+input[type='text'] {
+    width: 60%;
+}
+
+.likes {
+    width: 80%;
+    background-color: #D5EEBB;
+    /* background-color: white; */
+    margin: auto;
+    color: black;
+    border: 3px solid black;
+    font-size: medium;
+}
+
+.kor1ime {
+    text-align: left;
+    padding: 10px;
+    margin-left: 100px;
+    color: black;
+}
+
+.inline {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.slika {
+    width: 70px;
+    height: 70px;
+    margin: 5px;
+    margin-left: 20px;
+}
+
+.kor1 {
+    border-radius: 25px;
+    border: 3px solid black;
+    background-color: #7FC8A9;
+    /* background-color: lightblue; */
+    width: 50%;
+    padding: 20px;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.black {
+    background-color: black;
+    height: 2px;
+    width: 100%;
+}
+
+.dugmeKom {
+    width: 20%;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 5%;
+    display: inline-block;
+    text-align: center;
+    background-color: #7FC8A9;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.dugmeKom:hover {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    background-color: #48a77f;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.porukaKom {
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+#desno{
+    margin-right: 10px;
+}
+
+.stil {
+    height: 200px;
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+.event-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+}
+
+.event-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left (vertically) */
+    justify-content: center; /* Center items horizontally */
+    gap: 5px; /* Add some space between the labels and values */
+}
+
+.orangered-label {
+    color: orangered;
+    font-size: larger;
+}
+
+.slova{
+    color: black;
+}
+
+#btnPretraga, #btnPretraga2 {
+    margin-top: 15px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    background-color: #7FC8A9;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+    font-size: 17px;
+    align-self: center;
+    margin-bottom: 10px;
+}
+
+#btnPretraga:hover, #btnPretraga2:hover {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    background-color: #48a77f;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+#tabela {
+    background-color: white;
+    color: black;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 30px;
+    border-radius: 30px;
+}
+
+#tabela td, th {
+    border: 1px solid #444941;
+}
+
+#tabela tr:hover {
+    background-color: lightblue;
+}
+
+a {
+    color: #5F7A61;
+    text-decoration: none;
+}
+
+a:hover {
+    color: orangered;
+    font-weight: 500;
+}
+
+.dugmePrijava {
+    outline: none;
+    width: 100%;
+    font-size: 17px;
+    border: none;
+    cursor: pointer;
+    margin-top: 5px;
+    display: inline-block;
+    text-align: center;
+    background-color: #7FC8A9;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.dugmePrijava:hover {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    background-color: #48a77f;
+    color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+}

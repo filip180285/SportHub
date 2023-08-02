@@ -411,10 +411,10 @@ class EventController {
             try {
                 // trazi sve dogadjaje za koje je ucesnik duzan
                 const events = yield event_1.default.find({
-                    status: "zavrsen",
-                    participants: username,
-                    paid: { $nin: [username] }
-                });
+                    "status": "zavrsen",
+                    "participants": username,
+                    "paid": { $nin: [username] }
+                }).sort({ "dateTime": -1 });
                 // racuna ukupan dug korisnika
                 let totalOwing = 0;
                 for (const event of events) {
@@ -437,7 +437,7 @@ class EventController {
             const username = req.body.username;
             try {
                 // pronalazenje svih dogadjaja organizatora
-                const events = yield event_1.default.find({ status: "zavrsen", organiser: username });
+                const events = yield event_1.default.find({ "status": "zavrsen", "organiser": username }).sort({ "dateTime": -1 });
                 // filtriranje dogadjaja za koje postoje dugovanja
                 const eventsWithOwing = events.filter((event) => (event.paid).length < (event.participants).length);
                 return res.status(200).json({ eventsWithOwing });

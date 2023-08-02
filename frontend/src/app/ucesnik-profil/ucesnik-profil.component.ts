@@ -20,7 +20,7 @@ export class UcesnikProfilComponent implements OnInit {
   * @param userService API service to inject
   * @param router Angular Router to inject
   */
-  constructor(private userService: UserService,private eventService: EventService, private router: Router) { }
+  constructor(private userService: UserService, private eventService: EventService, private router: Router) { }
 
   loggedIn: User;
   events: Event[] = [];
@@ -38,9 +38,14 @@ export class UcesnikProfilComponent implements OnInit {
       const data: Object = { username: decodedToken.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
-      const responseEvents: any = await lastValueFrom(this.eventService.findOwingEventsForParticipant(data, token));
-      this.events = responseEvents["events"];
-      this.totalOwing = responseEvents["totalOwing"];
+      const responseEvents: any = await lastValueFrom(this.eventService.getAllPreviousEventsForParticipant(data, token));
+      this.events = responseEvents;
+      this.totalOwing = this.events.reduce((total, event) => {
+        if (!event.paid.includes(this.loggedIn.username)) {
+          total += event.pricePerUser;
+        }
+        return total;
+      }, 0);
     } catch (error) {
       console.log(error);
     }
