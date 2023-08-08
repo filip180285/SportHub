@@ -1,0 +1,31 @@
+<app-header></app-header>
+
+<div class="row sredina">
+    <div class="col-sm-6 offset-3 text-center boja">
+        <form class="forma2">
+            <h2>Dopuni profil</h2>
+            <img src="../../assets/register.png">
+            <br><br>
+            <div class="form-field">
+                <input type="text" id="korisnickoIme" placeholder="Korisničko ime..." name='korisnickoIme'
+                    [(ngModel)]='username'>
+            </div>
+            <div class="form-field">
+                <input type="text" id="telefon" placeholder="Kontakt telefon(+381 xx xxxxxxx)..." name='telefon'
+                    [(ngModel)]='phone'>
+            </div>
+            <div class="form-field">
+                <select name="type" id="type" [(ngModel)]='type'>
+                    <option value="" disabled selected>Izaberite tip korisnika</option>
+                    <option value="ucesnik">Učesnik</option>
+                    <option value="organizator">Organizator</option>
+                </select>
+            </div>
+            <div class="form-field" *ngIf = "type == 'organizator'">
+                <textarea id="opis" placeholder="Recite nešto o sebi..." name='opis' [(ngModel)]='description' rows="7" cols="100"></textarea>
+            </div>
+            <button id="regBtn" (click)="finishGoogleSignIn()" class="btn btn-secondary dugmeReg">Dopuni</button>
+            <br><br>
+        </form>
+    </div>
+</div>

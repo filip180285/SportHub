@@ -8,13 +8,17 @@
             <h2>Prijavi se</h2>
             <img src="../../assets/login.png">
             <div class="forma-field">
-                <input type="text" id="korisnickoIme" placeholder="Korisničko ime..." name='korisnickoIme' [(ngModel)]='username'>
+                <input type="text" id="korisnickoIme" placeholder="Korisničko ime..." name='korisnickoIme'
+                    [(ngModel)]='username'>
             </div>
             <div class="forma-field">
                 <input type="password" id="lozinka" placeholder="Lozinka..." name='lozinka' [(ngModel)]='password'>
             </div>
             <div class="forma-field">
                 <button id="loginBtn" class="btn btn-secondary" (click)='login()'>Prijava</button>
+            </div>
+            <div class="forma-field">
+                <div id="gbtn"></div>
             </div>
         </div>
     </div>

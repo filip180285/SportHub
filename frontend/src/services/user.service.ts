@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  uri = 'http://localhost:4000/users';
+  uri = environment.usersURI;
   //private token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI2LCJ1c2VybmFtZSI6Im5vdmkiLCJuYW1lIjoibm92aSIsImxhc3RuYW1lIjoibm92aSIsInVzZXJUeXBlIjoib3JnYW5pemF0b3IiLCJpYXQiOjE2ODk5NjgwMjgsImV4cCI6MTY4OTk3MTYyOH0.VYEvnNvPwOoJAAaCFGrRCTw5dtfGFQnsOUHrO7sxd3s';
 
   /**
@@ -34,6 +35,25 @@ export class UserService {
   }
 
   /**
+  * Slanje POST zahteva za prijavu korisnika sa Google nalogom.
+  * @param {Object} data - Objekat sa poljima sa Google tokenom
+  * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+ */
+  googleSignIn(data: Object): Observable<Object> {
+    return this.http.post(`${this.uri}/googleSignIn`, data);
+  }
+
+  /**
+* Slanje POST zahteva za dopunu korisnickog profila nakon prijave sa Google nalogom.
+* @param {Object} data - Objekat sa poljima sa Google tokenom
+* @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+*/
+  finishGoogleSignIn(data: Object): Observable<Object> {
+    return this.http.post(`${this.uri}/finishGoogleSignIn`, data);
+  }
+
+
+  /**
    * Slanje POST zahteva za dodavanje profilne slike novog korisnika pri registraciji.
    * @param {formData} FormData - FormData objekat koji sadrzi sliku koja se salje na backend.
    * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
@@ -48,10 +68,20 @@ export class UserService {
   * @param {string} token - Token korisnika za autorizaciju
   * @returns {Observable<User>} Observable korisnika, sa telom kao objektom parsiranim iz JSON-a."
  */
-  getUser(data: Object, token: string) {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
-    return this.http.post(`${this.uri}/getUser`, data, { headers });
-  }
+  /*getPictureByUsername() {
+    return this.http.get(`${this.uri}/getPictureByUsername`);
+  }*/
+
+    /**
+  * Slanje POST zahteva za dohvatanje korisnika.
+  * @param {Object} data - Objekat sa poljima sa korisnickim imenom
+  * @param {string} token - Token korisnika za autorizaciju
+  * @returns {Observable<User>} Observable korisnika, sa telom kao objektom parsiranim iz JSON-a."
+ */
+    getUser(data: Object, token: string) {
+      const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
+      return this.http.post(`${this.uri}/getUser`, data, { headers });
+    }
 
   /**
   * Slanje GET zahteva za dohvatanje svih ucesnika.
@@ -73,12 +103,12 @@ export class UserService {
     return this.http.get(`${this.uri}/getAllOrganisers`, { headers });
   }
 
-   /**
-  * Slanje GET zahteva za dohvatanje svih aktivnih organizatora.
-  * @param {string} token - Token korisnika za autorizaciju
-  * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
-  */
-   getAllActiveOrganisers(token: string) {
+  /**
+ * Slanje GET zahteva za dohvatanje svih aktivnih organizatora.
+ * @param {string} token - Token korisnika za autorizaciju
+ * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+ */
+  getAllActiveOrganisers(token: string) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.get(`${this.uri}/getAllActiveOrganisers`, { headers });
   }

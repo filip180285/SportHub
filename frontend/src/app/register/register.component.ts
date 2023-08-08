@@ -1,8 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+declare var google: any;
+
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
+
+import { accounts } from 'google-one-tap';
+import { environment } from 'src/environments/environment';
+
+import jwt_decode from "jwt-decode";
 
 @Component({
   selector: 'app-register',
@@ -17,7 +24,7 @@ export class RegisterComponent implements OnInit {
  * @param router Angular Router to inject
  * @param toastr Toastr ToastrService to inject
  */
-  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private ngZone: NgZone) { }
 
   /**
    * Poziva se pri ucitavanju komponente.
@@ -29,6 +36,28 @@ export class RegisterComponent implements OnInit {
       alert("Sva polja osim izbora profilne slike(Choose file polje) su obavezna!" + "\n"
         + "Polja ime, prezime, korisničko ime i lozinka moraju biti duzine do 20 karaktera!");
     }, 100);
+
+    const gAccounts: accounts = google.accounts;
+    gAccounts.id.initialize({
+      client_id: environment.googleClientId,
+      ux_mode: 'popup',
+      auto_select: false,
+      cancel_on_tap_outside: true,
+      callback: ({ credential }) => {
+        this.ngZone.run(() => {
+          this.googleSignIn(credential);
+        });
+      },
+    });
+
+    setTimeout(() => {
+      gAccounts.id.renderButton(document.getElementById('gbtn') as HTMLElement, {
+        size: 'large',
+        width: 270,
+        shape: "pill",
+        theme: "filled_blue"
+      });
+    }, 200);
   }
 
   username: string = "";
@@ -77,11 +106,11 @@ export class RegisterComponent implements OnInit {
       this.toastr.error("", "Obavezna polja su ime, prezime , korisničko ime, lozinka, telefon, tip i mejl!");
       return false;
     }
-    
-    if(this.type == "organizator" && this.description == "") {
+
+    if (this.type == "organizator" && this.description == "") {
       this.toastr.error("", "Popunite polje za opis profila!");
       return false;
-    } 
+    }
 
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
@@ -138,6 +167,27 @@ export class RegisterComponent implements OnInit {
     } catch (error) {
       console.log(error);
       this.toastr.error("", error.error.message);
+    }
+  }
+
+  /**
+  * Obrada prijave preko Google naloga.
+  */
+  async googleSignIn(token: string): Promise<void> {
+    try {
+      const data = { token: token };
+      const response: any = await lastValueFrom(this.userService.googleSignIn(data));
+
+      if (response["token"]) {
+        sessionStorage.setItem('token', response["token"]);
+        const decodedToken: any = jwt_decode(response["token"]);
+        this.router.navigate([`/${decodedToken.role}`]);
+      } else if (response.id) {
+        this.router.navigate(["dopunaProfil", response.id]);
+      }
+    } catch (error) {
+      console.error(error);
+      this.toastr.error("", error.error["message"]);
     }
   }
 

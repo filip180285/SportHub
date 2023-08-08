@@ -35,15 +35,21 @@
                     <option value="organizator">Organizator</option>
                 </select>
             </div>
-            <div class="form-field" *ngIf = "type == 'organizator'">
-                <textarea id="opis" placeholder="Recite nešto o sebi..." name='opis' [(ngModel)]='description' rows="7" cols="100"></textarea>
+            <div class="form-field" *ngIf="type == 'organizator'">
+                <textarea id="opis" placeholder="Recite nešto o sebi..." name='opis' [(ngModel)]='description' rows="7"
+                    cols="100"></textarea>
             </div>
             <div class="form-field">
-                <input type="file" id="slika" name="image"
-                    (change)="selectImage($event)" title="Izaberite profilnu sliku(opciono)">
+                <input type="file" id="slika" name="image" (change)="selectImage($event)"
+                    title="Izaberite profilnu sliku(opciono)">
             </div>
-            <button id="regBtn" (click)="sendRegistrationRequest()" class="btn btn-secondary dugmeReg">Registruj se</button>
-            <br><br>
+            <div class="forma-field">
+                <button id="regBtn" (click)="sendRegistrationRequest()" class="btn btn-secondary dugmeReg">Registruj
+                    se</button>
+            </div>
+            <div class="forma-field">
+                <div id="gbtn"></div>
+            </div>
         </form>
     </div>
 </div>

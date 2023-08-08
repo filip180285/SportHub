@@ -28,6 +28,14 @@ userRouter.route("/register").post(
   (req, res) => new UserController().register(req, res)
 );
 
+userRouter.route("/googleSignIn").post(
+  (req, res) => new UserController().googleSignIn(req, res)
+);
+
+userRouter.route("/finishGoogleSignIn").post(
+  (req, res) => new UserController().finishGoogleSignIn(req, res)
+);
+
 userRouter.route("/addPicture").post(upload.single("file"), (req, res) =>
   new UserController().addPicture(req, res)
 );
@@ -41,9 +49,10 @@ userRouter.route("/getUserPicture").get(
   (req, res) => new UserController().getUserPicture(req, res)
 );
 
+/*
 userRouter.route("/getPictureByUsername").get(
   (req, res) => new UserController().getPictureByUsername(req, res)
-);
+);*/
 
 userRouter.route("/getAllParticipants").get(
   // verifyTokenMiddleware(["administrator"]),

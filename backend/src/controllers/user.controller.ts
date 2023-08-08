@@ -4,6 +4,8 @@ const path = require("path");
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client();
 
 export class UserController {
 
@@ -112,6 +114,135 @@ export class UserController {
             return res.status(400).json({
                 "message": "Došlo je do greške prilikom slanja zahteva za registraciju!", error
             });
+        }
+    }
+
+    /**
+    * Obrada prijave preko gugl naloga, dodavanje novog korisnika ako nije prethodno registrovan.
+    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+    * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
+    */
+    googleSignIn = async (req: express.Request, res: express.Response) => {
+        console.log("usao")
+        const googleToken: string = req.body.token;
+
+        try {
+            // verifikacija tokena
+            const ticket = await client.verifyIdToken({
+                idToken: googleToken,
+                audience: process.env.GOOGLE_CLIENT_ID
+            });
+            const payload = ticket.getPayload();
+            const email = payload.email;
+
+            const user = await User.findOne({ "email": email });
+            console.log(user)
+
+            // aktivan korisnik
+            if (user && user.status == "aktivan") {
+                const jwtData = {
+                    username: user.username,
+                    name: user.name,
+                    lastname: user.lastname,
+                    role: user.type
+                }
+
+                // kreiranje i potpis tokena
+                const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+                console.log("kraj")
+                return res.status(200).json({ token });
+            }
+            // obrisan korisnik
+            else if (user && user.status == "neaktivan") {
+                return res.status(400).json({ "message": "Ne možete se prijaviti sa ovim mejlom!" });
+            }
+
+            // id novog korisnika
+            let id: number = 1;
+            const users = await User.find().sort({ "id": -1 }).limit(1);
+            if (users.length > 0) {
+                id = users[0].id + 1;
+            }
+
+            // kreiramo novog korisnika
+            const name = payload.given_name;
+            const lastname = payload.family_name;
+            const picture = payload.picture;
+            const subscriptions: Array<string> = [];
+
+            const newUser = new User({
+                id: id,
+                name: name,
+                lastname: lastname,
+                username: "",
+                password: "",
+                email: email,
+                type: "",
+                status: "aktivan",
+                phone: "",
+                description: "",
+                picture: picture,
+                subscriptions: subscriptions
+            });
+
+            const savedUser = await newUser.save();
+            return res.status(200).json({
+                "message": "Uspešna registracija! Popunite preostala polja!",
+                id
+            });
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({ "message": "Greška pri prijavi sa Google nalogom!" });
+        }
+    }
+
+    /**
+  * Dopuna podataka prilikom prijave sa Google nalogom.
+  * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+  * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+  * @returns {Object} JSON objekat sa odgovarajucom porukom
+  */
+    finishGoogleSignIn = async (req: express.Request, res: express.Response) => {
+        const id = req.body.id;
+        const username = req.body.username;
+        const phone = req.body.phone;
+        const type = req.body.type;
+        const description = req.body.description;
+        try {
+            const user = await User.findOne({ "username": username });
+            if (user) {
+                return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
+            }
+
+            const updateResult = await User.updateOne(
+                { "id": id },
+                {
+                    $set: {
+                        "username": username,
+                        "phone": phone,
+                        "type": type,
+                        "description": description
+                    }
+                }
+            );
+
+            // nalazenje novog korisnika
+            const newUser = await User.findOne({ "username": username });
+
+            const jwtData = {
+                username: newUser.username,
+                name: newUser.name,
+                lastname: newUser.lastname,
+                role: newUser.type
+            };
+
+            // kreiranje i potpis tokena
+            const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
+            return res.status(200).json({  "message": "Uspešna registracija sa Google nalogom!", token });
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({ "message": "Greška pri dopuni podataka!", error });
         }
     }
 
@@ -393,9 +524,30 @@ export class UserController {
 
 
     test = async (req: express.Request, res: express.Response) => { // ok
-        const orgUsername: string = req.body.username;
+        const token = req.body.token;
+        try {
+            const ticket = await client.verifyIdToken({
+                idToken: token,
+                audience: process.env.GOOGLE_CLIENT_ID
+            });
+            const payload = ticket.getPayload();
+            const userid = payload['sub'];
+            console.log(payload)
+            console.log(payload.email)
+            return res.status(200).json({ payload });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(400).json({ "message": 'gRESKAAAA' });
+            // Handle any errors that occurred during verification here
+        }
+    }
+}
+
+/*
+//const orgUsername: string = req.body.username;
         //console.log(username)
-        User.findOne({ "username": "jovica" }, (err, user) => {
+        /*User.findOne({ "username": "jovica" }, (err, user) => {
             if (err) {
                 return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
             }
@@ -407,6 +559,4 @@ export class UserController {
                 // Send all the other fields in a new object
                 res.status(200).json(userData);
             }
-        });
-    }
-}
+        });*/

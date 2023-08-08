@@ -35,6 +35,7 @@ import { UcesnikDogadjajComponent } from './ucesnik-dogadjaj/ucesnik-dogadjaj.co
 import { OrganizatorDogadjajComponent } from './organizator-dogadjaj/organizator-dogadjaj.component';
 import { OrgUcesnikComponent } from './org-ucesnik/org-ucesnik.component';
 import { AdminDogadjajComponent } from './admin-dogadjaj/admin-dogadjaj.component';
+import { DopunaProfilComponent } from './dopuna-profil/dopuna-profil.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { AdminDogadjajComponent } from './admin-dogadjaj/admin-dogadjaj.componen
     UcesnikDogadjajComponent,
     OrganizatorDogadjajComponent,
     OrgUcesnikComponent,
-    AdminDogadjajComponent
+    AdminDogadjajComponent,
+    DopunaProfilComponent
   ],
   imports: [
     BrowserModule,

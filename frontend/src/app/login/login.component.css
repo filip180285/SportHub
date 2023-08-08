@@ -87,6 +87,7 @@ h2 {
     align-items: center;
     margin-bottom: 1rem;
     position: relative;
+    margin-bottom: 0px;
 }
 
 .forma1 input {
@@ -145,4 +146,9 @@ h2 {
 #ponistavanje a:hover {
     color: orangered;
     font-weight: 500;
+}
+
+#gbtn{
+    margin: auto;
+    margin-top: 40px;
 }
