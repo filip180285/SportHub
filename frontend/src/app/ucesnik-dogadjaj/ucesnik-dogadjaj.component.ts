@@ -55,9 +55,46 @@ export class UcesnikDogadjajComponent implements OnInit {
       const responseEvent: any = await lastValueFrom(this.eventService.getEvent(dataEvent, token));
       this.event = responseEvent;
       console.log(this.event);
+      // inicijalizovanje mape
+      this.initMap(this.event.location);
     } catch (error) {
       console.log(error);
     }
+  }
+
+  map: google.maps.Map;
+
+  async initMap(address: string): Promise<void> {
+    const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
+
+    // geocoder pronalazi lat i lng adrese date u vidu stringa
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK) {
+        const lat = results[0].geometry.location.lat();
+        const lng = results[0].geometry.location.lng();
+        // koordinate
+        const position = { lat, lng };
+        // mapa
+        this.map = new Map(
+          document.getElementById('map') as HTMLElement,
+          {
+            zoom: 16,
+            center: position,
+            mapId: 'DEMO_MAP_ID',
+          }
+        );
+        // marker
+        const marker = new AdvancedMarkerElement({
+          map: this.map,
+          position: position,
+          title: 'Lokacija'
+        });
+      } else {
+        console.log('Geocode was not successful for the following reason: ' + status);
+      }
+    });
   }
 
   /**
