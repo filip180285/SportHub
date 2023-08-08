@@ -2,9 +2,7 @@
     <div class="col-sm-12" id="heder">
         <img src="../../assets/logo.png" id="logo">
         <h1 id="naslov"><span>GameTime</span></h1>
-        <img class="rounded-circle velicina" *ngIf="loggedIn.picture != '' && loggedIn.picture.includes('https')"
-            src="{{loggedIn.picture}}">
-        <img class="rounded-circle velicina" *ngIf="loggedIn.picture != '' && !loggedIn.picture.includes('https')"
+        <img class="rounded-circle velicina" *ngIf="loggedIn.picture != ''"
             src="http://localhost:4000/users/getUserPicture/?image={{loggedIn.picture}}">
         <img class="rounded-circle velicina" src="../../assets/unknownuser.png" *ngIf="loggedIn.picture == ''">
     </div>

@@ -31,6 +31,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client();
+const axios = require('axios');
 class UserController {
     constructor() {
         /**
@@ -306,9 +307,26 @@ class UserController {
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
         * @returns {Object} Profilna slika korisnika
         */
-        this.getUserPicture = (req, res) => {
-            return res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
-        };
+        this.getUserPicture = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const picture = req.query.image;
+            try {
+                if (!picture.includes("googleusercontent")) { // uploadovana slika
+                    return res.sendFile(path.join(__dirname, `../../uploads/users/${picture}`));
+                }
+                else { // slika sa gugl servera
+                    const imageUrl = picture;
+                    const response = yield axios.get(imageUrl, { responseType: 'arraybuffer' });
+                    const imageBuffer = Buffer.from(response.data, 'base64');
+                    const contentType = response.headers['content-type'];
+                    res.set('Content-Type', contentType);
+                    res.send(imageBuffer);
+                }
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(400).json({ "message": "Greška pri dohvatanju slike korisnika!", error });
+            }
+        });
         /**
         * Dohvatanje slike za dogadjaj
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
@@ -318,10 +336,20 @@ class UserController {
         this.getPictureByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 const user = yield user_1.default.findOne({ "username": req.query.username });
-                if (user.picture != "") {
+                if (user.picture == "") { // nema slike
+                    return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));
+                }
+                else if (user.picture != "" && !user.picture.includes("googleusercontent")) { // uploadovana slika
                     return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
                 }
-                return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));
+                else { // slika sa gugl servera
+                    const imageUrl = user.picture;
+                    const response = yield axios.get(imageUrl, { responseType: 'arraybuffer' });
+                    const imageBuffer = Buffer.from(response.data, 'base64');
+                    const contentType = response.headers['content-type'];
+                    res.set('Content-Type', contentType);
+                    res.send(imageBuffer);
+                }
             }
             catch (error) {
                 console.log(error);

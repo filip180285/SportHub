@@ -49,10 +49,9 @@ userRouter.route("/getUserPicture").get(
   (req, res) => new UserController().getUserPicture(req, res)
 );
 
-/*
 userRouter.route("/getPictureByUsername").get(
   (req, res) => new UserController().getPictureByUsername(req, res)
-);*/
+);
 
 userRouter.route("/getAllParticipants").get(
   // verifyTokenMiddleware(["administrator"]),

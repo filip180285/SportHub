@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client();
+const axios = require('axios');
 
 export class UserController {
 
@@ -239,7 +240,7 @@ export class UserController {
 
             // kreiranje i potpis tokena
             const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-            return res.status(200).json({  "message": "Uspešna registracija sa Google nalogom!", token });
+            return res.status(200).json({ "message": "Uspešna registracija sa Google nalogom!", token });
         } catch (error) {
             console.error(error);
             return res.status(400).json({ "message": "Greška pri dopuni podataka!", error });
@@ -313,8 +314,24 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} Profilna slika korisnika
     */
-    getUserPicture = (req, res) => { // ok
-        return res.sendFile(path.join(__dirname, `../../uploads/users/${req.query.image}`));
+    getUserPicture = async (req, res) => { // ok
+        const picture = req.query.image;
+        try {
+            if (!picture.includes("googleusercontent")) { // uploadovana slika
+                return res.sendFile(path.join(__dirname, `../../uploads/users/${picture}`));
+            }
+            else { // slika sa gugl servera
+                const imageUrl = picture;
+                const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+                const imageBuffer = Buffer.from(response.data, 'base64');
+                const contentType = response.headers['content-type'];
+                res.set('Content-Type', contentType);
+                res.send(imageBuffer);
+            }
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json({ "message": "Greška pri dohvatanju slike korisnika!", error });
+        }
     };
 
     /**
@@ -326,10 +343,20 @@ export class UserController {
     getPictureByUsername = async (req, res) => { // ok
         try {
             const user = await User.findOne({ "username": req.query.username });
-            if (user.picture != "") {
+            if (user.picture == "") { // nema slike
+                return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));
+            }
+            else if (user.picture != "" && !user.picture.includes("googleusercontent")) { // uploadovana slika
                 return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
             }
-            return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));
+            else { // slika sa gugl servera
+                const imageUrl = user.picture;
+                const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+                const imageBuffer = Buffer.from(response.data, 'base64');
+                const contentType = response.headers['content-type'];
+                res.set('Content-Type', contentType);
+                res.send(imageBuffer);
+            }
         } catch (error) {
             console.log(error);
             return res.status(400).json({ "message": "Greška pri dohvatanju slike korisnika!", error });
