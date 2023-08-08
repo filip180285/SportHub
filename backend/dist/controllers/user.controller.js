@@ -73,10 +73,17 @@ class UserController {
         */
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const username = req.body.username;
+            const email = req.body.email;
             try {
+                // provera da li je slobodno korisnicko ime
                 const user = yield user_1.default.findOne({ "username": username });
                 if (user) {
                     return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
+                }
+                // provera da li je slobodan mejl
+                const user2 = yield user_1.default.findOne({ "email": email });
+                if (user2) {
+                    return res.status(400).json({ "message": "Mejl je zauzet!" });
                 }
                 // id novog korisnika
                 let id = 1;
@@ -87,9 +94,9 @@ class UserController {
                 const name = req.body.name;
                 const lastname = req.body.lastname;
                 const password = req.body.password;
-                const email = req.body.email;
                 const type = req.body.type;
                 const phone = req.body.phone;
+                const description = req.body.description;
                 const subscriptions = [];
                 const saltRounds = 10;
                 const hashedPassword = yield bcrypt.hash(password, saltRounds);
@@ -103,6 +110,7 @@ class UserController {
                     type: type,
                     status: "aktivan",
                     phone: phone,
+                    description: description,
                     picture: "",
                     subscriptions: subscriptions
                 });

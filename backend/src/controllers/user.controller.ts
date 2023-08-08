@@ -54,11 +54,19 @@ export class UserController {
     */
     register = async (req: express.Request, res: express.Response) => { // ok
         const username: string = req.body.username;
+        const email: string = req.body.email;
 
         try {
+            // provera da li je slobodno korisnicko ime
             const user = await User.findOne({ "username": username });
             if (user) {
                 return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
+            }
+
+            // provera da li je slobodan mejl
+            const user2 = await User.findOne({ "email": email });
+            if (user2) {
+                return res.status(400).json({ "message": "Mejl je zauzet!" });
             }
 
             // id novog korisnika
@@ -71,9 +79,9 @@ export class UserController {
             const name: string = req.body.name;
             const lastname: string = req.body.lastname;
             const password: string = req.body.password;
-            const email: string = req.body.email;
             const type: string = req.body.type;
             const phone: string = req.body.phone;
+            const description: string = req.body.description;
 
             const subscriptions: Array<string> = [];
 
@@ -90,6 +98,7 @@ export class UserController {
                 type: type,
                 status: "aktivan",
                 phone: phone,
+                description: description,
                 picture: "",
                 subscriptions: subscriptions
             });
@@ -186,7 +195,7 @@ export class UserController {
     getPictureByUsername = async (req, res) => { // ok
         try {
             const user = await User.findOne({ "username": req.query.username });
-            if(user.picture != "") {
+            if (user.picture != "") {
                 return res.sendFile(path.join(__dirname, `../../uploads/users/${user.picture}`));
             }
             return res.sendFile(path.join(__dirname, `../../uploads/users/unknownuser.png`));

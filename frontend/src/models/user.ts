@@ -8,6 +8,7 @@ export class User {
     type: string;
     status: string;
     phone: string;
+    description: string;
     picture: string;
     subscriptions: Array<string>;
 }

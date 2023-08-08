@@ -35,6 +35,9 @@
                     <option value="organizator">Organizator</option>
                 </select>
             </div>
+            <div class="form-field" *ngIf = "type == 'organizator'">
+                <textarea id="opis" placeholder="Recite nešto o sebi..." name='opis' [(ngModel)]='description' rows="7" cols="100"></textarea>
+            </div>
             <div class="form-field">
                 <input type="file" id="slika" name="image"
                     (change)="selectImage($event)" title="Izaberite profilnu sliku(opciono)">

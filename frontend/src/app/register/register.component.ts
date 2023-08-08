@@ -38,6 +38,7 @@ export class RegisterComponent implements OnInit {
   email: string = "";
   phone: string = "";
   type: string = "";
+  description: string = "";
 
   picture: File = null;
 
@@ -76,6 +77,11 @@ export class RegisterComponent implements OnInit {
       this.toastr.error("", "Obavezna polja su ime, prezime , korisničko ime, lozinka, telefon, tip i mejl!");
       return false;
     }
+    
+    if(this.type == "organizator" && this.description == "") {
+      this.toastr.error("", "Popunite polje za opis profila!");
+      return false;
+    } 
 
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
@@ -113,7 +119,8 @@ export class RegisterComponent implements OnInit {
       password: this.password,
       email: this.email,
       type: this.type,
-      phone: this.phone
+      phone: this.phone,
+      description: this.description
     };
 
     try {

@@ -19,7 +19,8 @@ h2 {
 #nazivOrg,
 #adresaOrg,
 #matBrOrg,
-#slika {
+#slika,
+#opis {
     margin-left: 10%;
     background-color: #D5EEBB;
     width: 80%;
@@ -189,12 +190,12 @@ h2 {
     height: 20px;
 }
 
-.forma2 .form-field:nth-child(12)::before {
+/*.forma2 .form-field:nth-child(12)::before {
     margin-left: 10%;
     background-image: url("../../assets/image.png");
     width: 20px;
     height: 20px;
-}
+}*/
 
 #ponistavanje a {
     color: #5F7A61;
