@@ -42,7 +42,8 @@ const routes: Routes = [
   { path: "ucesnikDogadjaj/:id", component: UcesnikDogadjajComponent },
   { path: "organizatorDogadjaj/:id", component: OrganizatorDogadjajComponent },
   { path: "adminDogadjaj/:id", component: AdminDogadjajComponent },
-  { path: "dopunaProfil/:id", component: DopunaProfilComponent }
+  { path: "dopunaProfil/:id", component: DopunaProfilComponent },
+  { path: "orgUcesnik/:username", component: OrgUcesnikComponent }
 ];
 
 @NgModule({

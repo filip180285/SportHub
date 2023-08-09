@@ -15,6 +15,10 @@
                     [(ngModel)]='phone'>
             </div>
             <div class="form-field">
+                <textarea id="opis" placeholder="Recite nešto o sebi..." name='opis' [(ngModel)]='description' rows="7"
+                    cols="100"></textarea>
+            </div>
+            <div class="form-field">
                 <input type="file" id="slika" placeholder="Slika(opciono)..." name="image"
                     (change)="selectImage($event)" title="Izaberite novu profilnu sliku(opciono)">
             </div>

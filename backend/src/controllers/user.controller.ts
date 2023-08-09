@@ -338,7 +338,7 @@ export class UserController {
     * Dohvatanje slike za dogadjaj
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-    * @returns {Object} Slika
+    * @returns {Object} Profilna slika korisnika
     */
     getPictureByUsername = async (req, res) => { // ok
         try {
@@ -459,13 +459,15 @@ export class UserController {
         const username = req.body.username;
         const phone = req.body.phone;
         const email = req.body.email;
+        const description = req.body.description;
 
         User.collection.updateOne(
             { "username": username },
             {
                 $set: {
                     "phone": phone,
-                    "email": email
+                    "email": email,
+                    "description": description
                 }
             },
             (error, success) => {
@@ -528,14 +530,14 @@ export class UserController {
             const participant = await User.findOne({ "username": username });
             const organizer = await User.findOne({ "username": orgUsername });
 
-            // Removing organizer from participant's subscriptions
+            // uklanjanje organizatora iz ucesnikovih pretplata
             const orgIndex = participant.subscriptions.indexOf(orgUsername);
             if (orgIndex != -1) {
                 participant.subscriptions.splice(orgIndex, 1);
                 await participant.save();
             }
 
-            // Removing participant from organizer's subscriptions
+            // uklanjanje ucesnika iz organizatorovih pretplata
             const participantIndex = organizer.subscriptions.indexOf(username);
             if (participantIndex != -1) {
                 organizer.subscriptions.splice(participantIndex, 1);
@@ -547,43 +549,5 @@ export class UserController {
             console.log(error);
             return res.status(400).json({ "message": 'Greška pri odjavi od organizatora!', error });
         }
-    };
-
-
-    test = async (req: express.Request, res: express.Response) => { // ok
-        const token = req.body.token;
-        try {
-            const ticket = await client.verifyIdToken({
-                idToken: token,
-                audience: process.env.GOOGLE_CLIENT_ID
-            });
-            const payload = ticket.getPayload();
-            const userid = payload['sub'];
-            console.log(payload)
-            console.log(payload.email)
-            return res.status(200).json({ payload });
-
-        } catch (error) {
-            console.error(error);
-            return res.status(400).json({ "message": 'gRESKAAAA' });
-            // Handle any errors that occurred during verification here
-        }
     }
 }
-
-/*
-//const orgUsername: string = req.body.username;
-        //console.log(username)
-        /*User.findOne({ "username": "jovica" }, (err, user) => {
-            if (err) {
-                return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
-            }
-            else {
-                // Exclude the 'password' field from the 'user' object
-                const { password, email, ...userData } = user._doc;
-                //console.log(user);
-                console.log(userData);
-                // Send all the other fields in a new object
-                res.status(200).json(userData);
-            }
-        });*/

@@ -10,15 +10,10 @@ h2 {
     font-family: 'DM Serif Display', serif;
 }
 
-#ime,
-#prezime,
-#korisnickoImeReg,
-#lozinkaReg,
+
 #telefon,
 #mejl,
-#nazivOrg,
-#adresaOrg,
-#matBrOrg,
+#opis,
 #slika {
     margin-left: 10%;
     background-color: #D5EEBB;
@@ -145,7 +140,7 @@ h2 {
 }
 
 
-.forma2 .form-field:nth-child(7)::before {
+.forma2 .form-field:nth-child(8)::before {
     margin-top: 20px;
     margin-left: 10%;
     background-image: url("../../assets/image.png");

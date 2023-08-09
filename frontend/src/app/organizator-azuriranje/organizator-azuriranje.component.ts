@@ -17,6 +17,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
   username: string = "";
   email: string = "";
   phone: string = "";
+  description:string = "";
 
   picture: File = null;
 
@@ -43,6 +44,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
       this.email = this.loggedIn.email;
       this.phone = this.loggedIn.phone;
       this.username = this.loggedIn.username;
+      this.description = this.loggedIn.description;
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +103,8 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
     const data = {
       username: this.username,
       email: this.email,
-      phone: this.phone
+      phone: this.phone,
+      description:this.description
     };
 
     try {

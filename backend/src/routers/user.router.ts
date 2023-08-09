@@ -16,10 +16,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-userRouter.route("/test").post( // testiranje
-  (req, res) => new UserController().test(req, res)
-);
-
 userRouter.route('/login').post(
   (req, res) => new UserController().login(req, res)
 );
@@ -41,7 +37,7 @@ userRouter.route("/addPicture").post(upload.single("file"), (req, res) =>
 );
 
 userRouter.route('/getUser').post(
-  // verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
+  verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new UserController().getUser(req, res)
 );
 
@@ -54,37 +50,37 @@ userRouter.route("/getPictureByUsername").get(
 );
 
 userRouter.route("/getAllParticipants").get(
-  // verifyTokenMiddleware(["administrator"]),
+  verifyTokenMiddleware(["administrator"]),
   (req, res) => new UserController().getAllParticipants(req, res)
 );
 
 userRouter.route("/getAllOrganisers").get(
-  // verifyTokenMiddleware(["administrator"]),
+  verifyTokenMiddleware(["administrator"]),
   (req, res) => new UserController().getAllOrganisers(req, res)
 );
 
 userRouter.route("/getAllActiveOrganisers").get(
-  // verifyTokenMiddleware(["ucesnik"]),
+  verifyTokenMiddleware(["ucesnik"]),
   (req, res) => new UserController().getAllActiveOrganisers(req, res)
 );
 
 userRouter.route("/deleteUser").post(
-  // verifyTokenMiddleware(["administrator"]),
+  verifyTokenMiddleware(["administrator"]),
   (req, res) => new UserController().deleteUser(req, res)
 );
 
 userRouter.route('/updateUser').post(
-  // verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
+  verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new UserController().updateUser(req, res)
 );
 
 userRouter.route('/subscribe').post(
-  // verifyTokenMiddleware(["ucesnik"]),
+  verifyTokenMiddleware(["ucesnik"]),
   (req, res) => new UserController().subscribe(req, res)
 );
 
 userRouter.route('/unsubscribe').post(
-  // verifyTokenMiddleware(["ucesnik"]),
+  verifyTokenMiddleware(["ucesnik"]),
   (req, res) => new UserController().unsubscribe(req, res)
 );
 

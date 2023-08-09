@@ -206,3 +206,11 @@ a:hover {
     width: 70%; /* The width is the width of the web page */
     margin: auto;
 }
+
+#dug{
+    font-weight: bold;
+}
+
+#dug:hover{
+    background-color: white;
+}

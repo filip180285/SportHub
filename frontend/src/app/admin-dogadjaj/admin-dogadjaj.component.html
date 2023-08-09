@@ -97,12 +97,15 @@
                 <td>{{user.username}}</td>
                 <td>{{user.name}}</td>
                 <td>{{user.lastname}}</td>
-                <td><a [routerLink]="['/orgUcenik', user.username]">LINK</a></td>
+                <td><a [routerLink]="['/prikazProfila', user.username]">LINK</a></td>
                 <td *ngIf="event.status == 'zavrsen'">
                     <input type="checkbox"
                      [checked]="event.paid.includes(user.username)"
                      (change)="paymentUpdate(user.username, $event)">
                 </td>
+            </tr>
+            <tr *ngIf="event.status == 'zavrsen'">
+                <td colspan="5" id="dug" class="text-center">Ukupan dug: {{totalOwing}} RSD</td>
             </tr>
         </table>
     </div>

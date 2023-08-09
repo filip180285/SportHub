@@ -331,7 +331,7 @@ class UserController {
         * Dohvatanje slike za dogadjaj
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-        * @returns {Object} Slika
+        * @returns {Object} Profilna slika korisnika
         */
         this.getPictureByUsername = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
@@ -450,10 +450,12 @@ class UserController {
             const username = req.body.username;
             const phone = req.body.phone;
             const email = req.body.email;
+            const description = req.body.description;
             user_1.default.collection.updateOne({ "username": username }, {
                 $set: {
                     "phone": phone,
-                    "email": email
+                    "email": email,
+                    "description": description
                 }
             }, (error, success) => {
                 if (error) {

@@ -34,6 +34,7 @@ export class OrganizatorDogadjajComponent implements OnInit {
   id: number;
   event: MyEvent;
   participants: User[];
+  totalOwing:number = 0;
 
   newComment = "";
 
@@ -63,6 +64,7 @@ export class OrganizatorDogadjajComponent implements OnInit {
       console.log(this.participants)
       // inicijalizovanje mape
       this.initMap(this.event.location);
+      this.totalOwing = (this.event.participants.length - this.event.paid.length) * this.event.pricePerUser
     } catch (error) {
       console.log(error);
     }
@@ -137,11 +139,13 @@ export class OrganizatorDogadjajComponent implements OnInit {
     const isChecked: boolean = target.checked;
     if (isChecked) {
       this.event.paid.push(username);
+      this.totalOwing -= this.event.pricePerUser;
     } else {
       const index = this.event.paid.indexOf(username);
       if (index != -1) {
         this.event.paid.splice(index, 1);
       }
+      this.totalOwing += this.event.pricePerUser;
     }
   }
 
