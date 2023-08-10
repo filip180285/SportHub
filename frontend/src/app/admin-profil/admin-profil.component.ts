@@ -20,10 +20,12 @@ export class AdminProfilComponent implements OnInit {
  */
   constructor(private userService: UserService, private router: Router) { }
 
+  // ulogovani korisnik
   loggedIn: User;
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");

@@ -150,7 +150,7 @@ export class EventController {
    * Dohvatanje prethodnih dogadjaja organizatora.
    * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-   * @returns {Object} JSON objekat sa nizom aktuelnih dogadjaja ili odgovarajucom porukom
+   * @returns {Object} JSON objekat sa nizom dogadjaja ili odgovarajucom porukom
    */
   getAllPreviousEventsForOrganiser = (req: express.Request, res: express.Response) => {
     const organiser: string = req.body.username; // korisnicko ime organizatora

@@ -23,14 +23,15 @@ export class AdminPrikazProfilaComponent implements OnInit {
  */
   constructor(private userService: UserService, private eventService: EventService, private router: Router, private toastr: ToastrService, private route: ActivatedRoute) { }
 
-
+  // korisnikovi podaci i prethodna ucesca
   user: User;
-  username: string
+  username: string;
   events: Event[] = [];
   totalOwing: number = 0;
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -39,7 +40,7 @@ export class AdminPrikazProfilaComponent implements OnInit {
     try {
       const params = await firstValueFrom(this.route.params);
       this.username = params['username'];
-      const data: Object = { username: this.username };
+      const data = { username: this.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.user = response;
       if (this.user.type == "ucesnik") {
@@ -61,6 +62,10 @@ export class AdminPrikazProfilaComponent implements OnInit {
     }
   }
 
+  /**
+   * Poziva se kliku na dugme za brisanje korisnika.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   */
   async deleteUser(): Promise<void> {
     const data = {
       username: this.username
@@ -78,17 +83,23 @@ export class AdminPrikazProfilaComponent implements OnInit {
       else {
         this.router.navigate(["adminOrganizatori"]);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error.message);
-      this.router.navigate([""]);
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 
   /**
-* Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-*/
-  convertToDate(numOfMs: number) {
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
+    */
+  convertToDate(numOfMs: number): Date {
     return new Date(numOfMs);
   }
 

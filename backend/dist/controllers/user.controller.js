@@ -261,7 +261,7 @@ class UserController {
                 });
             }
             const myArray = file.originalname.split(".");
-            const pictureName = username + "." + myArray[myArray.length - 1];
+            const pictureName = username + Date.now() + "." + myArray[myArray.length - 1];
             // preimenovanje dodate slike
             fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), (err) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
@@ -331,7 +331,7 @@ class UserController {
             }
         });
         /**
-        * Dohvatanje slike za dogadjaj
+        * Dohvatanje profilne slike korisnika
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
         * @returns {Object} Profilna slika korisnika
@@ -427,7 +427,7 @@ class UserController {
             });
         };
         /**
-        * Promena statusa korinika na neaktivan.
+        * Promena statusa korisnika na neaktivan.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
         * @returns {Object} JSON objekat sa odgovarajucom porukom
@@ -449,27 +449,37 @@ class UserController {
        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
        * @returns {Object} JSON objekat sa odgovarajucom porukom
        */
-        this.updateUser = (req, res) => {
+        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const username = req.body.username;
             const phone = req.body.phone;
             const email = req.body.email;
-            const description = req.body.description;
-            user_1.default.collection.updateOne({ "username": username }, {
-                $set: {
-                    "phone": phone,
-                    "email": email,
-                    "description": description
+            const description = req.body.description != undefined ? req.body.description : "";
+            try {
+                const existingUser = yield user_1.default.findOne({ email: email });
+                if (existingUser && existingUser.username != username) {
+                    return res.status(400).json({ "message": "Mejl je zauzet." });
                 }
-            }, (error, success) => {
-                if (error) {
-                    console.log(error);
-                    return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
-                }
-                else {
-                    res.status(200).json({ message: "Podaci su ažurirani!" });
-                }
-            });
-        };
+                user_1.default.collection.updateOne({ "username": username }, {
+                    $set: {
+                        "phone": phone,
+                        "email": email,
+                        "description": description
+                    }
+                }, (error, success) => {
+                    if (error) {
+                        console.log(error);
+                        return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
+                    }
+                    else {
+                        res.status(200).json({ "message": "Podaci su ažurirani!" });
+                    }
+                });
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).json({ "message": "Internal server error.", error });
+            }
+        });
         /**
      * Subscribe-ovanje korisnika na nekog organizatora.
      * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.

@@ -36,8 +36,6 @@ export class AdminOrganizatoriComponent implements OnInit {
         this.organisers = response;
       } catch (error) {
         console.log(error);
-        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
-        this.router.navigate([""]);
       }
   }
 }

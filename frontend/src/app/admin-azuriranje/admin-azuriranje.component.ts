@@ -22,7 +22,9 @@ export class AdminAzuriranjeComponent implements OnInit {
      */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // podaci
   username: string = "";
   email: string = "";
   phone: string = "";
@@ -31,27 +33,28 @@ export class AdminAzuriranjeComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-    
-      try {
-        const decodedToken: any = jwt_decode(token);
-        const data: Object = { username: decodedToken.username };
-        const response: any = await lastValueFrom(this.userService.getUser(data, token));
-        this.loggedIn = response;
-        this.email = this.loggedIn.email;
-        this.phone = this.loggedIn.phone;
-        this.username = this.loggedIn.username;
-      } catch (error) {
-        console.log(error);
-      }
+
+    try {
+      const decodedToken: any = jwt_decode(token);
+      const data: Object = { username: decodedToken.username };
+      const response: any = await lastValueFrom(this.userService.getUser(data, token));
+      this.loggedIn = response;
+      this.email = this.loggedIn.email;
+      this.phone = this.loggedIn.phone;
+      this.username = this.loggedIn.username;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /**
    * Obrada dogadjaja select-ovanja fajla.
-   * @param {event} Event - event objekat koji predstavlja dogadjaj biranja fajla
+   * @param {event} Event - Event objekat koji predstavlja dogadjaj biranja fajla
    */
   selectImage(event: Event): void {
     if ((event.target as HTMLInputElement).files?.length > 0) {
@@ -64,6 +67,7 @@ export class AdminAzuriranjeComponent implements OnInit {
 
   /**
    * Provera tipa slike
+   * @returns {void}
    */
   validateFileType(): void {
     const allowedExtensions = ['.png', '.jpg', '.jpeg'];
@@ -76,6 +80,10 @@ export class AdminAzuriranjeComponent implements OnInit {
     }
   }
 
+  /**
+   * Provera unetih podataka.
+   * @returns {boolean}
+   */
   checkInputValues(): boolean {
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
@@ -94,6 +102,7 @@ export class AdminAzuriranjeComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za azuriranje korisnickih podataka.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
   */
   async updateUserInfo(): Promise<void> {
     // provera da li su sve unete vrednosti validne
@@ -118,10 +127,14 @@ export class AdminAzuriranjeComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
       // preusmeravanje na stranicu sa pregledom profila
       this.router.navigate(["adminProfil"]);
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error.message);
-      this.router.navigate([""]);
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 }

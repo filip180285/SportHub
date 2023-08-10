@@ -219,7 +219,7 @@ export class UserController {
         const phone = req.body.phone;
         const type = req.body.type;
         const description = req.body.description;
-        
+
         try {
             const updateResult = await User.updateOne(
                 { "id": id },
@@ -268,7 +268,7 @@ export class UserController {
         }
 
         const myArray: Array<string> = file.originalname.split(".");
-        const pictureName: string = username + "." + myArray[myArray.length - 1];
+        const pictureName: string = username + Date.now() +  "." + myArray[myArray.length - 1];
         // preimenovanje dodate slike
         fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), async (err) => {
             if (err) {
@@ -436,7 +436,7 @@ export class UserController {
     };
 
     /**
-    * Promena statusa korinika na neaktivan.
+    * Promena statusa korisnika na neaktivan.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat sa odgovarajucom porukom
@@ -459,30 +459,39 @@ export class UserController {
    * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
    * @returns {Object} JSON objekat sa odgovarajucom porukom
    */
-    updateUser = (req: express.Request, res: express.Response) => { // ok
+    updateUser = async (req: express.Request, res: express.Response) => {
         const username = req.body.username;
         const phone = req.body.phone;
         const email = req.body.email;
-        const description = req.body.description;
+        const description = req.body.description != undefined ? req.body.description : "";
 
-        User.collection.updateOne(
-            { "username": username },
-            {
-                $set: {
-                    "phone": phone,
-                    "email": email,
-                    "description": description
-                }
-            },
-            (error, success) => {
-                if (error) {
-                    console.log(error);
-                    return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
-                }
-                else {
-                    res.status(200).json({ message: "Podaci su ažurirani!" });
-                }
-            })
+        try {
+            const existingUser = await User.findOne({ email: email });
+            if (existingUser && existingUser.username != username) {
+                return res.status(400).json({ "message": "Mejl je zauzet." });
+            }
+
+            User.collection.updateOne(
+                { "username": username },
+                {
+                    $set: {
+                        "phone": phone,
+                        "email": email,
+                        "description": description
+                    }
+                },
+                (error, success) => {
+                    if (error) {
+                        console.log(error);
+                        return res.status(400).json({ "message": "Greška pri ažuriranju podataka!", error });
+                    } else {
+                        res.status(200).json({ "message": "Podaci su ažurirani!" });
+                    }
+                });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ "message": "Internal server error.", error });
+        }
     }
 
     /**
