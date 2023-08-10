@@ -3,10 +3,6 @@ import { EventController } from '../controllers/event.controller';
 import { verifyTokenMiddleware } from '../middleware/middleware';
 const eventRouter = express.Router();
 
-eventRouter.route("/test").post( // testiranje
-  (req, res) => new EventController().test(req, res)
-);
-
 eventRouter.route("/getEvent").post(
   verifyTokenMiddleware(["ucesnik", "organizator", "administrator"]),
   (req, res) => new EventController().getEvent(req, res)

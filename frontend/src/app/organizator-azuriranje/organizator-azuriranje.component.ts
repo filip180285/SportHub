@@ -13,7 +13,10 @@ import { UserService } from 'src/services/user.service';
   styleUrls: ['./organizator-azuriranje.component.css']
 })
 export class OrganizatorAzuriranjeComponent implements OnInit {
+  
+  // ulogovani korisnik
   loggedIn: User;
+  // podaci
   username: string = "";
   email: string = "";
   phone: string = "";
@@ -31,6 +34,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -38,7 +42,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
     
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
       this.email = this.loggedIn.email;
@@ -65,6 +69,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
 
   /**
    * Provera tipa slike
+   *  @returns {boolean}
    */
   validateFileType(): void {
     const allowedExtensions = ['.png', '.jpg', '.jpeg'];
@@ -77,6 +82,10 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
     }
   }
 
+  /**
+   * Provera unetih vrednosti
+   *  @returns {boolean}
+   */
   checkInputValues(): boolean {
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
@@ -95,6 +104,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za azuriranje korisnickih podataka.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async updateUserInfo(): Promise<void> {
     // provera da li su sve unete vrednosti validne
@@ -122,8 +132,12 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
       this.router.navigate(["organizatorProfil"]);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error.message);
-      this.router.navigate([""]);
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 

@@ -33,17 +33,14 @@ const formatDate = (date) => date.toLocaleString('en-GB', options);
 
 export class EventController {
 
-  test = async (req: express.Request, res: express.Response) => { // ok
-    console.log("kakakakaka")
-  }
-
   /**
    * Pomocna metoda za slanje mejlova.
    * @param {string} emails - Mejlovi razdvojeni sa ", ".
    * @param {string} subject - Naslov mejla.
    * @param {string} html - Sadrzaj mejla.
+   * @returns {void}
   */
-  sendEmail = async (emails: string, subject: string, html: string) => { // ok
+  sendEmail = async (emails: string, subject: string, html: string) => {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
       port: parseInt(process.env.PORT, 10),
@@ -292,7 +289,7 @@ export class EventController {
  * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
  * @returns {Object} JSON objekat sa odgovarajucom porukom
  */
-  cancelEvent = async (req: express.Request, res: express.Response) => { // ok
+  cancelEvent = async (req: express.Request, res: express.Response) => {
     const eventId: number = req.body.eventId; // id dogadjaja koji se otkazuje
     const organiserUsername: string = req.body.organiser; // korisnicko ime organizatora
 
@@ -419,7 +416,7 @@ export class EventController {
         text: text,
       };
 
-      // Update the comments array in the event document
+      // dodavanje novog komentara u niz komentara
       event.comments.push(newComment);
       await event.save();
 

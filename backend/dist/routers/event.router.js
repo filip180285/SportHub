@@ -7,8 +7,6 @@ const express_1 = __importDefault(require("express"));
 const event_controller_1 = require("../controllers/event.controller");
 const middleware_1 = require("../middleware/middleware");
 const eventRouter = express_1.default.Router();
-eventRouter.route("/test").post(// testiranje
-(req, res) => new event_controller_1.EventController().test(req, res));
 eventRouter.route("/getEvent").post((0, middleware_1.verifyTokenMiddleware)(["ucesnik", "organizator", "administrator"]), (req, res) => new event_controller_1.EventController().getEvent(req, res));
 eventRouter.route("/getAllActiveEvents").get((0, middleware_1.verifyTokenMiddleware)(["ucesnik"]), (req, res) => new event_controller_1.EventController().getAllActiveEvents(req, res));
 eventRouter.route("/getAllPreviousEventsForParticipant").post((0, middleware_1.verifyTokenMiddleware)(["ucesnik", "administrator"]), (req, res) => new event_controller_1.EventController().getAllPreviousEventsForParticipant(req, res));

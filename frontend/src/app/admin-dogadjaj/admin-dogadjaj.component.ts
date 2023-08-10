@@ -63,6 +63,7 @@ export class AdminDogadjajComponent implements OnInit {
       console.log(this.participants)
       // inicijalizovanje mape
       this.initMap(this.event.location);
+      // racunanje duga
       this.totalOwing = (this.event.participants.length - this.event.paid.length) * this.event.pricePerUser
     } catch (error) {
       console.log(error);

@@ -41,14 +41,12 @@ const options = {
 const formatDate = (date) => date.toLocaleString('en-GB', options);
 class EventController {
     constructor() {
-        this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.log("kakakakaka");
-        });
         /**
          * Pomocna metoda za slanje mejlova.
          * @param {string} emails - Mejlovi razdvojeni sa ", ".
          * @param {string} subject - Naslov mejla.
          * @param {string} html - Sadrzaj mejla.
+         * @returns {void}
         */
         this.sendEmail = (emails, subject, html) => __awaiter(this, void 0, void 0, function* () {
             const transporter = nodemailer.createTransport({
@@ -390,7 +388,7 @@ class EventController {
                     datetime: datetime,
                     text: text,
                 };
-                // Update the comments array in the event document
+                // dodavanje novog komentara u niz komentara
                 event.comments.push(newComment);
                 yield event.save();
                 return res.status(200).json({ "message": "Komentar uspešno dodat!", newComment });

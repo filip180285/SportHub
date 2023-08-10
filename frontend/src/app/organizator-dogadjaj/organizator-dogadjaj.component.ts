@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { User } from 'src/models/user';
-import { Event as MyEvent } from 'src/models/event'; // Use the "as" keyword to import your custom Event class
+import { Event as MyEvent } from 'src/models/event';
 import { EventService } from 'src/services/event.service';
 import { SportService } from 'src/services/sport.service';
 import { UserService } from 'src/services/user.service';
@@ -30,16 +30,19 @@ export class OrganizatorDogadjajComponent implements OnInit {
     private route: ActivatedRoute) {
   }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // podaci o dogadjaju
   id: number;
   event: MyEvent;
   participants: User[];
   totalOwing:number = 0;
 
-  newComment = "";
+  newComment:string = "";
 
-  /**
+   /**
     * Poziva se pri ucitavanju komponente.
+    * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
     */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -47,31 +50,37 @@ export class OrganizatorDogadjajComponent implements OnInit {
 
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
+      // dohvatanje dogadjaja i ucesnika
       const params = await firstValueFrom(this.route.params);
       this.id = params['id'];
-      const dataEvent: Object = { eventId: this.id };
-      // dohvatanje dogadjaja i ucesnika
+      const dataEvent = { eventId: this.id };
       const responseEvent: any = await lastValueFrom(this.eventService.getEvent(dataEvent, token));
       this.event = responseEvent;
-      const dataUsers: Object = { eventId: this.id };
+      const dataUsers = { eventId: this.id };
       // dohvatanje dogadjaja i ucesnika
       const responseParticipants: any = await lastValueFrom(this.eventService.getEventParticipants(dataEvent, token));
       this.participants = responseParticipants;
-      console.log(this.participants)
       // inicijalizovanje mape
       this.initMap(this.event.location);
+      // racunanje duga
       this.totalOwing = (this.event.participants.length - this.event.paid.length) * this.event.pricePerUser
     } catch (error) {
       console.log(error);
     }
   }
 
+  // mapa
   map: google.maps.Map;
 
+  /** 
+  * Inicijalizacija Google mape
+  * @param {string} address - Adresa za prikaz na mapi.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  */
   async initMap(address: string): Promise<void> {
     const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
@@ -106,18 +115,21 @@ export class OrganizatorDogadjajComponent implements OnInit {
   }
 
   /**
-* Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-*/
-  convertToDate(numOfMs: number) {
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
+  */
+  convertToDate(numOfMs: number): Date {
     return new Date(numOfMs);
   }
 
   /**
-* Otkazivanje dogadjaja.
-*/
+    Otkazivanje dogadjaja.
+    @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  */
   async cancelEvent(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
-    const data: Object = {
+    const data = {
       organiser: this.loggedIn.username,
       eventId: this.id
     }
@@ -132,8 +144,11 @@ export class OrganizatorDogadjajComponent implements OnInit {
   }
 
   /**
-   * Stikliranje polja za placanje.
-   */
+   * Stikliranje ucesnika koji su platili.
+   * @param {string} username - Korisnicko ime ucesnika
+   * @param {Event} event Event objekat koji predstavlja stikliranje checkbox-a
+   * @returns {void}
+  */
   paymentUpdate(username: string, event: Event): void {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     const isChecked: boolean = target.checked;
@@ -149,8 +164,9 @@ export class OrganizatorDogadjajComponent implements OnInit {
     }
   }
 
-  /*
-    Cuvanje stikliranih placanja
+  /**
+    Cuvanje stikliranih placanja.
+    @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async savePayments(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -163,14 +179,20 @@ export class OrganizatorDogadjajComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 
 
-    /**
-     * Slanje komentara o dogadjaju.
-     */
+  /**
+    Dodavanje komentara.
+    @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  */
   async sendComment(): Promise<void> {
     if (this.newComment == "") {
       this.toastr.error("", "Ne možete poslati prazan komentar!", { positionClass: "toast-bottom-center" });
@@ -189,12 +211,16 @@ export class OrganizatorDogadjajComponent implements OnInit {
     try {
       const response = await lastValueFrom(this.eventService.addComment(data, token));
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
-
       this.event.comments.push(response["newComment"]);
       this.newComment = "";
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 
