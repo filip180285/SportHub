@@ -344,7 +344,7 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} Profilna slika korisnika
     */
-    getPictureByUsername = async (req, res) => { // ok
+    getPictureByUsername = async (req, res) => {
         try {
             const user = await User.findOne({ "username": req.query.username });
             if (user.picture == "") { // nema slike

@@ -30,7 +30,9 @@ export class UcesnikDogadjajComponent implements OnInit {
     private route: ActivatedRoute) {
   }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // dogadjaj
   id: number;
   event: Event;
 
@@ -38,6 +40,7 @@ export class UcesnikDogadjajComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -45,13 +48,13 @@ export class UcesnikDogadjajComponent implements OnInit {
 
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
       const params = await firstValueFrom(this.route.params);
       this.id = params['id'];
-      const dataEvent: Object = { eventId: this.id };
+      const dataEvent = { eventId: this.id };
       const responseEvent: any = await lastValueFrom(this.eventService.getEvent(dataEvent, token));
       this.event = responseEvent;
       console.log(this.event);
@@ -62,8 +65,14 @@ export class UcesnikDogadjajComponent implements OnInit {
     }
   }
 
+  // mapa
   map: google.maps.Map;
 
+  /** 
+  * Inicijalizacija Google mape
+  * @param {string} address - Adresa za prikaz na mapi.
+  * @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
+  */
   async initMap(address: string): Promise<void> {
     const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
@@ -98,7 +107,9 @@ export class UcesnikDogadjajComponent implements OnInit {
   }
 
   /**
-  * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
   */
   convertToDate(numOfMs: number) {
     return new Date(numOfMs);
@@ -106,6 +117,7 @@ export class UcesnikDogadjajComponent implements OnInit {
 
   /**
   * Prijavljivanje za dogadjaj.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async applyForEvent(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -120,12 +132,18 @@ export class UcesnikDogadjajComponent implements OnInit {
       this.event.participants.push(this.loggedIn.username);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 
   /**
   * Ponistavanje prijave za dogadjaj.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async cancelApplication(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -143,12 +161,18 @@ export class UcesnikDogadjajComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 
   /**
    * Slanje komentara o dogadjaju.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
    */
   async sendComment(): Promise<void> {
     if (this.newComment == "") {
@@ -173,7 +197,12 @@ export class UcesnikDogadjajComponent implements OnInit {
       this.newComment = "";
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 }

@@ -22,7 +22,9 @@ export class UcesnikAzuriranjeComponent implements OnInit {
        */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // podaci
   username: string = "";
   email: string = "";
   phone: string = "";
@@ -31,11 +33,12 @@ export class UcesnikAzuriranjeComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-    
+
     try {
       const decodedToken: any = jwt_decode(token);
       const data: Object = { username: decodedToken.username };
@@ -64,6 +67,7 @@ export class UcesnikAzuriranjeComponent implements OnInit {
 
   /**
    * Provera tipa slike
+   * @returns {void}
    */
   validateFileType(): void {
     const allowedExtensions = ['.png', '.jpg', '.jpeg'];
@@ -76,6 +80,10 @@ export class UcesnikAzuriranjeComponent implements OnInit {
     }
   }
 
+  /**
+   * Provera unetih podataka.
+   * @returns {boolean}
+   */
   checkInputValues(): boolean {
     // provera da li je broj telefona u trazenom formatu
     if (/^\+381 \d{2} \d{7}$/.test(this.phone) == false) {
@@ -93,7 +101,8 @@ export class UcesnikAzuriranjeComponent implements OnInit {
   }
 
   /**
-  * Obrada submit-a forme za azuriranje korisnickih podataka.
+   * Obrada submit-a forme za azuriranje korisnickih podataka.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
   */
   async updateUserInfo(): Promise<void> {
     // provera da li su sve unete vrednosti validne
@@ -118,10 +127,14 @@ export class UcesnikAzuriranjeComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
       // preusmeravanje na stranicu sa pregledom profila
       this.router.navigate(["ucesnikProfil"]);
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error.message);
-      this.router.navigate([""]);
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 }

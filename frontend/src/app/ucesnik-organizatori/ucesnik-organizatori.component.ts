@@ -28,12 +28,16 @@ export class UcesnikOrganizatoriComponent implements OnInit {
     private sportService: SportService, private router: Router, private toastr: ToastrService) {
   }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // organizatori
   organisers: User[] = [];
+  // pracenja
   following: User[] = [];
 
   /**
  * Poziva se pri ucitavanju komponente.
+ * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
  */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -41,7 +45,7 @@ export class UcesnikOrganizatoriComponent implements OnInit {
 
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
@@ -58,8 +62,6 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       this.organisers = this.organisers.filter((organiser) => {
         return !this.loggedIn.subscriptions.includes(organiser.username);
       });
-      console.log(this.following);
-      console.log(this.organisers)
     } catch (error) {
       console.log(error);
     }
@@ -68,6 +70,7 @@ export class UcesnikOrganizatoriComponent implements OnInit {
   /**
     * Pracenje organizatora od strane korisnika
     * @param {User} organiser - Organizator koga korisnik zapracuje.
+    * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
     */
   async subscribe(organiser: User): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -79,19 +82,25 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       const response = await lastValueFrom(this.userService.subscribe(data, token));
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
 
-      // Find the index of the organiser in the organisers array
+      // dodaj u niz following, ukloni iz niza organizatora
       const organiserIndex = this.organisers.findIndex((o) => o.username == organiser.username);
       const [removedOrganiser] = this.organisers.splice(organiserIndex, 1);
       this.following.push(removedOrganiser);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 
   /**
   * Pracenje organizatora od strane korisnika
   * @param {User} organiser - Organizator koga korisnik otpracuje.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async unsubscribe(organiser: User): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -102,14 +111,18 @@ export class UcesnikOrganizatoriComponent implements OnInit {
     try {
       const response = await lastValueFrom(this.userService.unsubscribe(data, token));
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
-
-      // Find the index of the organiser in the organisers array
+      // dodaj u niz organizatora, ukloni iz niza following
       const organiserIndex = this.following.findIndex((o) => o.username == organiser.username);
       const [removedOrganiser] = this.following.splice(organiserIndex, 1);
       this.organisers.push(removedOrganiser);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 

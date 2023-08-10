@@ -23,9 +23,7 @@
             <img class="rounded-circle stil" src="../../assets/unknownuser.png" *ngIf="organiser.picture == ''">
             <div class="event-info">
                 <span class="slova vece">{{organiser.name}} {{organiser.lastname}}<br></span>
-                <span class="slova">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Numquam suscipit debitis
-                    magnam esse ex ullam autem quaerat dolore molestiae deserunt. Dignissimos nulla ullam vero ipsum
-                    aliquid dolore veritatis repellat rerum. <br></span>
+                <span class="slova">{{organiser.description}} <br></span>
                 <button id="btnPretraga2" (click)="unsubscribe(organiser)" class="btn btn-primary">Otprati</button>
             </div>
         </div>
