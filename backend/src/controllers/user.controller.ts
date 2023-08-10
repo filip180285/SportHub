@@ -16,7 +16,7 @@ export class UserController {
      * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
      * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
      */
-    login = async (req: express.Request, res: express.Response) => { // ok
+    login = async (req: express.Request, res: express.Response) => {
         const username: string = req.body.username;
         const password: string = req.body.password;
 
@@ -119,13 +119,12 @@ export class UserController {
     }
 
     /**
-    * Obrada prijave preko gugl naloga, dodavanje novog korisnika ako nije prethodno registrovan.
+    * Obrada prijave preko Google naloga, dodavanje novog korisnika ako nije prethodno registrovan.
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
     */
     googleSignIn = async (req: express.Request, res: express.Response) => {
-        console.log("usao")
         const googleToken: string = req.body.token;
 
         try {
@@ -138,7 +137,6 @@ export class UserController {
             const email = payload.email;
 
             const user = await User.findOne({ "email": email });
-            console.log(user)
 
             // aktivan korisnik
             if (user && user.status == "aktivan") {
@@ -151,7 +149,6 @@ export class UserController {
 
                 // kreiranje i potpis tokena
                 const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-                console.log("kraj")
                 return res.status(200).json({ token });
             }
             // obrisan korisnik
@@ -167,16 +164,29 @@ export class UserController {
             }
 
             // kreiramo novog korisnika
-            const name = payload.given_name;
-            const lastname = payload.family_name;
-            const picture = payload.picture;
+            const name: string = payload.given_name;
+            const lastname: string = payload.family_name;
+            const picture: string = payload.picture;
             const subscriptions: Array<string> = [];
+
+            // generisanje jedinstvenog korisnickog imena
+            let _id: number = 1;
+            const generatedUsername: string = payload.given_name.toLowerCase() + _id;
+            let username: string = generatedUsername;
+            while (true) {
+                const userWithSameUsername = await User.findOne({ "username": username });
+                if (!userWithSameUsername) {
+                    break;
+                }
+                _id++;
+                username = `${generatedUsername}${_id}`;
+            }
 
             const newUser = new User({
                 id: id,
                 name: name,
                 lastname: lastname,
-                username: "",
+                username: username,
                 password: "",
                 email: email,
                 type: "",
@@ -206,21 +216,15 @@ export class UserController {
   */
     finishGoogleSignIn = async (req: express.Request, res: express.Response) => {
         const id = req.body.id;
-        const username = req.body.username;
         const phone = req.body.phone;
         const type = req.body.type;
         const description = req.body.description;
+        
         try {
-            const user = await User.findOne({ "username": username });
-            if (user) {
-                return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
-            }
-
             const updateResult = await User.updateOne(
                 { "id": id },
                 {
                     $set: {
-                        "username": username,
                         "phone": phone,
                         "type": type,
                         "description": description
@@ -229,7 +233,7 @@ export class UserController {
             );
 
             // nalazenje novog korisnika
-            const newUser = await User.findOne({ "username": username });
+            const newUser = await User.findOne({ "id": id });
 
             const jwtData = {
                 username: newUser.username,

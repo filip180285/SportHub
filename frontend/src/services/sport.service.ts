@@ -20,7 +20,7 @@ export class SportService {
   /**
    * Slanje GET zahteva za dohvatanje sportova.
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Sport[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Sport[]>} Observable koji emituje parsirani JSON odgovor.
    */
   getAllSports(token: string): Observable<Object>  {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);

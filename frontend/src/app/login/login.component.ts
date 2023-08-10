@@ -1,6 +1,6 @@
 declare var google: any;
 
-import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
    * @param userService API service to inject
    * @param router Angular Router to inject
    * @param toastr Toastr ToastrService to inject
+   * @param toastr NgZone NgZoneService to inject
    */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private ngZone: NgZone) { }
 
@@ -58,20 +59,19 @@ export class LoginComponent implements OnInit {
 
   /**
   * Obrada prijave preko Google naloga.
+  * @param {string} token - Token dobijen od Google-a.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
   */
   async googleSignIn(token: string): Promise<void> {
     try {
       const data = { token: token };
       const response: any = await lastValueFrom(this.userService.googleSignIn(data));
-      console.log(response)
-
       if (response["token"]) {
         sessionStorage.setItem('token', response["token"]);
         const decodedToken: any = jwt_decode(response["token"]);
-        console.log(decodedToken)
         this.router.navigate([`/${decodedToken.role}`]);
-      } else if (response.id) {
-        this.router.navigate(["dopunaProfil", response.id]);
+      } else if (response["id"]) {
+        this.router.navigate(["dopunaProfil", response["id"]]);
       }
     } catch (error) {
       console.error(error);
@@ -79,11 +79,13 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  // kredencijali
   username: string = "";
   password: string = "";
 
   /**
    * Obrada submit-a forme za prijavu.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
    */
   async login(): Promise<void> {
     if (this.username == "" || this.password == "") {

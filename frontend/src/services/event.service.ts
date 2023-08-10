@@ -21,7 +21,7 @@ export class EventService {
    * Slanje POST zahteva za dohvatanje dogadjaja.
    * @param {Object} data - Objekat sa id dogadjaja
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event>} Observable koji emituje parsirani JSON odgovor.
    */
   getEvent(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -31,7 +31,7 @@ export class EventService {
   /**
    * Slanje GET zahteva za dohvatanje aktuelnih dogadjaja.
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
    */
   getAllActiveEvents(token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -42,7 +42,7 @@ export class EventService {
    * Slanje POST zahteva za dohvatanje prethodnih dogadjaja za ucesnika.
    * @param {Object} data - Objekat sa korisnickim imenom ucesnika
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
    */
   getAllPreviousEventsForParticipant(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -53,7 +53,7 @@ export class EventService {
    * Slanje POST zahteva za dohvatanje aktulenih dogadjaja za organizatora.
    * @param {Object} data - Objekat sa korisnickim imenom organizatora
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
    */
   getAllActiveEventsForOrganiser(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -64,7 +64,7 @@ export class EventService {
    * Slanje POST zahteva za dohvatanje prethodnih dogadjaja za organizatora.
    * @param {Object} data - Objekat sa korisnickim imenom organizatora
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
    */
   getAllPreviousEventsForOrganiser(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -75,7 +75,7 @@ export class EventService {
     * Slanje POST zahteva za dohvatanje ucesnika dogadjaja.
     * @param {Object} data - Objekat sa id dogadjaja
     * @param {string} token - Token korisnika za autorizaciju
-    * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+    * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
     */
   getEventParticipants(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -87,7 +87,7 @@ export class EventService {
    * Slanje POST zahteva za kreiranje novog dogadjaja.
    * @param {Object} data - Objekat sa podacima o novom dogadjaju
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor.
    */
   newEvent(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -98,7 +98,7 @@ export class EventService {
    * Slanje POST zahteva za otkazivanje dogadjaja.
    * @param {Object} data - Objekat sa id dogadjaja
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor.
    */
   cancelEvent(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -109,7 +109,7 @@ export class EventService {
    * Slanje POST zahteva za prijavu na dogadjaj.
    * @param {Object} data - Objekat sa id dogadjaja i korisnickim imenom korisnika
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor.
    */
   applyForEvent(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -120,7 +120,7 @@ export class EventService {
    * Slanje POST zahteva za otkazivanje prijave na dogadjaj.
    * @param {Object} data - Objekat sa id dogadjaja i korisnickim imenom korisnika
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor.
    */
   cancelApplication(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -131,7 +131,7 @@ export class EventService {
    * Slanje POST zahteva za dodavanje komentara.
    * @param {Object} data - Objekat sa korisnickim imenom korisnika i podacima za komentar
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor.
    */
   addComment(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -142,7 +142,7 @@ export class EventService {
    * Slanje POST zahteva za dohvatanje dogadjaja za koje je ucesnik duzan.
    * @param {Object} data - Objekat sa korisnickim imenom korisnika
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
    */
   findOwingEventsForParticipant(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -153,7 +153,7 @@ export class EventService {
    * Slanje POST zahteva za dohvatanje dogadjaja za koje ucesnici duguju organizatoru.
    * @param {Object} data - Objekat sa korisnickim imenom organizatora
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Event[]>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Event[]>} Observable koji emituje parsirani JSON odgovor.
    */
   findOwingEventsForOrganiser(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -164,7 +164,7 @@ export class EventService {
    * Slanje POST zahteva za azuriranje placanja.
    * @param {Object} data - Objekat sa id dogadjaja i nizom korisnickih imena
    * @param {string} token - Token korisnika za autorizaciju
-   * @returns {Observable<Object>} Observable odgovora, sa telom kao objektom parsiranim iz JSON-a.
+   * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor.
    */
   updatePayments(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);

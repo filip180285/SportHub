@@ -130,13 +130,12 @@ class UserController {
             }
         });
         /**
-        * Obrada prijave preko gugl naloga, dodavanje novog korisnika ako nije prethodno registrovan.
+        * Obrada prijave preko Google naloga, dodavanje novog korisnika ako nije prethodno registrovan.
         * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
         * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
         * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
         */
         this.googleSignIn = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console.log("usao");
             const googleToken = req.body.token;
             try {
                 // verifikacija tokena
@@ -147,7 +146,6 @@ class UserController {
                 const payload = ticket.getPayload();
                 const email = payload.email;
                 const user = yield user_1.default.findOne({ "email": email });
-                console.log(user);
                 // aktivan korisnik
                 if (user && user.status == "aktivan") {
                     const jwtData = {
@@ -176,11 +174,23 @@ class UserController {
                 const lastname = payload.family_name;
                 const picture = payload.picture;
                 const subscriptions = [];
+                // generisanje jedinstvenog korisnickog imena
+                let _id = 1;
+                const generatedUsername = payload.given_name.toLowerCase() + _id;
+                let username = generatedUsername;
+                while (true) {
+                    const userWithSameUsername = yield user_1.default.findOne({ "username": username });
+                    if (!userWithSameUsername) {
+                        break;
+                    }
+                    _id++;
+                    username = `${generatedUsername}${_id}`;
+                }
                 const newUser = new user_1.default({
                     id: id,
                     name: name,
                     lastname: lastname,
-                    username: "",
+                    username: username,
                     password: "",
                     email: email,
                     type: "",
@@ -209,25 +219,19 @@ class UserController {
       */
         this.finishGoogleSignIn = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const id = req.body.id;
-            const username = req.body.username;
             const phone = req.body.phone;
             const type = req.body.type;
             const description = req.body.description;
             try {
-                const user = yield user_1.default.findOne({ "username": username });
-                if (user) {
-                    return res.status(400).json({ "message": "Korisničko ime je zauzeto!" });
-                }
                 const updateResult = yield user_1.default.updateOne({ "id": id }, {
                     $set: {
-                        "username": username,
                         "phone": phone,
                         "type": type,
                         "description": description
                     }
                 });
                 // nalazenje novog korisnika
-                const newUser = yield user_1.default.findOne({ "username": username });
+                const newUser = yield user_1.default.findOne({ "id": id });
                 const jwtData = {
                     username: newUser.username,
                     name: newUser.name,
@@ -510,13 +514,13 @@ class UserController {
                 // trazenje korisnika
                 const participant = yield user_1.default.findOne({ "username": username });
                 const organizer = yield user_1.default.findOne({ "username": orgUsername });
-                // Removing organizer from participant's subscriptions
+                // uklanjanje organizatora iz ucesnikovih pretplata
                 const orgIndex = participant.subscriptions.indexOf(orgUsername);
                 if (orgIndex != -1) {
                     participant.subscriptions.splice(orgIndex, 1);
                     yield participant.save();
                 }
-                // Removing participant from organizer's subscriptions
+                // uklanjanje ucesnika iz organizatorovih pretplata
                 const participantIndex = organizer.subscriptions.indexOf(username);
                 if (participantIndex != -1) {
                     organizer.subscriptions.splice(participantIndex, 1);
@@ -529,42 +533,7 @@ class UserController {
                 return res.status(400).json({ "message": 'Greška pri odjavi od organizatora!', error });
             }
         });
-        this.test = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            const token = req.body.token;
-            try {
-                const ticket = yield client.verifyIdToken({
-                    idToken: token,
-                    audience: process.env.GOOGLE_CLIENT_ID
-                });
-                const payload = ticket.getPayload();
-                const userid = payload['sub'];
-                console.log(payload);
-                console.log(payload.email);
-                return res.status(200).json({ payload });
-            }
-            catch (error) {
-                console.error(error);
-                return res.status(400).json({ "message": 'gRESKAAAA' });
-                // Handle any errors that occurred during verification here
-            }
-        });
     }
 }
 exports.UserController = UserController;
-/*
-//const orgUsername: string = req.body.username;
-        //console.log(username)
-        /*User.findOne({ "username": "jovica" }, (err, user) => {
-            if (err) {
-                return res.status(400).json({ "message": "Greška pri prijavi korisnika!" });
-            }
-            else {
-                // Exclude the 'password' field from the 'user' object
-                const { password, email, ...userData } = user._doc;
-                //console.log(user);
-                console.log(userData);
-                // Send all the other fields in a new object
-                res.status(200).json(userData);
-            }
-        });*/ 
 //# sourceMappingURL=user.controller.js.map

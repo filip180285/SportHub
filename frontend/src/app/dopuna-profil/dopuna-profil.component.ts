@@ -29,6 +29,7 @@ export class DopunaProfilComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta kreirana.
    */
   async ngOnInit(): Promise<void> {
     setTimeout(() => {
@@ -39,15 +40,19 @@ export class DopunaProfilComponent implements OnInit {
     this.id = params['id'];
   }
 
+  // podaci
   id: number;
-  username: string = "";
   phone: string = "";
   type: string = "";
   description: string = "";
 
+  /**
+   * Provera unetih podataka
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
+   */
   checkInputValues(): boolean {
     // provera da li su unete sve vrednosti
-    if (this.username == "" || this.phone == "" || this.type == "") {
+    if (this.phone == "" || this.type == "") {
       this.toastr.error("", "Popunite preostala polja!");
       return false;
     }
@@ -67,7 +72,8 @@ export class DopunaProfilComponent implements OnInit {
   }
 
   /**
-  * Obrada submit-a forme za registraciju.
+  * Obrada submit-a forme za dopunu korisnickog profila.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
   */
   async finishGoogleSignIn(): Promise<void> {
     // provera da li su sve unete vrednosti validne
@@ -75,7 +81,6 @@ export class DopunaProfilComponent implements OnInit {
     // podaci za slanje na backend
     const data = {
       id: this.id,
-      username: this.username,
       type: this.type,
       phone: this.phone,
       description: this.description

@@ -10,7 +10,6 @@ h2 {
     font-family: 'DM Serif Display', serif;
 }
 
-#korisnickoIme,
 #telefon,
 #mejl,
 #opis {
@@ -131,22 +130,13 @@ h2 {
 .forma2 .form-field:nth-child(5)::before {
     margin-top: 20px;
     margin-left: 10%;
-    background-image: url("../../assets/user-icon.png");
-    width: 20px;
-    height: 20px;
-    top: -5px;
-}
-
-.forma2 .form-field:nth-child(6)::before {
-    margin-top: 20px;
-    margin-left: 10%;
     background-image: url("../../assets/phone.png");
     width: 20px;
     height: 20px;
     top: -5px;
 }
 
-.forma2 .form-field:nth-child(7)::before {
+.forma2 .form-field:nth-child(6)::before {
     margin-top: 20px;
     margin-left: 10%;
     background-image: url("../../assets/type.png");

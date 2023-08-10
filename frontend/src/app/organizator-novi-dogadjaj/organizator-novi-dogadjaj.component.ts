@@ -46,6 +46,9 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
   location: string = "";
   eventPrice: number;
 
+  autocomplete: google.maps.places.Autocomplete;
+  
+
   /**
    * Postavljanje datuma u formi na sutrasnji.
    */
@@ -125,7 +128,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-    
+
     try {
       const decodedToken: any = jwt_decode(token);
       const data: Object = { username: decodedToken.username };
@@ -135,9 +138,23 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
       // dohvatanje sportova
       const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
       this.sports = responseSport;
+      // inizijalizacija autocomplete za polje lokacija
+      this.initAutocomplete();
     } catch (error) {
       console.log(error);
     }
+  }
+
+  /**
+  * Inicijalizacija autocomplete pri dodavanju lokacije.
+  */
+  initAutocomplete(){
+    this.autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("location") as HTMLInputElement, {
+        types:[],
+        componentRestrictions: {"country" : ["RS"]},
+        fields:["place_id" , "geometry", "name", "formatted_address"]
+      });
   }
 
   /**
