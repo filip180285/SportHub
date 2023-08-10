@@ -1,13 +1,13 @@
 <app-header-logged></app-header-logged>
 <app-meni-administrator></app-meni-administrator>
     
-    <div class="row sredina">
+    <div class="row sredina" *ngIf = "participants.length > 0">
         <div class="col-sm-12 text-center">
             <h3 id="naslov">Učesnici</h3>
         </div>
     </div>
     
-    <div class="row sredina">
+    <div class="row sredina" *ngIf = "participants.length > 0">
         <div class="col-sm-12 text-center">
             <table class="table table-bordered" id="tabela">
                 <th>Korisničko ime</th>
@@ -23,5 +23,11 @@
                     <td><a [routerLink]="['/prikazProfila', user.username]">LINK</a></td>
                 </tr>
             </table>
+        </div>
+    </div>
+
+    <div class="row sredina" *ngIf = "participants.length == 0">
+        <div class="col-sm-12 text-center">
+            <h3 id="naslov">Nema učesnika u sistemu</h3>
         </div>
     </div>

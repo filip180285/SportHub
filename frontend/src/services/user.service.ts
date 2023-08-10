@@ -65,7 +65,7 @@ export class UserService {
 * Slanje POST zahteva za dohvatanje korisnika.
 * @param {Object} data - Objekat sa poljima sa korisnickim imenom
 * @param {string} token - Token korisnika za autorizaciju
-* @returns {Observable<User>} Observable korisnika, sa telom kao objektom parsiranim iz JSON-a."
+* @returns {Observable<User>} Observable koji emituje parsirani JSON odgovor.
 */
   getUser(data: Object, token: string) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -75,7 +75,7 @@ export class UserService {
   /**
   * Slanje GET zahteva za dohvatanje svih ucesnika.
   * @param {string} token - Token korisnika za autorizaciju
-  * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+  * @returns {Observable<User[]>} Observable koji emituje parsirani JSON odgovor.
   */
   getAllParticipants(token: string) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -85,7 +85,7 @@ export class UserService {
   /**
   * Slanje GET zahteva za dohvatanje svih organizatora.
   * @param {string} token - Token korisnika za autorizaciju
-  * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+  * @returns {Observable<User[]>} Observable koji emituje parsirani JSON odgovor.
   */
   getAllOrganisers(token: string) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
@@ -95,7 +95,7 @@ export class UserService {
   /**
  * Slanje GET zahteva za dohvatanje svih aktivnih organizatora.
  * @param {string} token - Token korisnika za autorizaciju
- * @returns {Observable<User[]>} Observable niza korisnika, sa telom kao objektom parsiranim iz JSON-a."
+ * @returns {Observable<User[]>} Observable koji emituje parsirani JSON odgovor.
  */
   getAllActiveOrganisers(token: string) {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);

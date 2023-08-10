@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { lastValueFrom } from 'rxjs';
 import { User } from 'src/models/user';
 import { UserService } from 'src/services/user.service';
@@ -11,17 +12,20 @@ import { UserService } from 'src/services/user.service';
 })
 export class AdministratorComponent implements OnInit {
 
-  participants: User[] = [];
-
   /**
    * Injects the API service and Angular Router.
    * @param userService API service to inject
    * @param router Angular Router to inject
+   * @param toastr Toastr ToastrService to inject
    */
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
+
+  // svi ucesnici u sistemu
+  participants: User[] = [];
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -32,6 +36,8 @@ export class AdministratorComponent implements OnInit {
         this.participants = response;
       } catch (error) {
         console.log(error);
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
       }
   }
 
