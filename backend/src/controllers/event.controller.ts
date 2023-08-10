@@ -189,7 +189,7 @@ export class EventController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat sa odgovarajucom porukom
     */
-  newEvent = async (req: express.Request, res: express.Response) => { // ok
+  newEvent = async (req: express.Request, res: express.Response) => {
     try {
       // id novog dogadjaja
       let id: number = 1;
@@ -224,6 +224,7 @@ export class EventController {
       const comments: Array<Object> = [];
       comments.push(newComment);
       const participants: Array<string> = [];
+      const paid: Array<string> = [];
 
       const newEvent = new Event({
         id: id,
@@ -238,7 +239,8 @@ export class EventController {
         eventPrice: eventPrice,
         pricePerUser: 0,
         comments: comments,
-        participants: participants
+        participants: participants,
+        paid:paid
       });
 
       await newEvent.save();

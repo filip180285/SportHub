@@ -33,9 +33,12 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
     this.time = '17:00';
   }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // sportovi
   sports: Sport[];
 
+  // podaci o novom dogadjaju
   sport: string = "";
   pollDeadline: number;
   minParticipants: number;
@@ -46,11 +49,13 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
   location: string = "";
   eventPrice: number;
 
+  // Google autocomplete
   autocomplete: google.maps.places.Autocomplete;
-  
+
 
   /**
    * Postavljanje datuma u formi na sutrasnji.
+   * @returns {string} Datum
    */
   getMinDate(): string {
     const tomorrow = new Date();
@@ -60,6 +65,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
    * Postavljanje maksimalnog datuma koji se moze izabrati na 3 nedelje u buducnosti.
+   * @returns {string} Datum
    */
   getMaxDate(): string {
     const maxDate = new Date();
@@ -69,6 +75,8 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
    * Formatiranje datuma.
+   * @param {Date} date - Datum za formatiranje
+   * @returns {string} Formatiran datum
    */
   formatDate(date: Date): string {
     const year = date.getFullYear();
@@ -80,6 +88,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
    * Provera ulaznih vrednosti.
+   * @returns {boolean}
    */
   checkInputValues(): boolean {
     if (this.sport == "") {
@@ -124,6 +133,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -131,7 +141,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
@@ -147,18 +157,20 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
   * Inicijalizacija autocomplete pri dodavanju lokacije.
+  * @returns {void}
   */
-  initAutocomplete(){
+  initAutocomplete(): void {
     this.autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("location") as HTMLInputElement, {
-        types:[],
-        componentRestrictions: {"country" : ["RS"]},
-        fields:["place_id" , "geometry", "name", "formatted_address"]
-      });
+      types: [],
+      componentRestrictions: { "country": ["RS"] },
+      fields: ["place_id", "geometry", "name", "formatted_address"]
+    });
   }
 
   /**
   * Obrada submit-a forme za dodavanje novog dogadjaja.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async newEvent(): Promise<void> {
     if (this.checkInputValues() == false) { return; }
@@ -189,15 +201,17 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
         eventPrice: this.eventPrice
       };
       const response = await lastValueFrom(this.eventService.newEvent(data, token));
-      console.log("ovedededededed")
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
       this.router.navigate(["organizator"]);
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error.message, { positionClass: "toast-top-center" });
-      this.router.navigate([""]);
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
-
   }
 
 }

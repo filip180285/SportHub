@@ -27,6 +27,7 @@ export class OrgUcesnikComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -35,7 +36,7 @@ export class OrgUcesnikComponent implements OnInit {
     try {
       const params = await firstValueFrom(this.route.params);
       this.username = params['username'];
-      const data: Object = { username: this.username };
+      const data = { username: this.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.user = response;
     } catch (error) {

@@ -139,7 +139,12 @@ export class OrganizatorDogadjajComponent implements OnInit {
       this.event.status = "otkazan";
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
 

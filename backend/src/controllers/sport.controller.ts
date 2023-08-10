@@ -26,7 +26,7 @@ export class SportController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} Slika
     */
-    getSportPicture = async (req, res) => { // ok
+    getSportPicture = async (req, res) => {
         try {
             const sport = await Sport.findOne({ "name": req.query.name });
             return res.sendFile(path.join(__dirname, `../../uploads/sports/${sport.picture}`));

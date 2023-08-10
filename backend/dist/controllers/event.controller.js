@@ -221,6 +221,7 @@ class EventController {
                 const comments = [];
                 comments.push(newComment);
                 const participants = [];
+                const paid = [];
                 const newEvent = new event_1.default({
                     id: id,
                     organiser: organiserUsername,
@@ -234,7 +235,8 @@ class EventController {
                     eventPrice: eventPrice,
                     pricePerUser: 0,
                     comments: comments,
-                    participants: participants
+                    participants: participants,
+                    paid: paid
                 });
                 yield newEvent.save();
                 // dohvatanje objekta organizatora
