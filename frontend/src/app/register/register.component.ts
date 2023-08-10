@@ -145,7 +145,7 @@ export class RegisterComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za registraciju.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async sendRegistrationRequest(): Promise<void> {
     // provera da li su sve unete vrednosti validne
@@ -183,7 +183,7 @@ export class RegisterComponent implements OnInit {
   /**
   * Obrada prijave preko Google naloga.
   * @param {string} token - Token dobijen od Google-a.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async googleSignIn(token: string): Promise<void> {
     try {

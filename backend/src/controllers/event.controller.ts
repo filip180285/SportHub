@@ -76,7 +76,7 @@ export class EventController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat dogadjaja ili odgovarajuca poruka
     */
-  getEvent = (req: express.Request, res: express.Response) => { // ok
+  getEvent = (req: express.Request, res: express.Response) => {
     const id: number = req.body.eventId;
     Event.findOne({ "id": id }, (error, event) => {
       if (error) {
@@ -482,17 +482,17 @@ export class EventController {
   };
 
   /**
-* Azuriranje placanja
-* @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
-* @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-* @returns {Object} JSON objekat sa odgovarajucom porukom
-*/
+  * Azuriranje placanja
+  * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+  * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+  * @returns {Object} JSON objekat sa odgovarajucom porukom
+  */
   updatePayments = async (req: express.Request, res: express.Response) => {
     const eventId: number = req.body.eventId; // id dogadjaja
     const paidArray: Array<string> = req.body.paid; // niz ucesnika koji su platili
     try {
       // pronalazenje dogadjaja
-      const event = await Event.findOne({ id: eventId });
+      const event = await Event.findOne({ "id": eventId });
 
       // azuriranje placanja
       event.paid = paidArray;
@@ -501,7 +501,7 @@ export class EventController {
       return res.status(200).json({ "message": "Plaćanje je uspešno ažurirano." });
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja placanja.", error });
+      return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja plaćanja.", error });
     }
   };
 

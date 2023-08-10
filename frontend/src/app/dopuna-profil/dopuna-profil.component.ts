@@ -73,7 +73,7 @@ export class DopunaProfilComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za dopunu korisnickog profila.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async finishGoogleSignIn(): Promise<void> {
     // provera da li su sve unete vrednosti validne

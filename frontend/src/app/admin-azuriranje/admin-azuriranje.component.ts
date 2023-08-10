@@ -102,7 +102,7 @@ export class AdminAzuriranjeComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za azuriranje korisnickih podataka.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async updateUserInfo(): Promise<void> {
     // provera da li su sve unete vrednosti validne

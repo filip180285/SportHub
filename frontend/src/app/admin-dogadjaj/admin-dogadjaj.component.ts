@@ -30,16 +30,19 @@ export class AdminDogadjajComponent implements OnInit {
     private route: ActivatedRoute) {
   }
 
+  // podaci o dogadjaju
   id: number;
   event: MyEvent;
   participants: User[];
 
+  // novi komentar i dug prema organizatoru
   newComment = "";
-  totalOwing:number = 0;
+  totalOwing: number = 0;
 
   /**
-    * Poziva se pri ucitavanju komponente.
-    */
+   * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
@@ -66,8 +69,14 @@ export class AdminDogadjajComponent implements OnInit {
     }
   }
 
+  // mapa
   map: google.maps.Map;
 
+  /** 
+  * Inicijalizacija Google mape
+  * @param {string} address - Adresa za prikaz na mapi.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  */
   async initMap(address: string): Promise<void> {
     const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
     const { AdvancedMarkerElement } = await google.maps.importLibrary("marker") as google.maps.MarkerLibrary;
@@ -102,15 +111,20 @@ export class AdminDogadjajComponent implements OnInit {
   }
 
   /**
-* Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-*/
-  convertToDate(numOfMs: number) {
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
+  */
+  convertToDate(numOfMs: number): Date {
     return new Date(numOfMs);
   }
 
   /**
-   * Stikliranje polja za placanje.
-   */
+   * Stikliranje ucesnika koji su platili.
+   * @param {string} username - Korisnicko ime ucesnika
+   * @param {Event} event Event objekat koji predstavlja stikliranje checkbox-a
+   * @returns {void}
+  */
   paymentUpdate(username: string, event: Event): void {
     const target: HTMLInputElement = event.target as HTMLInputElement;
     const isChecked: boolean = target.checked;
@@ -126,8 +140,9 @@ export class AdminDogadjajComponent implements OnInit {
     }
   }
 
-  /*
-    Cuvanje stikliranih placanja
+  /**
+    Cuvanje stikliranih placanja.
+    @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
   */
   async savePayments(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -140,9 +155,13 @@ export class AdminDogadjajComponent implements OnInit {
       this.toastr.success("", response["message"], { positionClass: "toast-top-center" });
     } catch (error) {
       console.log(error);
-      this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
+      if (error.status == 403) {
+        this.toastr.info("", error.error["message"], { positionClass: "toast-top-center" });
+        this.router.navigate([""]);
+      } else {
+        this.toastr.error("", error.error["message"]);
+      }
     }
   }
-
 
 }

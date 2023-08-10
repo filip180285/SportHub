@@ -64,7 +64,7 @@ export class AdminPrikazProfilaComponent implements OnInit {
 
   /**
    * Poziva se kliku na dugme za brisanje korisnika.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
    */
   async deleteUser(): Promise<void> {
     const data = {

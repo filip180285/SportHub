@@ -448,17 +448,17 @@ class EventController {
             }
         });
         /**
-      * Azuriranje placanja
-      * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
-      * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-      * @returns {Object} JSON objekat sa odgovarajucom porukom
-      */
+        * Azuriranje placanja
+        * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
+        * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
+        * @returns {Object} JSON objekat sa odgovarajucom porukom
+        */
         this.updatePayments = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const eventId = req.body.eventId; // id dogadjaja
             const paidArray = req.body.paid; // niz ucesnika koji su platili
             try {
                 // pronalazenje dogadjaja
-                const event = yield event_1.default.findOne({ id: eventId });
+                const event = yield event_1.default.findOne({ "id": eventId });
                 // azuriranje placanja
                 event.paid = paidArray;
                 yield event.save();
@@ -466,7 +466,7 @@ class EventController {
             }
             catch (error) {
                 console.log(error);
-                return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja placanja.", error });
+                return res.status(400).json({ "message": "Došlo je do greske prilikom ažuriranja plaćanja.", error });
             }
         });
         /**
