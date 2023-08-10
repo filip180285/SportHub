@@ -34,7 +34,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -104,7 +104,7 @@ export class OrganizatorAzuriranjeComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za azuriranje korisnickih podataka.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  * @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
   */
   async updateUserInfo(): Promise<void> {
     // provera da li su sve unete vrednosti validne

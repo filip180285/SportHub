@@ -41,7 +41,7 @@ export class AdminDogadjajComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -76,7 +76,7 @@ export class AdminDogadjajComponent implements OnInit {
   /** 
   * Inicijalizacija Google mape
   * @param {string} address - Adresa za prikaz na mapi.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  * @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
   */
   async initMap(address: string): Promise<void> {
     const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
@@ -143,7 +143,7 @@ export class AdminDogadjajComponent implements OnInit {
 
   /**
     Cuvanje stikliranih placanja.
-    @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+    @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
   */
   async savePayments(): Promise<void> {
     const token: string = sessionStorage.getItem("token");

@@ -31,7 +31,7 @@ export class AdminPrikazProfilaComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -64,7 +64,7 @@ export class AdminPrikazProfilaComponent implements OnInit {
 
   /**
    * Poziva se kliku na dugme za brisanje korisnika.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
    */
   async deleteUser(): Promise<void> {
     const data = {

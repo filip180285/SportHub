@@ -7,7 +7,6 @@ import { User } from 'src/models/user';
 import { Event } from 'src/models/event';
 import { lastValueFrom } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { Sport } from 'src/models/sport';
 import { EventService } from 'src/services/event.service';
 import { SportService } from 'src/services/sport.service';
 
@@ -30,26 +29,25 @@ export class UcesnikComponent implements OnInit {
     private sportService: SportService, private router: Router, private toastr: ToastrService) {
   }
 
+  // ulogovani korisnik
   loggedIn: User;
-  sports: Sport[];
+  // aktuelni dogadjaji
   activeEvents: Event[] = [];
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-    
+
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
-      // dohvatanje sportova
-      const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
-      this.sports = responseSport;
       // dohvatanje aktuelnih dogadjaja
       const responseActive: any = await lastValueFrom(this.eventService.getAllActiveEvents(token));
       this.activeEvents = responseActive;
@@ -59,9 +57,11 @@ export class UcesnikComponent implements OnInit {
   }
 
   /**
- * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
- */
-  convertToDate(numOfMs: number) {
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
+   */
+  convertToDate(numOfMs: number): Date {
     return new Date(numOfMs);
   }
 

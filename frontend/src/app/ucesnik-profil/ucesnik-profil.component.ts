@@ -22,12 +22,15 @@ export class UcesnikProfilComponent implements OnInit {
   */
   constructor(private userService: UserService, private eventService: EventService, private router: Router) { }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // prethodna ucesca i dugovanja
   events: Event[] = [];
   totalOwing: number = 0;
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -35,7 +38,7 @@ export class UcesnikProfilComponent implements OnInit {
 
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
       const responseEvents: any = await lastValueFrom(this.eventService.getAllPreviousEventsForParticipant(data, token));
@@ -52,9 +55,11 @@ export class UcesnikProfilComponent implements OnInit {
   }
 
   /**
-* Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-*/
-  convertToDate(numOfMs: number) {
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
+    */
+  convertToDate(numOfMs: number): Date {
     return new Date(numOfMs);
   }
 

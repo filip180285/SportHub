@@ -25,7 +25,7 @@ export class AdminOrganizatoriComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");

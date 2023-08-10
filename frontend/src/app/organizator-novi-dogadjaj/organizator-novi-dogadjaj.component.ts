@@ -133,7 +133,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+   * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -170,7 +170,7 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za dodavanje novog dogadjaja.
-  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
+  * @returns {Promise<void>} Promise objekat koji se izvrsava kada je operacija zavrsena.
   */
   async newEvent(): Promise<void> {
     if (this.checkInputValues() == false) { return; }
