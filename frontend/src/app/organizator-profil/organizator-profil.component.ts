@@ -20,21 +20,24 @@ export class OrganizatorProfilComponent implements OnInit {
   * @param userService API service to inject
   * @param router Angular Router to inject
   */
-  constructor(private userService: UserService,private eventService: EventService, private router: Router) { }
+  constructor(private userService: UserService, private eventService: EventService, private router: Router) { }
 
+  // ulogovani korisnik
   loggedIn: User;
+  // prethodno organizovani dogadjaji korisnika
   events: Event[] = [];
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
-    
+
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
       const responseEvents: any = await lastValueFrom(this.eventService.getAllPreviousEventsForOrganiser(data, token));
@@ -44,12 +47,13 @@ export class OrganizatorProfilComponent implements OnInit {
     }
   }
 
-    /**
-* Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
-*/
-convertToDate(numOfMs: number) {
-  return new Date(numOfMs);
-}
-
+  /**
+   * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
+  */
+  convertToDate(numOfMs: number): Date {
+    return new Date(numOfMs);
+  }
 
 }

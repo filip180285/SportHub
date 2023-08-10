@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import jwt_decode from "jwt-decode";
 import { ToastrService } from 'ngx-toastr';
 import { lastValueFrom } from 'rxjs';
-import { Sport } from 'src/models/sport';
 import { User } from 'src/models/user';
 import { Event } from 'src/models/event';
 import { EventService } from 'src/services/event.service';
@@ -32,13 +31,15 @@ export class OrganizatorComponent implements OnInit {
     private sportService: SportService, private router: Router, private toastr: ToastrService) {
   }
 
+  // ulogovani korisnik
   loggedIn: User;
-  sports: Sport[];
+  // dogadjaji u organizaciji ulogovanog korisnika
   activeEvents: Event[] = [];
   previousEvents: Event[] = [];
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -46,13 +47,10 @@ export class OrganizatorComponent implements OnInit {
 
     try {
       const decodedToken: any = jwt_decode(token);
-      const data: Object = { username: decodedToken.username };
+      const data = { username: decodedToken.username };
       // dohvatanje ulogovanog korisnika
       const response: any = await lastValueFrom(this.userService.getUser(data, token));
       this.loggedIn = response;
-      // dohvatanje sportova
-      const responseSport: any = await lastValueFrom(this.sportService.getAllSports(token));
-      this.sports = responseSport;
       // dohvatanje aktuelnih dogadjaja za organizatora
       const dataEvent: Object = {
         username: this.loggedIn.username
@@ -69,8 +67,11 @@ export class OrganizatorComponent implements OnInit {
 
   /**
    * Konvertuje milisekunde u datum i vreme radi prikaza na stranici.
+   * @param {number} numOfMs - Datum i vreme u milisekundama
+   * @returns {Date} Datum i vreme kao objekat tipa Date
    */
-  convertToDate(numOfMs: number) {
+  convertToDate(numOfMs: number): Date {
     return new Date(numOfMs);
   }
+
 }
