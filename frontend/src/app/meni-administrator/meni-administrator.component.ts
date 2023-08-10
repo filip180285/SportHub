@@ -14,8 +14,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MeniAdministratorComponent implements OnInit {
 
-  loggedIn: User;
-
   /**
    * Injects the API service and Angular Router.
    * @param userService API service to inject
@@ -24,8 +22,12 @@ export class MeniAdministratorComponent implements OnInit {
    */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  // ulogovani korisnik
+  loggedIn: User;
+
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -39,33 +41,34 @@ export class MeniAdministratorComponent implements OnInit {
         this.router.navigate([`/${decodedToken.role}`]);
       }
       else {
-        const data: Object = { username: decodedToken.username };
+        const data = { username: decodedToken.username };
         const response: any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;
       }
     } catch (error) {
       console.log(error);
-      //this.toastr.error("", error.error["message"], { positionClass: "toast-top-center" });
-      //this.router.navigate([""]);
     }
   }
 
   /**
-* Odlazak na pocetnu stranicu za administratora.
-*/
+  * Odlazak na pocetnu stranicu za administratora.
+  * @returns {void}
+  */
   administrator(): void {
     this.router.navigate(["administrator"]);
   }
 
   /**
-* Odlazak na stranicu sa pregledom organizatora.
-*/
+  * Odlazak na stranicu sa pregledom organizatora.
+  * @returns {void}
+  */
   organizatori(): void {
     this.router.navigate(["adminOrganizatori"]);
   }
 
   /**
   * Odlazak na stranicu sa prikazom profila.
+  * @returns {void}
   */
   profil(): void {
     this.router.navigate(["adminProfil"]);
@@ -73,6 +76,7 @@ export class MeniAdministratorComponent implements OnInit {
 
   /**
   * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
+  * @returns {void}
   */
   logout(): void {
     sessionStorage.clear();

@@ -156,7 +156,6 @@ class UserController {
                     };
                     // kreiranje i potpis tokena
                     const token = jwt.sign(jwtData, process.env.JWT_SECRET_KEY, { expiresIn: '1h' });
-                    console.log("kraj");
                     return res.status(200).json({ token });
                 }
                 // obrisan korisnik
@@ -215,7 +214,7 @@ class UserController {
       * Dopuna podataka prilikom prijave sa Google nalogom.
       * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
       * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-      * @returns {Object} JSON objekat sa odgovarajucom porukom
+      * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
       */
         this.finishGoogleSignIn = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const id = req.body.id;
@@ -262,7 +261,7 @@ class UserController {
                 });
             }
             const myArray = file.originalname.split(".");
-            const pictureName = username + Date.now() + "." + myArray[myArray.length - 1];
+            const pictureName = username + "." + myArray[myArray.length - 1];
             // preimenovanje dodate slike
             fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), (err) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {

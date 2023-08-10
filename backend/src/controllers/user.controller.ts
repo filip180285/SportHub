@@ -55,7 +55,7 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat sa odgovarajucom porukom
     */
-    register = async (req: express.Request, res: express.Response) => { // ok
+    register = async (req: express.Request, res: express.Response) => {
         const username: string = req.body.username;
         const email: string = req.body.email;
 
@@ -212,7 +212,7 @@ export class UserController {
   * Dopuna podataka prilikom prijave sa Google nalogom.
   * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
   * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
-  * @returns {Object} JSON objekat sa odgovarajucom porukom
+  * @returns {Object} JSON objekat sa JWT tokenom ili odgovarajucom porukom
   */
     finishGoogleSignIn = async (req: express.Request, res: express.Response) => {
         const id = req.body.id;
@@ -257,7 +257,7 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat sa odgovarajucom porukom
     */
-    addPicture = (req: express.Request, res: express.Response) => { // ok
+    addPicture = (req: express.Request, res: express.Response) => {
         const file: Express.Multer.File = req.file;
         const username: string = req.body.username;
 
@@ -268,7 +268,7 @@ export class UserController {
         }
 
         const myArray: Array<string> = file.originalname.split(".");
-        const pictureName: string = username + Date.now() + "." + myArray[myArray.length - 1];
+        const pictureName: string = username + "." + myArray[myArray.length - 1];
         // preimenovanje dodate slike
         fs.rename(file.path, path.join(__dirname, "../../uploads/users/" + pictureName), async (err) => {
             if (err) {
@@ -297,7 +297,7 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat korisnika ili odgovarajuca poruka
     */
-    getUser = (req: express.Request, res: express.Response) => { // ok
+    getUser = (req: express.Request, res: express.Response) => {
         const username: string = req.body.username;
         User.findOne({ "username": username }, (error, user) => {
             if (error) {
@@ -318,7 +318,7 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} Profilna slika korisnika
     */
-    getUserPicture = async (req, res) => { // ok
+    getUserPicture = async (req, res) => {
         const picture = req.query.image;
         try {
             if (!picture.includes("googleusercontent")) { // uploadovana slika
@@ -339,7 +339,7 @@ export class UserController {
     };
 
     /**
-    * Dohvatanje slike za dogadjaj
+    * Dohvatanje profilne slike korisnika
     * @param {express.Request} req - Express Request objekat sa prosledjenim parametrima u telu zahteva.
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} Profilna slika korisnika

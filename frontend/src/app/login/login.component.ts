@@ -28,7 +28,8 @@ export class LoginComponent implements OnInit {
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private ngZone: NgZone) { }
 
   /**
-   * Poziva se pri ucitavanju komponente, cisti session storage.
+   * Poziva se kada se komponenta ucita, cisti session storage.
+   *  @returns {void}
    */
   ngOnInit(): void {
     // cisti storage

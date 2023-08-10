@@ -3,7 +3,7 @@ declare var google: any;
 import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, lastValueFrom } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 import { UserService } from 'src/services/user.service';
 
 import { accounts } from 'google-one-tap';
@@ -23,11 +23,13 @@ export class RegisterComponent implements OnInit {
  * @param userService API service to inject
  * @param router Angular Router to inject
  * @param toastr Toastr ToastrService to inject
+ * @param ngZone NgZone NgZoneService to inject
  */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService, private ngZone: NgZone) { }
 
   /**
-   * Poziva se pri ucitavanju komponente.
+   * Poziva se kada se komponenta ucita.
+   * @returns {void}
    */
   ngOnInit(): void {
     sessionStorage.clear();
@@ -60,6 +62,7 @@ export class RegisterComponent implements OnInit {
     }, 200);
   }
 
+  // podaci
   username: string = "";
   password: string = "";
   name: string = "";
@@ -73,7 +76,8 @@ export class RegisterComponent implements OnInit {
 
   /**
    * Obrada dogadjaja select-ovanja fajla.
-   * @param {event} Event - event objekat koji predstavlja dogadjaj biranja fajla
+   * @param {event} Event - Event objekat koji predstavlja dogadjaj biranja fajla
+   * @returns {void}
    */
   selectImage(event: Event): void {
     if ((event.target as HTMLInputElement).files?.length > 0) {
@@ -86,6 +90,7 @@ export class RegisterComponent implements OnInit {
 
   /**
    * Provera tipa slike
+   * @returns {void}
    */
   validateFileType(): void {
     const allowedExtensions = ['.png', '.jpg', '.jpeg'];
@@ -98,6 +103,10 @@ export class RegisterComponent implements OnInit {
     }
   }
 
+  /**
+    * Provera unetih podataka
+    * @returns {boolean}
+    */
   checkInputValues(): boolean {
     // provera da li su unete sve vrednosti
     if (this.name == "" || this.username == "" || this.password == "" ||
@@ -136,6 +145,7 @@ export class RegisterComponent implements OnInit {
 
   /**
   * Obrada submit-a forme za registraciju.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
   */
   async sendRegistrationRequest(): Promise<void> {
     // provera da li su sve unete vrednosti validne
@@ -172,18 +182,19 @@ export class RegisterComponent implements OnInit {
 
   /**
   * Obrada prijave preko Google naloga.
+  * @param {string} token - Token dobijen od Google-a.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
   */
   async googleSignIn(token: string): Promise<void> {
     try {
       const data = { token: token };
       const response: any = await lastValueFrom(this.userService.googleSignIn(data));
-
       if (response["token"]) {
         sessionStorage.setItem('token', response["token"]);
         const decodedToken: any = jwt_decode(response["token"]);
         this.router.navigate([`/${decodedToken.role}`]);
-      } else if (response.id) {
-        this.router.navigate(["dopunaProfil", response.id]);
+      } else if (response["id"]) {
+        this.router.navigate(["dopunaProfil", response["id"]]);
       }
     } catch (error) {
       console.error(error);

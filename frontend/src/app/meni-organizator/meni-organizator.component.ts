@@ -14,8 +14,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MeniOrganizatorComponent implements OnInit {
 
-  loggedIn: User;
-
   /**
  * Injects the API service and Angular Router.
  * @param userService API service to inject
@@ -24,8 +22,12 @@ export class MeniOrganizatorComponent implements OnInit {
  */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  // ulogovani korisnik
+  loggedIn: User;
+
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -38,7 +40,7 @@ export class MeniOrganizatorComponent implements OnInit {
         this.router.navigate([`/${decodedToken.role}`]);
       }
       else {
-        const data: Object = { username: decodedToken.username };
+        const data = { username: decodedToken.username };
         const response: any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;
       }
@@ -48,28 +50,32 @@ export class MeniOrganizatorComponent implements OnInit {
   }
 
   /**
-* Odlazak na pocetnu stranicu za organizatora.
-*/
+  * Odlazak na pocetnu stranicu za organizatora.
+  * @returns {void}
+  */
   profil(): void {
     this.router.navigate(["organizatorProfil"]);
   }
 
   /**
-* Odlazak na stranicu za dodavanje novog dogadjaja.
-*/
+  * Odlazak na stranicu za dodavanje novog dogadjaja.
+  *@returns {void}
+  */
   noviDogadjaj(): void {
     this.router.navigate(["organizatorNoviDogadjaj"]);
   }
 
   /**
-* Odlazak na stranicu za pregled organizatora.
-*/
+  * Odlazak na stranicu za pregled organizatora.
+  *@returns {void}
+  */
   organizator(): void {
     this.router.navigate(["ucesnik"]);
   }
 
   /**
   * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
+  * @returns {void}
   */
   logout(): void {
     sessionStorage.clear();

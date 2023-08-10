@@ -29,7 +29,7 @@ export class DopunaProfilComponent implements OnInit {
 
   /**
    * Poziva se pri ucitavanju komponente.
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta kreirana.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     setTimeout(() => {
@@ -48,7 +48,7 @@ export class DopunaProfilComponent implements OnInit {
 
   /**
    * Provera unetih podataka
-   * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija završena.
+   * @returns {boolean}
    */
   checkInputValues(): boolean {
     // provera da li su unete sve vrednosti

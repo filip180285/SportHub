@@ -14,8 +14,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MeniUcesnikComponent implements OnInit {
 
-  loggedIn: User;
-
   /**
  * Injects the API service and Angular Router.
  * @param userService API service to inject
@@ -24,9 +22,13 @@ export class MeniUcesnikComponent implements OnInit {
  */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  // ulogovani korisnik
+  loggedIn: User;
+
   /**
-   * Poziva se pri ucitavanju komponente.
-   */
+  * Poziva se pri ucitavanju komponente.
+  * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
+  */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
@@ -49,29 +51,33 @@ export class MeniUcesnikComponent implements OnInit {
   }
 
   /**
-* Odlazak na stranicu sa profilom ucesnika.
-*/
+  * Odlazak na stranicu sa profilom ucesnika.
+  * @returns {void}
+  */
   profil(): void {
     this.router.navigate(["ucesnikProfil"]);
   }
 
   /**
-* Odlazak na stranicu za pregled organizatora.
-*/
+  * Odlazak na stranicu za pregled organizatora.
+  * @returns {void}
+  */
   organizatori(): void {
     this.router.navigate(["ucesnikOrganizatori"]);
   }
 
-   /**
-* Odlazak na stranicu za pregled organizatora.
-*/
-ucesnik(): void {
-  this.router.navigate(["ucesnik"]);
-}
+  /**
+  * Odlazak na stranicu za pregled organizatora.
+  * @returns {void}
+  */
+  ucesnik(): void {
+    this.router.navigate(["ucesnik"]);
+  }
 
   /**
- * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
- */
+   * Brisanje tokena iz session storage i preusmeravanje na stranicu za prijavu.
+   * @returns {void}
+   */
   logout(): void {
     sessionStorage.clear();
     this.router.navigate([""]);

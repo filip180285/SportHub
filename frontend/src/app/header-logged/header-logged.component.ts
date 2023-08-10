@@ -22,10 +22,12 @@ export class HeaderLoggedComponent implements OnInit {
    */
   constructor(private userService: UserService, private router: Router, private toastr: ToastrService) { }
 
+  // ulogovani korisnik
   loggedIn: User;
 
   /**
    * Poziva se pri ucitavanju komponente.
+   * @returns {Promise<void>} Promise objekat koji se izvršava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
     const token: string = sessionStorage.getItem("token");
@@ -35,7 +37,7 @@ export class HeaderLoggedComponent implements OnInit {
     else {
       try {
         const decodedToken: any = jwt_decode(token);
-        const data: Object = { username: decodedToken.username };
+        const data = { username: decodedToken.username };
         const response: any = await lastValueFrom(this.userService.getUser(data, token));
         this.loggedIn = response;
       } catch (error) {
