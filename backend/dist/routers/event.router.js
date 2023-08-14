@@ -21,5 +21,7 @@ eventRouter.route("/addComment").post((0, middleware_1.verifyTokenMiddleware)(["
 eventRouter.route("/findOwingEventsForParticipant").post((0, middleware_1.verifyTokenMiddleware)(["ucesnik", "administrator"]), (req, res) => new event_controller_1.EventController().findOwingEventsForParticipant(req, res));
 eventRouter.route("/findOwingEventsForOrganiser").post((0, middleware_1.verifyTokenMiddleware)(["organizator"]), (req, res) => new event_controller_1.EventController().findOwingEventsForOrganiser(req, res));
 eventRouter.route("/updatePayments").post((0, middleware_1.verifyTokenMiddleware)(["organizator", "administrator"]), (req, res) => new event_controller_1.EventController().updatePayments(req, res));
+// radi testiranja update-a
+eventRouter.route("/updateEventsStatus2").post((req, res) => new event_controller_1.EventController().updateEventsStatus2(req, res));
 exports.default = eventRouter;
 //# sourceMappingURL=event.router.js.map

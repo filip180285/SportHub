@@ -17,10 +17,6 @@ const event_1 = __importDefault(require("../models/event"));
 const user_1 = __importDefault(require("../models/user"));
 const schedule = require("node-schedule");
 const nodemailer = require("nodemailer");
-schedule.scheduleJob("1 6 * * *", () => {
-    console.log("filip");
-    console.log(Date.now());
-});
 schedule.scheduleJob("5 0 * * *", () => {
     console.log("cancel");
     new EventController().cancelEventsWithoutMinimum();
@@ -99,7 +95,7 @@ class EventController {
          */
         this.getAllActiveEvents = (req, res) => {
             event_1.default.find({ "status": "aktivan" })
-                .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
+                .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
                 .exec((error, events) => {
                 if (error) {
                     console.log(error);
@@ -136,7 +132,7 @@ class EventController {
         this.getAllActiveEventsForOrganiser = (req, res) => {
             const username = req.body.username; // korisnicko ime organizatora
             event_1.default.find({ "organiser": username, status: "aktivan" })
-                .sort({ "dateTime": -1 }) // vrati prvo najskorije dogadjaje
+                .sort({ "dateTime": 1 }) // vrati prvo najskorije dogadjaje
                 .exec((error, events) => {
                 if (error) {
                     console.log(error);
@@ -516,7 +512,7 @@ class EventController {
         this.cancelEventsWithoutMinimum = () => __awaiter(this, void 0, void 0, function* () {
             const now = Date.now();
             try {
-                // Find aktivan dogadjaja kojima je istekao rok za prijavu i ima manje ucesnika od minParticipants
+                // nadji aktivne dogadjaje kojima je istekao rok za prijavu i ima manje ucesnika od minParticipants
                 const events = yield event_1.default.find({
                     "status": "aktivan",
                     "pollDeadline": { $lt: now },
@@ -551,6 +547,49 @@ class EventController {
             catch (error) {
                 console.log(error);
                 console.log("Došlo je do greške!", error);
+            }
+        });
+        // update radi testiranja
+        /**
+      * Azuriranje statusa dogadjaja i cene po korisniku, slanje mejla kao podsetnika
+      * na dogadjaj.
+      */
+        this.updateEventsStatus2 = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const now = Date.now();
+            try {
+                // nalazenje aktuelnih dogadjaja kojima je istekao rok za prijavu
+                const events = yield event_1.default.find({ "id": req.body.id });
+                // azurira status dogadjaja i racuna cenu po korisniku
+                for (const event of events) {
+                    event.status = "zavrsen";
+                    // cena za ucesnika = cena termina / broj ucesnika
+                    const pricePerUser = Number((event.eventPrice / event.participants.length).toFixed(2));
+                    event.pricePerUser = pricePerUser;
+                    yield event.save();
+                }
+                // slanje mejlova
+                for (const event of events) {
+                    const participants = event.participants;
+                    // dohvatanje mejlova ucesnika
+                    const participantsEmails = yield user_1.default.find({ "username": { $in: participants } }).select('email');
+                    const emails = participantsEmails.join(', ');
+                    const date = new Date(event.dateTime);
+                    // mejl podsetnik
+                    const title = "Podsetnik";
+                    const content = `<p><strong>Današnji događaj:</strong></p>
+        <p><strong>Sport:</strong> ${event.sport} </p>
+        <p><strong>Datum:</strong> ${formatDate(date)} </p>
+        <p><strong>Lokacija:</strong> ${event.location} </p>`;
+                    // poziv metode za slanje mejlova
+                    this.sendEmail(emails, title, content);
+                }
+                console.log("Uspešno ažurirani događaji!");
+                return res.status(200).json({ "message": "Uspešno ažurirani događaji!" });
+            }
+            catch (error) {
+                console.log(error);
+                console.log("Došlo je do greške!", error);
+                return res.status(200).json({ "message": "Došlo je do greške!" });
             }
         });
     }

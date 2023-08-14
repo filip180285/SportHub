@@ -1,107 +1,419 @@
-[ {
+[{
   "id": 1,
   "organiser": "filip",
-  "sport": "fudbal",
-  "pollDeadline": 1691923919965,
-  "minParticipants": 4,
-  "maxParticipants": 15,
-  "dateTime": 1691923919965,
-  "location": "Dunavski kej 19, Beograd",
-  "status": "aktivan",
-  "eventPrice": 10000,
-  "pricePerUser": 0,
+  "sport": "Tenis",
+  "pollDeadline": {
+    "$numberLong": "1691618400000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 4,
+  "dateTime": {
+    "$numberLong": "1691683200000"
+  },
+  "location": "Teniski centar Novak, Beograd",
+  "status": "zavrsen",
+  "eventPrice": 3000,
+  "pricePerUser": 750,
   "comments": [
     {
-	  "username" : "filip",
-      "time": 1691923919965,
+      "id": 1,
+      "username": "filip",
+      "name": "Filip",
+      "lastname": "Kojic",
+      "datetime": {
+        "$numberLong": "1691485200000"
+      },
       "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    },
+    {
+      "id": 2,
+      "username": "gordana",
+      "name": "Gordana",
+      "lastname": "Sekulic",
+      "datetime": {
+        "$numberLong": "1691755800000"
+      },
+      "text": "Jako zabavno, nadam se ponovnom okupljanju uskoro!"
     }
   ],
-  "participants": ["petar", "milica", "milan"]
-},
-{
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": [
+    "gordana",
+    "milan",
+    "stefan"
+  ]
+},{
   "id": 2,
   "organiser": "filip",
-  "sport": "kosarka",
-  "pollDeadline": 1691923919965,
-  "minParticipants": 4,
-  "maxParticipants": 15,
-  "dateTime": 1691923919965,
+  "sport": "Košarka",
+  "pollDeadline": {
+    "$numberLong": "1691704800000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 10,
+  "dateTime": {
+    "$numberLong": "1691773200000"
+  },
   "location": "Dunavski kej 20, Beograd",
-  "status": "aktivan",
-  "eventPrice": 20000,
-  "pricePerUser": 0,
+  "status": "zavrsen",
+  "eventPrice": 2000,
+  "pricePerUser": 500,
   "comments": [
     {
-	  "username" : "filip",
-      "time": 1691923919965,
+      "id": 1,
+      "username": "filip",
+      "name": "Filip",
+      "lastname": "Kojic",
+      "datetime": {
+        "$numberLong": "1691488800000"
+      },
       "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    },
+    {
+      "id": 2,
+      "username": "milan",
+      "name": "Milan",
+      "lastname": "Jokic",
+      "datetime": {
+        "$numberLong": "1691787600000"
+      },
+      "text": "Odličan basket!"
     }
   ],
-  "participants": ["petar", "milica", "milan"]
-},
-{
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": [
+    "gordana",
+    "milan",
+    "stefan"
+  ]
+},{
   "id": 3,
-  "organiser": "filip",
-  "sport": "tenis",
-  "pollDeadline": 1691923919965,
+  "organiser": "ana",
+  "sport": "Fudbal",
+  "pollDeadline": {
+    "$numberLong": "1691791200000"
+  },
   "minParticipants": 2,
-  "maxParticipants": 4,
-  "dateTime": 1691923919965,
-  "location": "Dunavski kej 21, Beograd",
-  "status": "aktivan",
-  "eventPrice": 15000,
-  "pricePerUser": 0,
+  "maxParticipants": 20,
+  "dateTime": {
+    "$numberLong": "1691842500000"
+  },
+  "location": "FK Dorćol, Beograd",
+  "status": "zavrsen",
+  "eventPrice": 4000,
+  "pricePerUser": 1000,
   "comments": [
     {
-	  "username" : "filip",
-      "time": 1691923919965,
+      "id": 1,
+      "username": "ana",
+      "name": "Ana",
+      "lastname": "Jovic",
+      "datetime": {
+        "$numberLong": "1691572200000"
+      },
       "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    },
+    {
+      "id": 2,
+      "username": "milan",
+      "name": "Milan",
+      "lastname": "Jokic",
+      "datetime": {
+        "$numberLong": "1691867820000"
+      },
+      "text": "Zabavno, vidimo se opet!"
+    },
+    {
+      "id": 3,
+      "username": "stefan",
+      "name": "Stefan",
+      "lastname": "Rakic",
+      "datetime": {
+        "$numberLong": "1691870580000"
+      },
+      "text": "Da li je neko slučajno našao moju jaknu?"
     }
   ],
-  "participants": ["petar", "milica", "milan"]
-},
-{
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ]
+},{
   "id": 4,
-  "organiser": "filip",
-  "sport": "tenis",
-  "pollDeadline": 1690323919965,
+  "organiser": "ana",
+  "sport": "Stoni tenis",
+  "pollDeadline": {
+    "$numberLong": "1691877600000"
+  },
   "minParticipants": 2,
   "maxParticipants": 4,
-  "dateTime": 1690323919965,
-  "location": "Dunavski kej 21, Beograd",
+  "dateTime": {
+    "$numberLong": "1691937000000"
+  },
+  "location": "Tržni centar Rajićeva,  Beograd",
   "status": "zavrsen",
-  "eventPrice": 15000,
-  "pricePerUser": 0,
+  "pricePerUser": 250,
+  "eventPrice": 500,
   "comments": [
     {
-	  "username" : "filip",
-      "time": 1690323919965,
+      "id": 1,
+      "username": "ana",
+      "name": "Ana",
+      "lastname": "Jovic",
+      "datetime": {
+        "$numberLong": "1691677800000"
+      },
       "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
     }
   ],
-  "participants": ["petar", "milica", "milan"]
-},
-{
+  "participants": [
+    "petar",
+    "stefan"
+  ],
+  "paid": [
+    "stefan"
+  ]
+},{
   "id": 5,
-  "organiser": "filip",
-  "sport": "tenis",
-  "pollDeadline": 1690323919965,
+  "organiser": "lazar",
+  "sport": "Odbojka",
+  "pollDeadline": {
+    "$numberLong": "1691964000000"
+  },
   "minParticipants": 2,
-  "maxParticipants": 4,
-  "dateTime": 1690323919965,
-  "location": "Dunavski kej 21, Beograd",
+  "maxParticipants": 15,
+  "dateTime": {
+    "$numberLong": "1692012600000"
+  },
+  "location": "Odbojkaški tereni, Ada,Beograd",
   "status": "zavrsen",
-  "eventPrice": 15000,
+  "pricePerUser": 625,
+  "eventPrice": 2500,
+  "comments": [
+    {
+      "id": 1,
+      "username": "lazar",
+      "name": "Lazar",
+      "lastname": "Mikic",
+      "datetime": {
+        "$numberLong": "1691667000000"
+      },
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    },
+    {
+      "id": 2,
+      "username": "petar",
+      "name": "Petar",
+      "lastname": "Simic",
+      "datetime": {
+        "$numberLong": "1692087120000"
+      },
+      "text": "Odlično!"
+    }
+  ],
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ]
+},{
+  "id": 6,
+  "organiser": "filip",
+  "sport": "Rukomet",
+  "pollDeadline": {
+    "$numberLong": "1692482400000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 15,
+  "dateTime": {
+    "$numberLong": "1692547200000"
+  },
+  "location": "Dunavki kej 20, Beograd",
+  "status": "aktivan",
+  "eventPrice": 1800,
   "pricePerUser": 0,
   "comments": [
     {
-	  "username" : "filip",
-      "time": 1690323919965,
+      "id": 1,
+      "username": "filip",
+      "name": "Filip",
+      "lastname": "Kojic",
+      "datetime": {
+        "$numberLong": "1692026661147"
+      },
       "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
     }
   ],
-  "participants": ["petar", "milica", "milan"]
-}
-
- ]
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": []
+},{
+  "id": 7,
+  "organiser": "filip",
+  "sport": "Tenis",
+  "pollDeadline": {
+    "$numberLong": "1692568800000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 4,
+  "dateTime": {
+    "$numberLong": "1692627300000"
+  },
+  "location": "Teniski centar Novak, Beograd",
+  "status": "aktivan",
+  "eventPrice": 3000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+      "id": 1,
+      "username": "filip",
+      "name": "Filip",
+      "lastname": "Kojic",
+      "datetime": {
+        "$numberLong": "1692026795231"
+      },
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": []
+},{
+  "id": 8,
+  "organiser": "ana",
+  "sport": "Košarka",
+  "pollDeadline": {
+    "$numberLong": "1692655200000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 10,
+  "dateTime": {
+    "$numberLong": "1692723600000"
+  },
+  "location": "Dunavki kej 20, Beograd",
+  "status": "aktivan",
+  "eventPrice": 2000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+      "id": 1,
+      "username": "ana",
+      "name": "Ana",
+      "lastname": "Jovic",
+      "datetime": {
+        "$numberLong": "1692026874126"
+      },
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": []
+},{
+  "id": 9,
+  "organiser": "ana",
+  "sport": "Odbojka",
+  "pollDeadline": {
+    "$numberLong": "1692828000000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 20,
+  "dateTime": {
+    "$numberLong": "1692889200000"
+  },
+  "location": "Odbojkaški tereni, Ada,Beograd",
+  "status": "aktivan",
+  "eventPrice": 1800,
+  "pricePerUser": 0,
+  "comments": [
+    {
+      "id": 1,
+      "username": "ana",
+      "name": "Ana",
+      "lastname": "Jovic",
+      "datetime": {
+        "$numberLong": "1692027018902"
+      },
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": []
+},{
+  "id": 10,
+  "organiser": "lazar",
+  "sport": "Američki fudbal",
+  "pollDeadline": {
+    "$numberLong": "1692914400000"
+  },
+  "minParticipants": 2,
+  "maxParticipants": 30,
+  "dateTime": {
+    "$numberLong": "1692979200000"
+  },
+  "location": "Dunavki kej 20, Beograd",
+  "status": "aktivan",
+  "eventPrice": 3000,
+  "pricePerUser": 0,
+  "comments": [
+    {
+      "id": 1,
+      "username": "lazar",
+      "name": "Lazar",
+      "lastname": "Mikic",
+      "datetime": {
+        "$numberLong": "1692027091968"
+      },
+      "text": "Pozdrav, ja sam organizator ovog događaja. Ovde možete da ostavite svoj komentar vezan za ovaj događaj."
+    }
+  ],
+  "participants": [
+    "gordana",
+    "milan",
+    "petar",
+    "stefan"
+  ],
+  "paid": []
+}]

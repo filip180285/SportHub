@@ -1,4 +1,4 @@
-[ {
+[{
   "id": 1,
   "name": "Jovica",
   "lastname": "Dobric",
@@ -9,9 +9,9 @@
   "status": "aktivan",
   "phone": "+381 66 5080121",
   "picture": "jovica.jpg",
-  "subscriptions": []
-},
-{
+  "subscriptions": [],
+  "description": ""
+},{
   "id": 2,
   "name": "Ana",
   "lastname": "Jovic",
@@ -22,9 +22,12 @@
   "status": "aktivan",
   "phone": "+381 66 4010255",
   "picture": "ana.jpg",
-  "subscriptions": []
-},
-{
+  "subscriptions": [
+    "gordana",
+    "petar"
+  ],
+  "description": "Kao organizator, imam privilegiju da stvaram nezaboravne događaje. Moje iskustvo i kreativnost omogućavaju mi da svaki detalj pažljivo osmislim, stvarajući prilike koje će učesnicima ostati urezane u sećanju. Moja strast prema ovom poslu doprinosi tome da svaki događaj bude besprekoran i poseban, ostavljajući dubok utisak na sve prisutne."
+},{
   "id": 3,
   "name": "Lazar",
   "lastname": "Mikic",
@@ -35,22 +38,30 @@
   "status": "aktivan",
   "phone": "+381 66 7232444",
   "picture": "lazar.jpg",
-  "subscriptions": []
-},
-{
+  "subscriptions": [
+    "milan",
+    "stefan"
+  ],
+  "description": "Kao organizator događaja, moj cilj je da svaka prilika postane nezaboravno iskustvo. Moje bogato iskustvo omogućava mi da sa preciznošću i kreativnošću oblikujem svaki detalj, stvarajući jedinstvene trenutke za sve prisutne. Posvećenost poslu i pažnja prema svakom aspektu događaja osiguravaju da svaka manifestacija bude besprekorno izvedena, ostavljajući pozitivan utisak i uspomene koje će dugo trajati."
+},{
   "id": 4,
   "name": "Filip",
   "lastname": "Kojic",
   "username": "filip",
   "password": "$2b$10$6TXLedNOBPbsqBTpqSoaDuK//.WveWJupoL9p.POGUYGD3GnAEnMW",
   "email": "filipkojic48@gmail.com",
-  "type": "ucesnik",
+  "type": "organizator",
   "status": "aktivan",
   "phone": "+381 66 5080929",
   "picture": "filip.jpg",
-  "subscriptions": []
-},
-{
+  "subscriptions": [
+    "milan",
+    "gordana",
+    "stefan",
+    "petar"
+  ],
+  "description": "Filip Kojić je stručan i posvećen sportski organizator, koji se ističe u organizaciji fudbalskih turnira, košarkaških liga i atletskih takmičenja. Njegovi događaji su poznati po profesionalizmu i pažljivo osmišljenim rasporedima, pružajući učesnicima izvanredno iskustvo i uzbuđenje na terenima širom zemlje."
+},{
   "id": 5,
   "name": "Gordana",
   "lastname": "Sekulic",
@@ -61,9 +72,12 @@
   "status": "aktivan",
   "phone": "+381 66 8050312",
   "picture": "gordana.jpg",
-  "subscriptions": []
-},
-{
+  "subscriptions": [
+    "filip",
+    "ana"
+  ],
+  "description": ""
+},{
   "id": 6,
   "name": "Milan",
   "lastname": "Jokic",
@@ -74,23 +88,13 @@
   "status": "aktivan",
   "phone": "+381 66 7323888",
   "picture": "milan.jpg",
-  "subscriptions": []
-},
-{
+  "subscriptions": [
+    "filip",
+    "lazar"
+  ],
+  "description": ""
+},{
   "id": 7,
-  "name": "Milica",
-  "lastname": "Petrovic",
-  "username": "milica",
-  "password": "$2b$10$6TXLedNOBPbsqBTpqSoaDuK//.WveWJupoL9p.POGUYGD3GnAEnMW",
-  "email": "milpetrovic22@gmail.com",
-  "type": "ucesnik",
-  "status": "aktivan",
-  "phone": "+381 66 4748124",
-  "picture": "milica.jpg",
-  "subscriptions": []
-},
-{
-  "id": 8,
   "name": "Petar",
   "lastname": "Simic",
   "username": "petar",
@@ -98,8 +102,27 @@
   "email": "simicp393@gmail.com",
   "type": "ucesnik",
   "status": "aktivan",
-  "phone": "+381 66 4010255",
+  "phone": "+381 66 4010256",
   "picture": "petar.jpg",
-  "subscriptions": []
-}
- ]
+  "subscriptions": [
+    "filip",
+    "ana"
+  ],
+  "description": ""
+},{
+  "id": 8,
+  "name": "Stefan",
+  "lastname": "Rakic",
+  "username": "stefan",
+  "password": "$2b$10$6TXLedNOBPbsqBTpqSoaDuK//.WveWJupoL9p.POGUYGD3GnAEnMW",
+  "email": "rakics104@gmail.com",
+  "type": "ucesnik",
+  "status": "aktivan",
+  "phone": "+381 66 5080145",
+  "picture": "stefan.jpg",
+  "subscriptions": [
+    "filip",
+    "lazar"
+  ],
+  "description": ""
+}]

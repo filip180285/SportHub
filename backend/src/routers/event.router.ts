@@ -73,4 +73,10 @@ eventRouter.route("/updatePayments").post(
   (req, res) => new EventController().updatePayments(req, res)
 );
 
+
+// radi testiranja update-a
+eventRouter.route("/updateEventsStatus2").post(
+  (req, res) => new EventController().updateEventsStatus2(req, res)
+);
+
 export default eventRouter;

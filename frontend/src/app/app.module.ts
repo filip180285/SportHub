@@ -16,7 +16,6 @@ import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { RegisterComponent } from './register/register.component';
-import { TestRouteComponent } from './test-route/test-route.component';
 import { UcesnikComponent } from './ucesnik/ucesnik.component';
 import { OrganizatorComponent } from './organizator/organizator.component';
 import { AdministratorComponent } from './administrator/administrator.component';
@@ -47,7 +46,6 @@ import { DopunaProfilComponent } from './dopuna-profil/dopuna-profil.component';
     HeaderComponent,
     FooterComponent,
     RegisterComponent,
-    TestRouteComponent,
     UcesnikComponent,
     OrganizatorComponent,
     AdministratorComponent,

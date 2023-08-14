@@ -1,36 +1,33 @@
-[ {
+[{
   "id": 1,
-  "name": "fudbal",
+  "name": "Fudbal",
   "picture": "fudbal.jpg"
-},
-{
+},{
   "id": 2,
-  "name": "kosarka",
+  "name": "Košarka",
   "picture": "kosarka.jpg"
-},
-{
+},{
   "id": 3,
-  "name": "odbojka",
+  "name": "Odbojka",
   "picture": "odbojka.jpg"
-},
-{
+},{
   "id": 4,
-  "name": "rukomet",
+  "name": "Rukomet",
   "picture": "rukomet.jpg"
-},
-{
+},{
   "id": 5,
-  "name": "stoni tenis",
+  "name": "Stoni tenis",
   "picture": "stoniTenis.jpg"
-},
-{
+},{
   "id": 6,
-  "name": "tenis",
+  "name": "Tenis",
   "picture": "tenis.jpg"
-},
-{
+},{
   "id": 7,
-  "name": "vaterpolo",
+  "name": "Vaterpolo",
   "picture": "vaterpolo.jpg"
-}
- ]
+},{
+  "id": 8,
+  "name": "Američki fudbal",
+  "picture": "americki_fudbal.jpg"
+}]
