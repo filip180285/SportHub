@@ -68,6 +68,15 @@ export class UcesnikOrganizatoriComponent implements OnInit {
   }
 
   /**
+  * Invertovanje flega za prikaz punog opisa organizatora
+  * @param {User} organiser - Organizator ciji se fleg menja.
+  * @returns {void} 
+  */
+  invertDescFlag(organiser: User): void {
+    organiser.showFullDesc = !organiser.showFullDesc;
+  }
+
+  /**
     * Pracenje organizatora od strane korisnika
     * @param {User} organiser - Organizator koga korisnik zapracuje.
     * @returns {Promise<void>} Promise objekat koji se izvršava kada je operacija zavrsena.
@@ -85,6 +94,7 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       // dodaj u niz following, ukloni iz niza organizatora
       const organiserIndex = this.organisers.findIndex((o) => o.username == organiser.username);
       const [removedOrganiser] = this.organisers.splice(organiserIndex, 1);
+      removedOrganiser.showFullDesc = false;
       this.following.push(removedOrganiser);
     } catch (error) {
       console.log(error);
@@ -114,6 +124,7 @@ export class UcesnikOrganizatoriComponent implements OnInit {
       // dodaj u niz organizatora, ukloni iz niza following
       const organiserIndex = this.following.findIndex((o) => o.username == organiser.username);
       const [removedOrganiser] = this.following.splice(organiserIndex, 1);
+      removedOrganiser.showFullDesc = false;
       this.organisers.push(removedOrganiser);
     } catch (error) {
       console.log(error);

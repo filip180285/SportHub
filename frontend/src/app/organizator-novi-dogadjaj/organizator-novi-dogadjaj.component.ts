@@ -136,6 +136,24 @@ export class OrganizatorNoviDogadjajComponent implements OnInit {
    * @returns {Promise<void>} Promise objekat koji se izvrsava kada je komponenta ucitana.
    */
   async ngOnInit(): Promise<void> {
+
+    /*const datumString:string = "2023-08-29";
+    const datum: Date = new Date(datumString);
+
+    const rok: number = datum.setHours(0,0); // rok za prijavu
+    const rokMS = rok.valueOf();
+    console.log("rok: " + rokMS);
+
+    const termin: number = datum.setHours(17,0); // datum i vreme termina
+    const terminMS = termin.valueOf();
+    console.log("termin: " + terminMS);
+
+    const testRok = new Date(rokMS);
+    console.log("rok datum i vreme: " + testRok);
+
+    const testTermin = new Date(terminMS);
+    console.log("termin datum i vreme: " + testTermin);*/
+
     const token: string = sessionStorage.getItem("token");
     if (token == null) return;
 

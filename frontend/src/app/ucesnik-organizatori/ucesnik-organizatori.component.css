@@ -5,6 +5,16 @@
     cursor: pointer;
 }
 
+.hover {
+    cursor: pointer;
+    color: #48a77f;
+    text-decoration: underline;
+}
+
+.hover:hover {
+    color: orangered;
+}
+
 .stil:hover {
     border: 5px solid orangered;
 }

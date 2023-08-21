@@ -11,4 +11,6 @@ export class User {
     description: string;
     picture: string;
     subscriptions: Array<string>;
+
+    showFullDesc:boolean = false;
 }

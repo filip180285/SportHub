@@ -23,7 +23,10 @@
             <img class="rounded-circle stil" src="../../assets/unknownuser.png" *ngIf="organiser.picture == ''">
             <div class="event-info">
                 <span class="slova vece">{{organiser.name}} {{organiser.lastname}}<br></span>
-                <span class="slova">{{organiser.description}} <br></span>
+                <span (click) = "invertDescFlag(organiser)" class="slova" *ngIf="!organiser.showFullDesc">{{organiser.description.substring(0, 150)}}
+                    <span class="hover"><b>...</b></span><br></span>
+                <span class="slova" *ngIf="organiser.showFullDesc">{{organiser.description}}
+                     <span class="hover" (click) = "invertDescFlag(organiser)"><b> prikaži manje</b></span> <br> </span>
                 <button id="btnPretraga2" (click)="unsubscribe(organiser)" class="btn btn-primary">Otprati</button>
             </div>
         </div>
@@ -50,7 +53,10 @@
                 class="rounded-circle stil">
             <div class="event-info">
                 <span class="slova vece">{{organiser.name}} {{organiser.lastname}}<br></span>
-                <span class="slova">{{organiser.description}}<br></span>
+                <span (click) = "invertDescFlag(organiser)" class="slova" *ngIf="!organiser.showFullDesc">{{organiser.description.substring(0, 150)}}
+                    <span class="hover"><b>...</b></span><br></span>
+                <span class="slova" *ngIf="organiser.showFullDesc">{{organiser.description}}
+                     <span class="hover" (click) = "invertDescFlag(organiser)"><b> prikaži manje</b></span> <br> </span>
                 <button id="btnPretraga" (click)="subscribe(organiser)" class="btn btn-primary">Zaprati</button>
             </div>
         </div>
