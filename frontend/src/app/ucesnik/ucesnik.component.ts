@@ -51,9 +51,70 @@ export class UcesnikComponent implements OnInit {
       // dohvatanje aktuelnih dogadjaja
       const responseActive: any = await lastValueFrom(this.eventService.getAllActiveEvents(token));
       this.activeEvents = responseActive;
+
+      //this.getCurrentLocation();
     } catch (error) {
       console.log(error);
     }
+  }
+
+  getCurrentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        console.log(pos);
+        this.filterEvents(pos);
+      });
+    } else {
+      console.error("Geolocation not supported by this browser.");
+    }
+  }
+
+  getLatLngFromAddress(address: string): Promise<{ lat: number; lng: number }> {
+    const geocoder = new google.maps.Geocoder();
+    
+    return new Promise((resolve, reject) => {
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const lat = results[0].geometry.location.lat();
+          const lng = results[0].geometry.location.lng();
+          resolve({ lat, lng });
+        } else {
+          reject('Geocode was not successful for the following reason: ' + status);
+        }
+      });
+    });
+  }
+
+  async filterEvents(pos: { lat: number; lng: number }) {
+    const filteredEvents = [];
+    
+    for (const event of this.activeEvents) {
+      const eventLocation = await this.getLatLngFromAddress(event.location);
+      const distance = this.getDistance(pos, eventLocation);
+      if (distance <= 20 * 1000) {  // Convert 20 km to meters.
+        filteredEvents.push(event);
+      }
+    }
+  
+    this.activeEvents = filteredEvents;
+  }
+
+  getDistance(location1: { lat: number; lng: number }, location2: { lat: number; lng: number }): number {
+    const rad = (x: number): number => (x * Math.PI) / 180;
+    
+    const R = 6378137; // Earth’s mean radius in meters
+    const dLat = rad(location2.lat - location1.lat);
+    const dLng = rad(location2.lng - location1.lng);
+    
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(location1.lat)) * Math.cos(rad(location2.lat)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    
+    return distance;
   }
 
   /**
