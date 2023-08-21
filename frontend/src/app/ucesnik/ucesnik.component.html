@@ -8,6 +8,15 @@
     </div>
     <div class="col-sm-12">
         <h3>Aktuelni događaji</h3>
+        <div class="text-center">
+            <select class="izbor" [(ngModel)]="selectedRadius" (change)="getCurrentLocation()">
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="15">15 km</option>
+                <option value="20">20 km</option>
+                <option value="-1" selected>25+ km</option>
+            </select>
+        </div>
     </div>
     <div class="col-sm-12">
         <hr>
@@ -37,7 +46,16 @@
         <hr>
     </div>
     <div class="col-sm-12">
-        <h3>Trenutno nema aktuelnih događaja</h3>
+        <h3>Trenutno nema akuelnih događaja</h3>
+        <div class="text-center">
+            <select class="izbor" [(ngModel)]="selectedRadius" (change)="getCurrentLocation()">
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="15">15 km</option>
+                <option value="20">20 km</option>
+                <option value="-1">25+ km</option>
+            </select>
+        </div>
     </div>
     <div class="col-sm-12">
         <hr>

@@ -5,6 +5,12 @@
     cursor: pointer;
 }
 
+.izbor{
+    width: 100px;
+    text-align: center;
+}
+
+
 .stil:hover {
     border: 5px solid orangered;
 }

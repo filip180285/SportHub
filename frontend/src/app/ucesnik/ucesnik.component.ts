@@ -33,6 +33,7 @@ export class UcesnikComponent implements OnInit {
   loggedIn: User;
   // aktuelni dogadjaji
   activeEvents: Event[] = [];
+  allActiveEvents: Event[] = [];
 
   /**
    * Poziva se pri ucitavanju komponente.
@@ -51,14 +52,21 @@ export class UcesnikComponent implements OnInit {
       // dohvatanje aktuelnih dogadjaja
       const responseActive: any = await lastValueFrom(this.eventService.getAllActiveEvents(token));
       this.activeEvents = responseActive;
+      this.allActiveEvents = this.activeEvents;
 
-      //this.getCurrentLocation();
+      //this.getCurrentLocation(); // dohvati sve dogadjaje
     } catch (error) {
       console.log(error);
     }
   }
 
-  getCurrentLocation() {
+  selectedRadius: number = -1; // Default vrednost
+
+  /**
+ * Dohvatanje trenutne lokacije korisnika.
+ * @returns {void}
+ */
+  getCurrentLocation(): void {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
         const pos = {
@@ -66,16 +74,29 @@ export class UcesnikComponent implements OnInit {
           lng: position.coords.longitude,
         };
         console.log(pos);
-        this.filterEvents(pos);
+        // filtriranje dogadjaja u krugu od maxDistance km ako je pozvana metoda
+        // za filtriranje
+        if (this.selectedRadius == -1) {
+          this.activeEvents = [...this.allActiveEvents];
+          return;
+        }
+        else {
+          this.filterEvents(pos);
+        }
       });
     } else {
       console.error("Geolocation not supported by this browser.");
     }
   }
 
+  /**
+ * Konvretovanje adrese u koordinate latitude i longitude.
+ * @param address Adresa od koje treba dobiti koordniate.
+ * @returns {Promise<{lat: number; lng: number }>} Promise objekat sa latitudom i longitudom adrese zadate u vidu stringa.
+ */
   getLatLngFromAddress(address: string): Promise<{ lat: number; lng: number }> {
     const geocoder = new google.maps.Geocoder();
-    
+
     return new Promise((resolve, reject) => {
       geocoder.geocode({ address }, (results, status) => {
         if (status === google.maps.GeocoderStatus.OK) {
@@ -89,31 +110,42 @@ export class UcesnikComponent implements OnInit {
     });
   }
 
+  /**
+   * Filtriranje dogadjaja u krugu od 30 kilometara.
+   * @param {Object} pos Trenutna lokacija korisnika.
+   * @returns {Promise<void>}
+   */
   async filterEvents(pos: { lat: number; lng: number }) {
-    const filteredEvents = [];
-    
-    for (const event of this.activeEvents) {
-      const eventLocation = await this.getLatLngFromAddress(event.location);
-      const distance = this.getDistance(pos, eventLocation);
-      if (distance <= 20 * 1000) {  // Convert 20 km to meters.
-        filteredEvents.push(event);
-      }
-    }
-  
+    const geocodePromises: Promise<{ lat: number; lng: number }>[] = this.allActiveEvents.map(event => this.getLatLngFromAddress(event.location));
+
+    const eventLocations = await Promise.all(geocodePromises);
+
+    const filteredEvents = this.allActiveEvents.filter((event, index) => {
+      const distance = this.getDistance(pos, eventLocations[index]);
+      return distance <= this.selectedRadius * 1000;
+    });
+
     this.activeEvents = filteredEvents;
   }
 
+
+  /**
+ * Racunanje udaljenosti dve lokacije pomocu Haversine formule.
+ * @param {Object} location1 Latituda i longituda prve lokacije.
+ * @param {Object} location2 Latituda i longituda druge lokacije.
+ * @returns {number} Vraca udaljenost izmedju dve lokacije u metrima.
+ */
   getDistance(location1: { lat: number; lng: number }, location2: { lat: number; lng: number }): number {
     const rad = (x: number): number => (x * Math.PI) / 180;
-    
-    const R = 6378137; // Earth’s mean radius in meters
+
+    const R = 6378137;
     const dLat = rad(location2.lat - location1.lat);
     const dLng = rad(location2.lng - location1.lng);
-    
+
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(location1.lat)) * Math.cos(rad(location2.lat)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c;
-    
+
     return distance;
   }
 
