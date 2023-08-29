@@ -10,7 +10,7 @@ require("dotenv").config();
 
 // podizanje express aplikacije
 const app = express();
-// za omogucavanje komunikacije izmedju razlicitih domena
+// za omogućavanje komunikacije izmedju razlicitih domena
 app.use(cors());
 // za obradjivanje JSON objekata iz tela zahteva
 app.use(bodyParser.json());

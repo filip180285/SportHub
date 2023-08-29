@@ -79,6 +79,7 @@ a:hover {
     border-radius: 4px;
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
     font-size: 17px;
+    width: 250px;
 }
 
 #btnPretraga:hover {

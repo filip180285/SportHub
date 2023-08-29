@@ -143,7 +143,11 @@ class UserController {
                     idToken: googleToken,
                     audience: process.env.GOOGLE_CLIENT_ID
                 });
+                console.log("tiket");
+                console.log(ticket);
                 const payload = ticket.getPayload();
+                console.log(payload);
+                console.log("payload");
                 const email = payload.email;
                 const user = yield user_1.default.findOne({ "email": email });
                 // aktivan korisnik
@@ -294,7 +298,6 @@ class UserController {
             const username = req.body.username;
             user_1.default.findOne({ "username": username }, (error, user) => {
                 if (error) {
-                    console.log("ovde");
                     console.log(error);
                     return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
                 }

@@ -108,7 +108,7 @@ export class UserService {
    * @param {string} token - Token korisnika za autorizaciju
    * @returns {Observable<Object>} Observable koji emituje parsirani JSON odgovor."
   */
-  deleteUser(data: Object, token: string) {
+  deleteUser(data: Object, token: string): Observable<Object> {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + token);
     return this.http.post(`${this.uri}/deleteUser`, data, { headers });
   }

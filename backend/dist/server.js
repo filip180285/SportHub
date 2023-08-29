@@ -13,7 +13,7 @@ const sport_router_1 = __importDefault(require("./routers/sport.router"));
 require("dotenv").config();
 // podizanje express aplikacije
 const app = (0, express_1.default)();
-// za omogucavanje komunikacije izmedju razlicitih domena
+// za omogućavanje komunikacije izmedju razlicitih domena
 app.use((0, cors_1.default)());
 // za obradjivanje JSON objekata iz tela zahteva
 app.use(body_parser_1.default.json());

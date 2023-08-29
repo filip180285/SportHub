@@ -12,7 +12,7 @@ export const verifyTokenMiddleware = (allowedUserTypes: string[]) => {
 
         try {
             // verifikacija tokena
-            const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
+            const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
             const role = decodedToken.role;
 
             // provera da li je odgovarajuca uloga

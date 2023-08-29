@@ -133,7 +133,11 @@ export class UserController {
                 idToken: googleToken,
                 audience: process.env.GOOGLE_CLIENT_ID
             });
+            console.log("tiket")
+            console.log(ticket)
             const payload = ticket.getPayload();
+            console.log(payload)
+            console.log("payload")
             const email = payload.email;
 
             const user = await User.findOne({ "email": email });
@@ -301,7 +305,6 @@ export class UserController {
         const username: string = req.body.username;
         User.findOne({ "username": username }, (error, user) => {
             if (error) {
-                console.log("ovde");
                 console.log(error);
                 return res.status(400).json({ "message": "Greška pri dohvatanju korisnika!", error });
             }
@@ -441,8 +444,8 @@ export class UserController {
     * @param {express.Response} res - Express Response objekat za slanje odgovora klijentskoj strani.
     * @returns {Object} JSON objekat sa odgovarajucom porukom
     */
-    deleteUser = (req: express.Request, res: express.Response) => { // ok
-        const username = req.body.username;
+    deleteUser = (req: express.Request, res: express.Response) => {
+        const username:string = req.body.username;
 
         User.collection.updateOne({ "username": username }, { $set: { status: "neaktivan" } }, (error, success) => {
             if (error) {
