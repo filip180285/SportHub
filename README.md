@@ -1,2 +1,2 @@
 # GameTime
-Realizacija WEB aplikacije GameTime korišćenjem MEAN radnog okvira u sklopu izrade diplomskog rada
+Implementation of the GameTime web application using the MEAN framework as part of the master's thesis project.
